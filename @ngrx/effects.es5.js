@@ -113,17 +113,47 @@ Actions.decorators = [
 Actions.ctorParameters = function () { return [
     { type: Observable, decorators: [{ type: Inject, args: [ScannedActionsSubject,] },] },
 ]; };
+var SingletonEffectsService = (function () {
+    function SingletonEffectsService() {
+        this.registeredEffects = [];
+    }
+    /**
+     * @param {?} effectInstances
+     * @return {?}
+     */
+    SingletonEffectsService.prototype.removeExistingAndRegisterNew = function (effectInstances) {
+        var _this = this;
+        return effectInstances.filter(function (instance) {
+            var /** @type {?} */ instanceAsString = instance.constructor.toString();
+            if (_this.registeredEffects.indexOf(instanceAsString) === -1) {
+                _this.registeredEffects.push(instanceAsString);
+                return true;
+            }
+            return false;
+        });
+    };
+    return SingletonEffectsService;
+}());
+SingletonEffectsService.decorators = [
+    { type: Injectable },
+];
+/**
+ * @nocollapse
+ */
+SingletonEffectsService.ctorParameters = function () { return []; };
 var effects = new OpaqueToken('ngrx/effects: Effects');
 var EffectsSubscription = (function (_super) {
     __extends(EffectsSubscription, _super);
     /**
      * @param {?} store
+     * @param {?} singletonEffectsService
      * @param {?=} parent
      * @param {?=} effectInstances
      */
-    function EffectsSubscription(store, parent, effectInstances) {
+    function EffectsSubscription(store, singletonEffectsService, parent, effectInstances) {
         var _this = _super.call(this) || this;
         _this.store = store;
+        _this.singletonEffectsService = singletonEffectsService;
         _this.parent = parent;
         if (parent) {
             parent.add(_this);
@@ -138,6 +168,7 @@ var EffectsSubscription = (function (_super) {
      * @return {?}
      */
     EffectsSubscription.prototype.addEffects = function (effectInstances) {
+        effectInstances = this.singletonEffectsService.removeExistingAndRegisterNew(effectInstances);
         var /** @type {?} */ sources = effectInstances.map(mergeEffects);
         var /** @type {?} */ merged = merge.apply(void 0, sources);
         this.add(merged.subscribe(this.store));
@@ -160,6 +191,7 @@ EffectsSubscription.decorators = [
  */
 EffectsSubscription.ctorParameters = function () { return [
     { type: undefined, decorators: [{ type: Inject, args: [Store,] },] },
+    { type: SingletonEffectsService, decorators: [{ type: Inject, args: [SingletonEffectsService,] },] },
     { type: EffectsSubscription, decorators: [{ type: Optional }, { type: SkipSelf },] },
     { type: Array, decorators: [{ type: Optional }, { type: Inject, args: [effects,] },] },
 ]; };
@@ -184,6 +216,17 @@ var EffectsModule = (function () {
     function EffectsModule(effectsSubscription) {
         this.effectsSubscription = effectsSubscription;
     }
+    /**
+     * @return {?}
+     */
+    EffectsModule.forRoot = function () {
+        return {
+            ngModule: EffectsModule,
+            providers: [
+                SingletonEffectsService
+            ]
+        };
+    };
     /**
      * @param {?} type
      * @return {?}
@@ -243,5 +286,5 @@ function toPayload(action) {
 /**
  * Generated bundle index. Do not edit.
  */
-export { Effect, mergeEffects, Actions, EffectsModule, EffectsSubscription, toPayload, runAfterBootstrapEffects, afterBootstrapEffects as ɵb, effects as ɵa };
+export { Effect, mergeEffects, Actions, EffectsModule, EffectsSubscription, toPayload, runAfterBootstrapEffects, afterBootstrapEffects as ɵb, effects as ɵa, SingletonEffectsService as ɵc };
 //# sourceMappingURL=effects.es5.js.map
