@@ -1,89 +1,131 @@
+import { ScannedActionsSubject, Store, compose } from '@ngrx/store';
 import { merge } from 'rxjs/observable/merge';
 import { ignoreElements } from 'rxjs/operator/ignoreElements';
-import { APP_BOOTSTRAP_LISTENER, Inject, Injectable, Injector, NgModule, OpaqueToken, Optional, SkipSelf } from '@angular/core';
-import { ScannedActionsSubject, Store } from '@ngrx/store';
+import { materialize } from 'rxjs/operator/materialize';
+import { map } from 'rxjs/operator/map';
+import { APP_INITIALIZER, Inject, Injectable, InjectionToken, NgModule } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { filter } from 'rxjs/operator/filter';
-import { Subscription } from 'rxjs/Subscription';
+import { groupBy } from 'rxjs/operator/groupBy';
+import { mergeMap } from 'rxjs/operator/mergeMap';
+import { exhaustMap } from 'rxjs/operator/exhaustMap';
+import { dematerialize } from 'rxjs/operator/dematerialize';
+import { Subject } from 'rxjs/Subject';
 
 const METADATA_KEY = '@ngrx/effects';
+const r = Reflect;
+/**
+ * @param {?} sourceProto
+ * @return {?}
+ */
+function getEffectMetadataEntries(sourceProto) {
+    if (r.hasOwnMetadata(METADATA_KEY, sourceProto)) {
+        return r.getOwnMetadata(METADATA_KEY, sourceProto);
+    }
+    return [];
+}
+/**
+ * @param {?} sourceProto
+ * @param {?} entries
+ * @return {?}
+ */
+function setEffectMetadataEntries(sourceProto, entries) {
+    r.defineMetadata(METADATA_KEY, entries, sourceProto);
+}
 /**
  * @param {?=} __0
  * @return {?}
  */
 function Effect({ dispatch } = { dispatch: true }) {
     return function (target, propertyName) {
-        if (!((Reflect)).hasOwnMetadata(METADATA_KEY, target)) {
-            ((Reflect)).defineMetadata(METADATA_KEY, [], target);
-        }
-        const /** @type {?} */ effects = ((Reflect)).getOwnMetadata(METADATA_KEY, target);
+        const /** @type {?} */ effects = getEffectMetadataEntries(target);
         const /** @type {?} */ metadata = { propertyName, dispatch };
-        ((Reflect)).defineMetadata(METADATA_KEY, [...effects, metadata], target);
+        setEffectMetadataEntries(target, [...effects, metadata]);
     };
 }
 /**
  * @param {?} instance
  * @return {?}
  */
-function getEffectsMetadata(instance) {
-    const /** @type {?} */ target = Object.getPrototypeOf(instance);
-    if (!((Reflect)).hasOwnMetadata(METADATA_KEY, target)) {
-        return [];
-    }
-    return ((Reflect)).getOwnMetadata(METADATA_KEY, target);
+function getSourceForInstance(instance) {
+    return Object.getPrototypeOf(instance);
 }
+const getSourceMetadata = compose(getEffectMetadataEntries, getSourceForInstance);
+
+const onRunEffectsKey = 'ngrxOnRunEffects';
 /**
- * @param {?} instance
+ * @param {?} sourceInstance
  * @return {?}
  */
-function mergeEffects(instance) {
-    const /** @type {?} */ observables = getEffectsMetadata(instance).map(({ propertyName, dispatch }) => {
-        const /** @type {?} */ observable = typeof instance[propertyName] === 'function' ?
-            instance[propertyName]() : instance[propertyName];
+function isOnRunEffects(sourceInstance) {
+    const /** @type {?} */ source = getSourceForInstance(sourceInstance);
+    return (onRunEffectsKey in source && typeof source[onRunEffectsKey] === 'function');
+}
+
+/**
+ * @param {?} sourceInstance
+ * @return {?}
+ */
+function mergeEffects(sourceInstance) {
+    const /** @type {?} */ sourceName = getSourceForInstance(sourceInstance).constructor.name;
+    const /** @type {?} */ observables = getSourceMetadata(sourceInstance).map(({ propertyName, dispatch }) => {
+        const /** @type {?} */ observable = typeof sourceInstance[propertyName] ===
+            'function'
+            ? sourceInstance[propertyName]()
+            : sourceInstance[propertyName];
         if (dispatch === false) {
             return ignoreElements.call(observable);
         }
-        return observable;
+        const /** @type {?} */ materialized$ = materialize.call(observable);
+        return map.call(materialized$, (notification) => ({
+            effect: sourceInstance[propertyName],
+            notification,
+            propertyName,
+            sourceName,
+            sourceInstance,
+        }));
     });
     return merge(...observables);
+}
+/**
+ * @param {?} sourceInstance
+ * @return {?}
+ */
+function resolveEffectSource(sourceInstance) {
+    const /** @type {?} */ mergedEffects$ = mergeEffects(sourceInstance);
+    if (isOnRunEffects(sourceInstance)) {
+        return sourceInstance.ngrxOnRunEffects(mergedEffects$);
+    }
+    return mergedEffects$;
 }
 
 class Actions extends Observable {
     /**
-     * @param {?} actionsSubject
+     * @param {?=} source
      */
-    constructor(actionsSubject) {
+    constructor(source) {
         super();
-        this.source = actionsSubject;
+        if (source) {
+            this.source = source;
+        }
     }
     /**
+     * @template R
      * @param {?} operator
      * @return {?}
      */
     lift(operator) {
-        const /** @type {?} */ observable = new Actions(this);
+        const /** @type {?} */ observable = new Actions();
+        observable.source = this;
         observable.operator = operator;
         return observable;
     }
     /**
-     * @param {...?} keys
+     * @param {...?} allowedTypes
      * @return {?}
      */
-    ofType(...keys) {
-        return filter.call(this, ({ type }) => {
-            const /** @type {?} */ len = keys.length;
-            if (len === 1) {
-                return type === keys[0];
-            }
-            else {
-                for (let /** @type {?} */ i = 0; i < len; i++) {
-                    if (keys[i] === type) {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        });
+    ofType(...allowedTypes) {
+        return filter.call(this, (action) => allowedTypes.some(type => type === action.type));
     }
 }
 Actions.decorators = [
@@ -96,166 +138,243 @@ Actions.ctorParameters = () => [
     { type: Observable, decorators: [{ type: Inject, args: [ScannedActionsSubject,] },] },
 ];
 
-class SingletonEffectsService {
-    constructor() {
-        this.registeredEffects = [];
+const IMMEDIATE_EFFECTS = new InjectionToken('ngrx/effects: Immediate Effects');
+const BOOTSTRAP_EFFECTS = new InjectionToken('ngrx/effects: Bootstrap Effects');
+const ROOT_EFFECTS = new InjectionToken('ngrx/effects: Root Effects');
+const FEATURE_EFFECTS = new InjectionToken('ngrx/effects: Feature Effects');
+const CONSOLE = new InjectionToken('Browser Console');
+
+class ErrorReporter {
+    /**
+     * @param {?} console
+     */
+    constructor(console) {
+        this.console = console;
     }
     /**
-     * @param {?} effectInstances
+     * @param {?} reason
+     * @param {?} details
      * @return {?}
      */
-    removeExistingAndRegisterNew(effectInstances) {
-        return effectInstances.filter(instance => {
-            const /** @type {?} */ instanceAsString = instance.constructor.toString();
-            if (this.registeredEffects.indexOf(instanceAsString) === -1) {
-                this.registeredEffects.push(instanceAsString);
-                return true;
-            }
-            return false;
-        });
+    report(reason, details) {
+        this.console.group(reason);
+        for (let /** @type {?} */ key in details) {
+            this.console.error(`${key}:`, details[key]);
+        }
+        this.console.groupEnd();
     }
 }
-SingletonEffectsService.decorators = [
+ErrorReporter.decorators = [
     { type: Injectable },
 ];
 /**
  * @nocollapse
  */
-SingletonEffectsService.ctorParameters = () => [];
+ErrorReporter.ctorParameters = () => [
+    { type: undefined, decorators: [{ type: Inject, args: [CONSOLE,] },] },
+];
 
-const effects = new OpaqueToken('ngrx/effects: Effects');
-class EffectsSubscription extends Subscription {
+class EffectSources extends Subject {
     /**
-     * @param {?} store
-     * @param {?} singletonEffectsService
-     * @param {?=} parent
-     * @param {?=} effectInstances
+     * @param {?} errorReporter
      */
-    constructor(store, singletonEffectsService, parent, effectInstances) {
+    constructor(errorReporter) {
         super();
-        this.store = store;
-        this.singletonEffectsService = singletonEffectsService;
-        this.parent = parent;
-        if (parent) {
-            parent.add(this);
-        }
-        if (typeof effectInstances !== 'undefined' && effectInstances) {
-            this.addEffects(effectInstances);
-        }
+        this.errorReporter = errorReporter;
     }
     /**
-     * @param {?} effectInstances
+     * @param {?} effectSourceInstance
      * @return {?}
      */
-    addEffects(effectInstances) {
-        effectInstances = this.singletonEffectsService.removeExistingAndRegisterNew(effectInstances);
-        const /** @type {?} */ sources = effectInstances.map(mergeEffects);
-        const /** @type {?} */ merged = merge(...sources);
-        this.add(merged.subscribe(this.store));
+    addEffects(effectSourceInstance) {
+        this.next(effectSourceInstance);
+    }
+    /**
+     * @return {?}
+     */
+    toActions() {
+        return mergeMap.call(groupBy.call(this, getSourceForInstance), (source$) => dematerialize.call(map.call(exhaustMap.call(source$, resolveEffectSource), (output) => {
+            switch (output.notification.kind) {
+                case 'N': {
+                    const /** @type {?} */ action = output.notification.value;
+                    const /** @type {?} */ isInvalidAction = !action || !action.type || typeof action.type !== 'string';
+                    if (isInvalidAction) {
+                        const /** @type {?} */ errorReason = `Effect "${output.sourceName}.${output.propertyName}" dispatched an invalid action`;
+                        this.errorReporter.report(errorReason, {
+                            Source: output.sourceInstance,
+                            Effect: output.effect,
+                            Dispatched: action,
+                            Notification: output.notification,
+                        });
+                    }
+                    break;
+                }
+                case 'E': {
+                    const /** @type {?} */ errorReason = `Effect "${output.sourceName}.${output.propertyName}" threw an error`;
+                    this.errorReporter.report(errorReason, {
+                        Source: output.sourceInstance,
+                        Effect: output.effect,
+                        Error: output.notification.error,
+                        Notification: output.notification,
+                    });
+                    break;
+                }
+            }
+            return output.notification;
+        })));
+    }
+}
+EffectSources.decorators = [
+    { type: Injectable },
+];
+/**
+ * @nocollapse
+ */
+EffectSources.ctorParameters = () => [
+    { type: ErrorReporter, },
+];
+
+class EffectsFeatureModule {
+    /**
+     * @param {?} effectSources
+     * @param {?} effectSourceGroups
+     */
+    constructor(effectSources, effectSourceGroups) {
+        this.effectSources = effectSources;
+        effectSourceGroups.forEach(group => group.forEach(effectSourceInstance => effectSources.addEffects(effectSourceInstance)));
+    }
+}
+EffectsFeatureModule.decorators = [
+    { type: NgModule, args: [{},] },
+];
+/**
+ * @nocollapse
+ */
+EffectsFeatureModule.ctorParameters = () => [
+    { type: EffectSources, },
+    { type: Array, decorators: [{ type: Inject, args: [FEATURE_EFFECTS,] },] },
+];
+
+class EffectsRunner {
+    /**
+     * @param {?} effectSources
+     * @param {?} store
+     */
+    constructor(effectSources, store) {
+        this.effectSources = effectSources;
+        this.store = store;
+        this.effectsSubscription = null;
+    }
+    /**
+     * @return {?}
+     */
+    start() {
+        if (!this.effectsSubscription) {
+            this.effectsSubscription = this.effectSources
+                .toActions()
+                .subscribe(this.store);
+        }
     }
     /**
      * @return {?}
      */
     ngOnDestroy() {
-        if (!this.closed) {
-            this.unsubscribe();
+        if (this.effectsSubscription) {
+            this.effectsSubscription.unsubscribe();
+            this.effectsSubscription = null;
         }
     }
 }
-EffectsSubscription.decorators = [
+EffectsRunner.decorators = [
     { type: Injectable },
 ];
 /**
  * @nocollapse
  */
-EffectsSubscription.ctorParameters = () => [
-    { type: undefined, decorators: [{ type: Inject, args: [Store,] },] },
-    { type: SingletonEffectsService, decorators: [{ type: Inject, args: [SingletonEffectsService,] },] },
-    { type: EffectsSubscription, decorators: [{ type: Optional }, { type: SkipSelf },] },
-    { type: Array, decorators: [{ type: Optional }, { type: Inject, args: [effects,] },] },
+EffectsRunner.ctorParameters = () => [
+    { type: EffectSources, },
+    { type: Store, },
 ];
 
-const afterBootstrapEffects = new OpaqueToken('ngrx:effects: Bootstrap Effects');
 /**
- * @param {?} injector
- * @param {?} subscription
+ * @param {?} effectSources
+ * @param {?} runner
+ * @param {?} rootEffects
  * @return {?}
  */
-function runAfterBootstrapEffects(injector, subscription) {
-    return () => {
-        const /** @type {?} */ effectInstances = injector.get(afterBootstrapEffects, false);
-        if (effectInstances) {
-            subscription.addEffects(effectInstances);
-        }
+function createRunEffects(effectSources, runner, rootEffects) {
+    return function () {
+        runner.start();
+        rootEffects.forEach(effectSourceInstance => effectSources.addEffects(effectSourceInstance));
     };
 }
+const RUN_EFFECTS = {
+    provide: APP_INITIALIZER,
+    multi: true,
+    deps: [EffectSources, EffectsRunner, ROOT_EFFECTS],
+    useFactory: createRunEffects,
+};
 
 class EffectsModule {
     /**
-     * @param {?} effectsSubscription
-     */
-    constructor(effectsSubscription) {
-        this.effectsSubscription = effectsSubscription;
-    }
-    /**
+     * @param {?} featureEffects
      * @return {?}
      */
-    static forRoot() {
+    static forFeature(featureEffects) {
         return {
-            ngModule: EffectsModule,
+            ngModule: EffectsFeatureModule,
             providers: [
-                SingletonEffectsService
-            ]
+                featureEffects,
+                {
+                    provide: FEATURE_EFFECTS,
+                    multi: true,
+                    deps: featureEffects,
+                    useFactory: createSourceInstances,
+                },
+            ],
         };
     }
     /**
-     * @param {?} type
+     * @param {?} rootEffects
      * @return {?}
      */
-    static run(type) {
+    static forRoot(rootEffects) {
         return {
             ngModule: EffectsModule,
             providers: [
-                EffectsSubscription,
-                type,
-                { provide: effects, useExisting: type, multi: true }
-            ]
-        };
-    }
-    /**
-     * @param {?} type
-     * @return {?}
-     */
-    static runAfterBootstrap(type) {
-        return {
-            ngModule: EffectsModule,
-            providers: [
-                type,
-                { provide: afterBootstrapEffects, useExisting: type, multi: true }
-            ]
+                EffectsRunner,
+                EffectSources,
+                ErrorReporter,
+                Actions,
+                RUN_EFFECTS,
+                rootEffects,
+                {
+                    provide: ROOT_EFFECTS,
+                    deps: rootEffects,
+                    useFactory: createSourceInstances,
+                },
+                {
+                    provide: CONSOLE,
+                    useValue: console,
+                },
+            ],
         };
     }
 }
 EffectsModule.decorators = [
-    { type: NgModule, args: [{
-                providers: [
-                    Actions,
-                    EffectsSubscription,
-                    {
-                        provide: APP_BOOTSTRAP_LISTENER,
-                        multi: true,
-                        deps: [Injector, EffectsSubscription],
-                        useFactory: runAfterBootstrapEffects
-                    }
-                ]
-            },] },
+    { type: NgModule, args: [{},] },
 ];
 /**
  * @nocollapse
  */
-EffectsModule.ctorParameters = () => [
-    { type: EffectsSubscription, },
-];
+EffectsModule.ctorParameters = () => [];
+/**
+ * @param {...?} instances
+ * @return {?}
+ */
+function createSourceInstances(...instances) {
+    return instances;
+}
 
 /**
  * @param {?} action
@@ -269,5 +388,5 @@ function toPayload(action) {
  * Generated bundle index. Do not edit.
  */
 
-export { Effect, mergeEffects, Actions, EffectsModule, EffectsSubscription, toPayload, runAfterBootstrapEffects, afterBootstrapEffects as ɵb, effects as ɵa, SingletonEffectsService as ɵc };
+export { Effect, mergeEffects, Actions, EffectsModule, EffectSources, toPayload, EffectsFeatureModule as ɵb, createSourceInstances as ɵa, EffectsRunner as ɵg, ErrorReporter as ɵf, RUN_EFFECTS as ɵi, createRunEffects as ɵh, CONSOLE as ɵe, FEATURE_EFFECTS as ɵd, ROOT_EFFECTS as ɵc };
 //# sourceMappingURL=effects.js.map
