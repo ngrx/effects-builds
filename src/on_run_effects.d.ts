@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs/Observable';
-import { EffectNotification } from './effects_resolver';
+import { EffectNotification } from './effect_notification';
 export interface OnRunEffects {
     ngrxOnRunEffects(resolvedEffects$: Observable<EffectNotification>): Observable<EffectNotification>;
 }

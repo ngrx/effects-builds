@@ -1,5 +1,5 @@
-import { EffectSources } from './effect_sources';
+import { EffectsRootModule } from './effects_root_module';
 export declare class EffectsFeatureModule {
-    private effectSources;
-    constructor(effectSources: EffectSources, effectSourceGroups: any[][]);
+    private root;
+    constructor(root: EffectsRootModule, effectSourceGroups: any[][]);
 }

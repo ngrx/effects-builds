@@ -13,7 +13,7 @@ import { merge } from 'rxjs/observable/merge';
 import { ignoreElements } from 'rxjs/operator/ignoreElements';
 import { materialize } from 'rxjs/operator/materialize';
 import { map } from 'rxjs/operator/map';
-import { APP_INITIALIZER, Inject, Injectable, InjectionToken, NgModule } from '@angular/core';
+import { Inject, Injectable, InjectionToken, NgModule } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { filter } from 'rxjs/operator/filter';
 import { groupBy } from 'rxjs/operator/groupBy';
@@ -152,8 +152,68 @@ Actions.decorators = [
 Actions.ctorParameters = function () { return [
     { type: Observable, decorators: [{ type: Inject, args: [ScannedActionsSubject,] },] },
 ]; };
+/**
+ * @param {?} output
+ * @param {?} reporter
+ * @return {?}
+ */
+function verifyOutput(output, reporter) {
+    reportErrorThrown(output, reporter);
+    reportInvalidActions(output, reporter);
+}
+/**
+ * @param {?} output
+ * @param {?} reporter
+ * @return {?}
+ */
+function reportErrorThrown(output, reporter) {
+    if (output.notification.kind === 'E') {
+        var /** @type {?} */ errorReason = "Effect " + getEffectName(output) + " threw an error";
+        reporter.report(errorReason, {
+            Source: output.sourceInstance,
+            Effect: output.effect,
+            Error: output.notification.error,
+            Notification: output.notification,
+        });
+    }
+}
+/**
+ * @param {?} output
+ * @param {?} reporter
+ * @return {?}
+ */
+function reportInvalidActions(output, reporter) {
+    if (output.notification.kind === 'N') {
+        var /** @type {?} */ action = output.notification.value;
+        var /** @type {?} */ isInvalidAction = !isAction(action);
+        if (isInvalidAction) {
+            var /** @type {?} */ errorReason = "Effect " + getEffectName(output) + " dispatched an invalid action";
+            reporter.report(errorReason, {
+                Source: output.sourceInstance,
+                Effect: output.effect,
+                Dispatched: action,
+                Notification: output.notification,
+            });
+        }
+    }
+}
+/**
+ * @param {?} action
+ * @return {?}
+ */
+function isAction(action) {
+    return action && action.type && typeof action.type === 'string';
+}
+/**
+ * @param {?} __0
+ * @return {?}
+ */
+function getEffectName(_a) {
+    var propertyName = _a.propertyName, sourceInstance = _a.sourceInstance, sourceName = _a.sourceName;
+    var /** @type {?} */ isMethod = typeof sourceInstance[propertyName] === 'function';
+    return "\"" + sourceName + "." + propertyName + (isMethod ? '()' : '') + "\"";
+}
 var IMMEDIATE_EFFECTS = new InjectionToken('ngrx/effects: Immediate Effects');
-var BOOTSTRAP_EFFECTS = new InjectionToken('ngrx/effects: Bootstrap Effects');
 var ROOT_EFFECTS = new InjectionToken('ngrx/effects: Root Effects');
 var FEATURE_EFFECTS = new InjectionToken('ngrx/effects: Feature Effects');
 var CONSOLE = new InjectionToken('Browser Console');
@@ -210,32 +270,7 @@ var EffectSources = (function (_super) {
     EffectSources.prototype.toActions = function () {
         var _this = this;
         return mergeMap.call(groupBy.call(this, getSourceForInstance), function (source$) { return dematerialize.call(map.call(exhaustMap.call(source$, resolveEffectSource), function (output) {
-            switch (output.notification.kind) {
-                case 'N': {
-                    var /** @type {?} */ action = output.notification.value;
-                    var /** @type {?} */ isInvalidAction = !action || !action.type || typeof action.type !== 'string';
-                    if (isInvalidAction) {
-                        var /** @type {?} */ errorReason = "Effect \"" + output.sourceName + "." + output.propertyName + "\" dispatched an invalid action";
-                        _this.errorReporter.report(errorReason, {
-                            Source: output.sourceInstance,
-                            Effect: output.effect,
-                            Dispatched: action,
-                            Notification: output.notification,
-                        });
-                    }
-                    break;
-                }
-                case 'E': {
-                    var /** @type {?} */ errorReason = "Effect \"" + output.sourceName + "." + output.propertyName + "\" threw an error";
-                    _this.errorReporter.report(errorReason, {
-                        Source: output.sourceInstance,
-                        Effect: output.effect,
-                        Error: output.notification.error,
-                        Notification: output.notification,
-                    });
-                    break;
-                }
-            }
+            verifyOutput(output, _this.errorReporter);
             return output.notification;
         })); });
     };
@@ -249,27 +284,6 @@ EffectSources.decorators = [
  */
 EffectSources.ctorParameters = function () { return [
     { type: ErrorReporter, },
-]; };
-var EffectsFeatureModule = (function () {
-    /**
-     * @param {?} effectSources
-     * @param {?} effectSourceGroups
-     */
-    function EffectsFeatureModule(effectSources, effectSourceGroups) {
-        this.effectSources = effectSources;
-        effectSourceGroups.forEach(function (group) { return group.forEach(function (effectSourceInstance) { return effectSources.addEffects(effectSourceInstance); }); });
-    }
-    return EffectsFeatureModule;
-}());
-EffectsFeatureModule.decorators = [
-    { type: NgModule, args: [{},] },
-];
-/**
- * @nocollapse
- */
-EffectsFeatureModule.ctorParameters = function () { return [
-    { type: EffectSources, },
-    { type: Array, decorators: [{ type: Inject, args: [FEATURE_EFFECTS,] },] },
 ]; };
 var EffectsRunner = (function () {
     /**
@@ -312,24 +326,58 @@ EffectsRunner.ctorParameters = function () { return [
     { type: EffectSources, },
     { type: Store, },
 ]; };
-/**
- * @param {?} effectSources
- * @param {?} runner
- * @param {?} rootEffects
- * @return {?}
- */
-function createRunEffects(effectSources, runner, rootEffects) {
-    return function () {
+var EffectsRootModule = (function () {
+    /**
+     * @param {?} sources
+     * @param {?} runner
+     * @param {?} rootEffects
+     */
+    function EffectsRootModule(sources, runner, rootEffects) {
+        this.sources = sources;
         runner.start();
-        rootEffects.forEach(function (effectSourceInstance) { return effectSources.addEffects(effectSourceInstance); });
+        rootEffects.forEach(function (effectSourceInstance) { return sources.addEffects(effectSourceInstance); });
+    }
+    /**
+     * @param {?} effectSourceInstance
+     * @return {?}
+     */
+    EffectsRootModule.prototype.addEffects = function (effectSourceInstance) {
+        this.sources.addEffects(effectSourceInstance);
     };
-}
-var RUN_EFFECTS = {
-    provide: APP_INITIALIZER,
-    multi: true,
-    deps: [EffectSources, EffectsRunner, ROOT_EFFECTS],
-    useFactory: createRunEffects,
-};
+    return EffectsRootModule;
+}());
+EffectsRootModule.decorators = [
+    { type: NgModule, args: [{},] },
+];
+/**
+ * @nocollapse
+ */
+EffectsRootModule.ctorParameters = function () { return [
+    { type: EffectSources, },
+    { type: EffectsRunner, },
+    { type: Array, decorators: [{ type: Inject, args: [ROOT_EFFECTS,] },] },
+]; };
+var EffectsFeatureModule = (function () {
+    /**
+     * @param {?} root
+     * @param {?} effectSourceGroups
+     */
+    function EffectsFeatureModule(root, effectSourceGroups) {
+        this.root = root;
+        effectSourceGroups.forEach(function (group) { return group.forEach(function (effectSourceInstance) { return root.addEffects(effectSourceInstance); }); });
+    }
+    return EffectsFeatureModule;
+}());
+EffectsFeatureModule.decorators = [
+    { type: NgModule, args: [{},] },
+];
+/**
+ * @nocollapse
+ */
+EffectsFeatureModule.ctorParameters = function () { return [
+    { type: EffectsRootModule, },
+    { type: Array, decorators: [{ type: Inject, args: [FEATURE_EFFECTS,] },] },
+]; };
 var EffectsModule = (function () {
     function EffectsModule() {
     }
@@ -357,13 +405,12 @@ var EffectsModule = (function () {
      */
     EffectsModule.forRoot = function (rootEffects) {
         return {
-            ngModule: EffectsModule,
+            ngModule: EffectsRootModule,
             providers: [
                 EffectsRunner,
                 EffectSources,
                 ErrorReporter,
                 Actions,
-                RUN_EFFECTS,
                 rootEffects,
                 {
                     provide: ROOT_EFFECTS,
@@ -407,5 +454,5 @@ function toPayload(action) {
 /**
  * Generated bundle index. Do not edit.
  */
-export { Effect, mergeEffects, Actions, EffectsModule, EffectSources, toPayload, EffectsFeatureModule as ɵb, createSourceInstances as ɵa, EffectsRunner as ɵg, ErrorReporter as ɵf, RUN_EFFECTS as ɵi, createRunEffects as ɵh, CONSOLE as ɵe, FEATURE_EFFECTS as ɵd, ROOT_EFFECTS as ɵc };
+export { Effect, mergeEffects, Actions, EffectsModule, EffectSources, toPayload, EffectsFeatureModule as ɵb, createSourceInstances as ɵa, EffectsRootModule as ɵf, EffectsRunner as ɵh, ErrorReporter as ɵg, CONSOLE as ɵe, FEATURE_EFFECTS as ɵd, ROOT_EFFECTS as ɵc };
 //# sourceMappingURL=effects.es5.js.map
