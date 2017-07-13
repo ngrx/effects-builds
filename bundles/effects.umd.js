@@ -71,8 +71,7 @@ function mergeEffects(sourceInstance) {
     var /** @type {?} */ sourceName = getSourceForInstance(sourceInstance).constructor.name;
     var /** @type {?} */ observables = getSourceMetadata(sourceInstance).map(function (_a) {
         var propertyName = _a.propertyName, dispatch = _a.dispatch;
-        var /** @type {?} */ observable = typeof sourceInstance[propertyName] ===
-            'function'
+        var /** @type {?} */ observable = typeof sourceInstance[propertyName] === 'function'
             ? sourceInstance[propertyName]()
             : sourceInstance[propertyName];
         if (dispatch === false) {

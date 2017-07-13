@@ -54,7 +54,7 @@ function isAction(action) {
  * @param {?} __0
  * @return {?}
  */
-function getEffectName({ propertyName, sourceInstance, sourceName }) {
+function getEffectName({ propertyName, sourceInstance, sourceName, }) {
     const /** @type {?} */ isMethod = typeof sourceInstance[propertyName] === 'function';
     return `"${sourceName}.${propertyName}${isMethod ? '()' : ''}"`;
 }

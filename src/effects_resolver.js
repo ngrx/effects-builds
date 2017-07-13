@@ -11,8 +11,7 @@ import { isOnRunEffects } from './on_run_effects';
 export function mergeEffects(sourceInstance) {
     const /** @type {?} */ sourceName = getSourceForInstance(sourceInstance).constructor.name;
     const /** @type {?} */ observables = getSourceMetadata(sourceInstance).map(({ propertyName, dispatch }) => {
-        const /** @type {?} */ observable = typeof sourceInstance[propertyName] ===
-            'function'
+        const /** @type {?} */ observable = typeof sourceInstance[propertyName] === 'function'
             ? sourceInstance[propertyName]()
             : sourceInstance[propertyName];
         if (dispatch === false) {

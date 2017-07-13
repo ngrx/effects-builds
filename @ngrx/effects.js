@@ -69,8 +69,7 @@ function isOnRunEffects(sourceInstance) {
 function mergeEffects(sourceInstance) {
     const /** @type {?} */ sourceName = getSourceForInstance(sourceInstance).constructor.name;
     const /** @type {?} */ observables = getSourceMetadata(sourceInstance).map(({ propertyName, dispatch }) => {
-        const /** @type {?} */ observable = typeof sourceInstance[propertyName] ===
-            'function'
+        const /** @type {?} */ observable = typeof sourceInstance[propertyName] === 'function'
             ? sourceInstance[propertyName]()
             : sourceInstance[propertyName];
         if (dispatch === false) {
@@ -194,7 +193,7 @@ function isAction(action) {
  * @param {?} __0
  * @return {?}
  */
-function getEffectName({ propertyName, sourceInstance, sourceName }) {
+function getEffectName({ propertyName, sourceInstance, sourceName, }) {
     const /** @type {?} */ isMethod = typeof sourceInstance[propertyName] === 'function';
     return `"${sourceName}.${propertyName}${isMethod ? '()' : ''}"`;
 }
