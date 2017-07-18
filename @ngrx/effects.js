@@ -15,10 +15,44 @@ import { Subject } from 'rxjs/Subject';
 const METADATA_KEY = '@ngrx/effects';
 const r = Reflect;
 /**
+ * @param {?} sourceType
+ * @return {?}
+ */
+function hasStaticMetadata(sourceType) {
+    return !!((sourceType)).propDecorators;
+}
+/**
+ * @param {?} sourceType
+ * @return {?}
+ */
+function getStaticMetadata(sourceType) {
+    const /** @type {?} */ propDecorators = sourceType.propDecorators;
+    return Object.keys(propDecorators).reduce((all, key) => all.concat(getStaticMetadataEntry(propDecorators[key], key)), []);
+}
+/**
+ * @param {?} metadataEntry
+ * @param {?} propertyName
+ * @return {?}
+ */
+function getStaticMetadataEntry(metadataEntry, propertyName) {
+    return metadataEntry
+        .filter((entry) => entry.type === Effect)
+        .map((entry) => {
+        let /** @type {?} */ dispatch = true;
+        if (entry.args.length) {
+            dispatch = !!entry.args[0].dispatch;
+        }
+        return { propertyName, dispatch };
+    });
+}
+/**
  * @param {?} sourceProto
  * @return {?}
  */
 function getEffectMetadataEntries(sourceProto) {
+    if (hasStaticMetadata(sourceProto.constructor)) {
+        return getStaticMetadata(sourceProto.constructor);
+    }
     if (r.hasOwnMetadata(METADATA_KEY, sourceProto)) {
         return r.getOwnMetadata(METADATA_KEY, sourceProto);
     }
@@ -33,6 +67,7 @@ function setEffectMetadataEntries(sourceProto, entries) {
     r.defineMetadata(METADATA_KEY, entries, sourceProto);
 }
 /**
+ * \@Annotation
  * @param {?=} __0
  * @return {?}
  */
