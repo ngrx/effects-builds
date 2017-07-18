@@ -1,1 +1,1 @@
-export * from './effects/testing/index';
+export * from './testing/testing';
