@@ -165,6 +165,7 @@ var Actions = (function (_super) {
         return observable;
     };
     /**
+     * @template V2
      * @param {...?} allowedTypes
      * @return {?}
      */
