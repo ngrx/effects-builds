@@ -41,7 +41,7 @@ function getStaticMetadataEntry(metadataEntry, propertyName) {
         .filter(function (entry) { return entry.type === Effect; })
         .map(function (entry) {
         var /** @type {?} */ dispatch = true;
-        if (entry.args.length) {
+        if (entry.args && entry.args.length) {
             dispatch = !!entry.args[0].dispatch;
         }
         return { propertyName: propertyName, dispatch: dispatch };
