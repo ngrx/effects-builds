@@ -1,9 +1,9 @@
-import { ScannedActionsSubject, Store, compose } from '@ngrx/store';
+import { ScannedActionsSubject, Store, StoreModule, compose } from '@ngrx/store';
 import { merge } from 'rxjs/observable/merge';
 import { ignoreElements } from 'rxjs/operator/ignoreElements';
 import { materialize } from 'rxjs/operator/materialize';
 import { map } from 'rxjs/operator/map';
-import { Inject, Injectable, InjectionToken, NgModule } from '@angular/core';
+import { Inject, Injectable, InjectionToken, NgModule, Optional } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { filter } from 'rxjs/operator/filter';
 import { groupBy } from 'rxjs/operator/groupBy';
@@ -350,8 +350,9 @@ class EffectsRootModule {
      * @param {?} sources
      * @param {?} runner
      * @param {?} rootEffects
+     * @param {?} storeModule
      */
-    constructor(sources, runner, rootEffects) {
+    constructor(sources, runner, rootEffects, storeModule) {
         this.sources = sources;
         runner.start();
         rootEffects.forEach(effectSourceInstance => sources.addEffects(effectSourceInstance));
@@ -374,14 +375,16 @@ EffectsRootModule.ctorParameters = () => [
     { type: EffectSources, },
     { type: EffectsRunner, },
     { type: Array, decorators: [{ type: Inject, args: [ROOT_EFFECTS,] },] },
+    { type: StoreModule, decorators: [{ type: Optional },] },
 ];
 
 class EffectsFeatureModule {
     /**
      * @param {?} root
      * @param {?} effectSourceGroups
+     * @param {?} storeModule
      */
-    constructor(root, effectSourceGroups) {
+    constructor(root, effectSourceGroups, storeModule) {
         this.root = root;
         effectSourceGroups.forEach(group => group.forEach(effectSourceInstance => root.addEffects(effectSourceInstance)));
     }
@@ -395,6 +398,7 @@ EffectsFeatureModule.decorators = [
 EffectsFeatureModule.ctorParameters = () => [
     { type: EffectsRootModule, },
     { type: Array, decorators: [{ type: Inject, args: [FEATURE_EFFECTS,] },] },
+    { type: StoreModule, decorators: [{ type: Optional },] },
 ];
 
 class EffectsModule {

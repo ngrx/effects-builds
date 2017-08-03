@@ -8,12 +8,12 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-import { ScannedActionsSubject, Store, compose } from '@ngrx/store';
+import { ScannedActionsSubject, Store, StoreModule, compose } from '@ngrx/store';
 import { merge } from 'rxjs/observable/merge';
 import { ignoreElements } from 'rxjs/operator/ignoreElements';
 import { materialize } from 'rxjs/operator/materialize';
 import { map } from 'rxjs/operator/map';
-import { Inject, Injectable, InjectionToken, NgModule } from '@angular/core';
+import { Inject, Injectable, InjectionToken, NgModule, Optional } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { filter } from 'rxjs/operator/filter';
 import { groupBy } from 'rxjs/operator/groupBy';
@@ -366,8 +366,9 @@ var EffectsRootModule = (function () {
      * @param {?} sources
      * @param {?} runner
      * @param {?} rootEffects
+     * @param {?} storeModule
      */
-    function EffectsRootModule(sources, runner, rootEffects) {
+    function EffectsRootModule(sources, runner, rootEffects, storeModule) {
         this.sources = sources;
         runner.start();
         rootEffects.forEach(function (effectSourceInstance) { return sources.addEffects(effectSourceInstance); });
@@ -391,13 +392,15 @@ EffectsRootModule.ctorParameters = function () { return [
     { type: EffectSources, },
     { type: EffectsRunner, },
     { type: Array, decorators: [{ type: Inject, args: [ROOT_EFFECTS,] },] },
+    { type: StoreModule, decorators: [{ type: Optional },] },
 ]; };
 var EffectsFeatureModule = (function () {
     /**
      * @param {?} root
      * @param {?} effectSourceGroups
+     * @param {?} storeModule
      */
-    function EffectsFeatureModule(root, effectSourceGroups) {
+    function EffectsFeatureModule(root, effectSourceGroups, storeModule) {
         this.root = root;
         effectSourceGroups.forEach(function (group) { return group.forEach(function (effectSourceInstance) { return root.addEffects(effectSourceInstance); }); });
     }
@@ -412,6 +415,7 @@ EffectsFeatureModule.decorators = [
 EffectsFeatureModule.ctorParameters = function () { return [
     { type: EffectsRootModule, },
     { type: Array, decorators: [{ type: Inject, args: [FEATURE_EFFECTS,] },] },
+    { type: StoreModule, decorators: [{ type: Optional },] },
 ]; };
 var EffectsModule = (function () {
     function EffectsModule() {

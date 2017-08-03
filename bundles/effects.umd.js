@@ -359,8 +359,9 @@ var EffectsRootModule = (function () {
      * @param {?} sources
      * @param {?} runner
      * @param {?} rootEffects
+     * @param {?} storeModule
      */
-    function EffectsRootModule(sources, runner, rootEffects) {
+    function EffectsRootModule(sources, runner, rootEffects, storeModule) {
         this.sources = sources;
         runner.start();
         rootEffects.forEach(function (effectSourceInstance) { return sources.addEffects(effectSourceInstance); });
@@ -384,13 +385,15 @@ EffectsRootModule.ctorParameters = function () { return [
     { type: EffectSources, },
     { type: EffectsRunner, },
     { type: Array, decorators: [{ type: _angular_core.Inject, args: [ROOT_EFFECTS,] },] },
+    { type: _ngrx_store.StoreModule, decorators: [{ type: _angular_core.Optional },] },
 ]; };
 var EffectsFeatureModule = (function () {
     /**
      * @param {?} root
      * @param {?} effectSourceGroups
+     * @param {?} storeModule
      */
-    function EffectsFeatureModule(root, effectSourceGroups) {
+    function EffectsFeatureModule(root, effectSourceGroups, storeModule) {
         this.root = root;
         effectSourceGroups.forEach(function (group) { return group.forEach(function (effectSourceInstance) { return root.addEffects(effectSourceInstance); }); });
     }
@@ -405,6 +408,7 @@ EffectsFeatureModule.decorators = [
 EffectsFeatureModule.ctorParameters = function () { return [
     { type: EffectsRootModule, },
     { type: Array, decorators: [{ type: _angular_core.Inject, args: [FEATURE_EFFECTS,] },] },
+    { type: _ngrx_store.StoreModule, decorators: [{ type: _angular_core.Optional },] },
 ]; };
 var EffectsModule = (function () {
     function EffectsModule() {
