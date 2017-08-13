@@ -462,6 +462,7 @@ function createSourceInstances(...instances) {
 }
 
 /**
+ * @deprecated Since version 4.1. Will be deleted in version 5.0.
  * @param {?} action
  * @return {?}
  */
