@@ -440,7 +440,7 @@ class EffectsModule {
                 },
                 {
                     provide: CONSOLE,
-                    useValue: console,
+                    useFactory: getConsole,
                 },
             ],
         };
@@ -460,6 +460,12 @@ EffectsModule.ctorParameters = () => [];
 function createSourceInstances(...instances) {
     return instances;
 }
+/**
+ * @return {?}
+ */
+function getConsole() {
+    return console;
+}
 
 /**
  * @deprecated Since version 4.1. Will be deleted in version 5.0.
@@ -474,5 +480,5 @@ function toPayload(action) {
  * Generated bundle index. Do not edit.
  */
 
-export { Effect, mergeEffects, Actions, EffectsModule, EffectSources, toPayload, EffectsFeatureModule as ɵb, createSourceInstances as ɵa, EffectsRootModule as ɵf, EffectsRunner as ɵh, ErrorReporter as ɵg, CONSOLE as ɵe, FEATURE_EFFECTS as ɵd, ROOT_EFFECTS as ɵc };
+export { Effect, mergeEffects, Actions, EffectsModule, EffectSources, toPayload, EffectsFeatureModule as ɵc, createSourceInstances as ɵa, getConsole as ɵb, EffectsRootModule as ɵg, EffectsRunner as ɵi, ErrorReporter as ɵh, CONSOLE as ɵf, FEATURE_EFFECTS as ɵe, ROOT_EFFECTS as ɵd };
 //# sourceMappingURL=effects.js.map

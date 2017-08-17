@@ -451,7 +451,7 @@ var EffectsModule = (function () {
                 },
                 {
                     provide: CONSOLE,
-                    useValue: console,
+                    useFactory: getConsole,
                 },
             ],
         };
@@ -477,6 +477,12 @@ function createSourceInstances() {
     return instances;
 }
 /**
+ * @return {?}
+ */
+function getConsole() {
+    return console;
+}
+/**
  * @deprecated Since version 4.1. Will be deleted in version 5.0.
  * @param {?} action
  * @return {?}
@@ -491,14 +497,15 @@ exports.Actions = Actions;
 exports.EffectsModule = EffectsModule;
 exports.EffectSources = EffectSources;
 exports.toPayload = toPayload;
-exports.ɵb = EffectsFeatureModule;
+exports.ɵc = EffectsFeatureModule;
 exports.ɵa = createSourceInstances;
-exports.ɵf = EffectsRootModule;
-exports.ɵh = EffectsRunner;
-exports.ɵg = ErrorReporter;
-exports.ɵe = CONSOLE;
-exports.ɵd = FEATURE_EFFECTS;
-exports.ɵc = ROOT_EFFECTS;
+exports.ɵb = getConsole;
+exports.ɵg = EffectsRootModule;
+exports.ɵi = EffectsRunner;
+exports.ɵh = ErrorReporter;
+exports.ɵf = CONSOLE;
+exports.ɵe = FEATURE_EFFECTS;
+exports.ɵd = ROOT_EFFECTS;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
