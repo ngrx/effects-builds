@@ -304,10 +304,10 @@ var EffectSources = (function (_super) {
      */
     EffectSources.prototype.toActions = function () {
         var _this = this;
-        return mergeMap.call(groupBy.call(this, getSourceForInstance), function (source$) { return dematerialize.call(map.call(exhaustMap.call(source$, resolveEffectSource), function (output) {
+        return mergeMap.call(groupBy.call(this, getSourceForInstance), function (source$) { return dematerialize.call(filter.call(map.call(exhaustMap.call(source$, resolveEffectSource), function (output) {
             verifyOutput(output, _this.errorReporter);
             return output.notification;
-        })); });
+        }), function (notification) { return notification.kind === 'N'; })); });
     };
     return EffectSources;
 }(Subject));

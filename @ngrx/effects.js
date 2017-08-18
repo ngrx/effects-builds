@@ -288,10 +288,10 @@ class EffectSources extends Subject {
      * @return {?}
      */
     toActions() {
-        return mergeMap.call(groupBy.call(this, getSourceForInstance), (source$) => dematerialize.call(map.call(exhaustMap.call(source$, resolveEffectSource), (output) => {
+        return mergeMap.call(groupBy.call(this, getSourceForInstance), (source$) => dematerialize.call(filter.call(map.call(exhaustMap.call(source$, resolveEffectSource), (output) => {
             verifyOutput(output, this.errorReporter);
             return output.notification;
-        })));
+        }), (notification) => notification.kind === 'N')));
     }
 }
 EffectSources.decorators = [

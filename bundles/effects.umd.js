@@ -297,10 +297,10 @@ var EffectSources = (function (_super) {
      */
     EffectSources.prototype.toActions = function () {
         var _this = this;
-        return rxjs_operator_mergeMap.mergeMap.call(rxjs_operator_groupBy.groupBy.call(this, getSourceForInstance), function (source$) { return rxjs_operator_dematerialize.dematerialize.call(rxjs_operator_map.map.call(rxjs_operator_exhaustMap.exhaustMap.call(source$, resolveEffectSource), function (output) {
+        return rxjs_operator_mergeMap.mergeMap.call(rxjs_operator_groupBy.groupBy.call(this, getSourceForInstance), function (source$) { return rxjs_operator_dematerialize.dematerialize.call(rxjs_operator_filter.filter.call(rxjs_operator_map.map.call(rxjs_operator_exhaustMap.exhaustMap.call(source$, resolveEffectSource), function (output) {
             verifyOutput(output, _this.errorReporter);
             return output.notification;
-        })); });
+        }), function (notification) { return notification.kind === 'N'; })); });
     };
     return EffectSources;
 }(rxjs_Subject.Subject));
