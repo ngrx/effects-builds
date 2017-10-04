@@ -14,51 +14,13 @@ var __extends = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var METADATA_KEY = '@ngrx/effects';
-var r = Reflect;
-/**
- * @param {?} sourceType
- * @return {?}
- */
-function hasStaticMetadata(sourceType) {
-    return !!((sourceType)).propDecorators;
-}
-/**
- * @param {?} sourceType
- * @return {?}
- */
-function getStaticMetadata(sourceType) {
-    var /** @type {?} */ propDecorators = sourceType.propDecorators;
-    return Object.keys(propDecorators).reduce(function (all, key) { return all.concat(getStaticMetadataEntry(propDecorators[key], key)); }, []);
-}
-/**
- * @param {?} metadataEntry
- * @param {?} propertyName
- * @return {?}
- */
-function getStaticMetadataEntry(metadataEntry, propertyName) {
-    return metadataEntry
-        .filter(function (entry) { return entry.type === Effect; })
-        .map(function (entry) {
-        var /** @type {?} */ dispatch = true;
-        if (entry.args && entry.args.length) {
-            dispatch = !!entry.args[0].dispatch;
-        }
-        return { propertyName: propertyName, dispatch: dispatch };
-    });
-}
+var METADATA_KEY = '__@ngrx/effects__';
 /**
  * @param {?} sourceProto
  * @return {?}
  */
 function getEffectMetadataEntries(sourceProto) {
-    if (hasStaticMetadata(sourceProto.constructor)) {
-        return getStaticMetadata(sourceProto.constructor);
-    }
-    if (r.hasOwnMetadata(METADATA_KEY, sourceProto)) {
-        return r.getOwnMetadata(METADATA_KEY, sourceProto);
-    }
-    return [];
+    return sourceProto.constructor[METADATA_KEY] || [];
 }
 /**
  * @param {?} sourceProto
@@ -66,19 +28,21 @@ function getEffectMetadataEntries(sourceProto) {
  * @return {?}
  */
 function setEffectMetadataEntries(sourceProto, entries) {
-    r.defineMetadata(METADATA_KEY, entries, sourceProto);
+    var /** @type {?} */ constructor = sourceProto.constructor;
+    var /** @type {?} */ meta = constructor.hasOwnProperty(METADATA_KEY)
+        ? ((constructor))[METADATA_KEY]
+        : Object.defineProperty(constructor, METADATA_KEY, { value: [] })[METADATA_KEY];
+    Array.prototype.push.apply(meta, entries);
 }
 /**
- * \@Annotation
  * @param {?=} __0
  * @return {?}
  */
 function Effect(_a) {
     var dispatch = (_a === void 0 ? { dispatch: true } : _a).dispatch;
     return function (target, propertyName) {
-        var /** @type {?} */ effects = getEffectMetadataEntries(target);
         var /** @type {?} */ metadata = { propertyName: propertyName, dispatch: dispatch };
-        setEffectMetadataEntries(target, effects.concat([metadata]));
+        setEffectMetadataEntries(target, [metadata]);
     };
 }
 /**
