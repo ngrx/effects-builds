@@ -1,16 +1,16 @@
 import { ScannedActionsSubject, Store, StoreModule, compose } from '@ngrx/store';
-import { merge } from 'rxjs/observable/merge';
-import { ignoreElements } from 'rxjs/operator/ignoreElements';
-import { materialize } from 'rxjs/operator/materialize';
-import { map } from 'rxjs/operator/map';
+import { merge as merge$1 } from 'rxjs/observable/merge';
+import { ignoreElements as ignoreElements$1 } from 'rxjs/operator/ignoreElements';
+import { materialize as materialize$1 } from 'rxjs/operator/materialize';
+import { map as map$1 } from 'rxjs/operator/map';
 import { Inject, Injectable, InjectionToken, NgModule, Optional } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { filter } from 'rxjs/operator/filter';
-import { groupBy } from 'rxjs/operator/groupBy';
-import { mergeMap } from 'rxjs/operator/mergeMap';
-import { exhaustMap } from 'rxjs/operator/exhaustMap';
-import { dematerialize } from 'rxjs/operator/dematerialize';
-import { Subject } from 'rxjs/Subject';
+import { Observable as Observable$1 } from 'rxjs/Observable';
+import { filter as filter$1 } from 'rxjs/operator/filter';
+import { groupBy as groupBy$1 } from 'rxjs/operator/groupBy';
+import { mergeMap as mergeMap$1 } from 'rxjs/operator/mergeMap';
+import { exhaustMap as exhaustMap$1 } from 'rxjs/operator/exhaustMap';
+import { dematerialize as dematerialize$1 } from 'rxjs/operator/dematerialize';
+import { Subject as Subject$1 } from 'rxjs/Subject';
 
 const METADATA_KEY = '__@ngrx/effects__';
 /**
@@ -72,10 +72,10 @@ function mergeEffects(sourceInstance) {
             ? sourceInstance[propertyName]()
             : sourceInstance[propertyName];
         if (dispatch === false) {
-            return ignoreElements.call(observable);
+            return ignoreElements$1.call(observable);
         }
-        const /** @type {?} */ materialized$ = materialize.call(observable);
-        return map.call(materialized$, (notification) => ({
+        const /** @type {?} */ materialized$ = materialize$1.call(observable);
+        return map$1.call(materialized$, (notification) => ({
             effect: sourceInstance[propertyName],
             notification,
             propertyName,
@@ -83,7 +83,7 @@ function mergeEffects(sourceInstance) {
             sourceInstance,
         }));
     });
-    return merge(...observables);
+    return merge$1(...observables);
 }
 /**
  * @param {?} sourceInstance
@@ -97,7 +97,7 @@ function resolveEffectSource(sourceInstance) {
     return mergedEffects$;
 }
 
-class Actions extends Observable {
+class Actions extends Observable$1 {
     /**
      * @param {?=} source
      */
@@ -124,7 +124,7 @@ class Actions extends Observable {
      * @return {?}
      */
     ofType(...allowedTypes) {
-        return filter.call(this, (action) => allowedTypes.some(type => type === action.type));
+        return filter$1.call(this, (action) => allowedTypes.some(type => type === action.type));
     }
 }
 Actions.decorators = [
@@ -134,7 +134,7 @@ Actions.decorators = [
  * @nocollapse
  */
 Actions.ctorParameters = () => [
-    { type: Observable, decorators: [{ type: Inject, args: [ScannedActionsSubject,] },] },
+    { type: Observable$1, decorators: [{ type: Inject, args: [ScannedActionsSubject,] },] },
 ];
 
 /**
@@ -233,7 +233,7 @@ ErrorReporter.ctorParameters = () => [
     { type: undefined, decorators: [{ type: Inject, args: [CONSOLE,] },] },
 ];
 
-class EffectSources extends Subject {
+class EffectSources extends Subject$1 {
     /**
      * @param {?} errorReporter
      */
@@ -252,7 +252,7 @@ class EffectSources extends Subject {
      * @return {?}
      */
     toActions() {
-        return mergeMap.call(groupBy.call(this, getSourceForInstance), (source$) => dematerialize.call(filter.call(map.call(exhaustMap.call(source$, resolveEffectSource), (output) => {
+        return mergeMap$1.call(groupBy$1.call(this, getSourceForInstance), (source$) => dematerialize$1.call(filter$1.call(map$1.call(exhaustMap$1.call(source$, resolveEffectSource), (output) => {
             verifyOutput(output, this.errorReporter);
             return output.notification;
         }), (notification) => notification.kind === 'N')));
@@ -273,9 +273,9 @@ class EffectsRunner {
      * @param {?} effectSources
      * @param {?} store
      */
-    constructor(effectSources, store) {
+    constructor(effectSources, store$$1) {
         this.effectSources = effectSources;
-        this.store = store;
+        this.store = store$$1;
         this.effectsSubscription = null;
     }
     /**

@@ -9,18 +9,18 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 import { ScannedActionsSubject, Store, StoreModule, compose } from '@ngrx/store';
-import { merge } from 'rxjs/observable/merge';
-import { ignoreElements } from 'rxjs/operator/ignoreElements';
-import { materialize } from 'rxjs/operator/materialize';
-import { map } from 'rxjs/operator/map';
+import { merge as merge$1 } from 'rxjs/observable/merge';
+import { ignoreElements as ignoreElements$1 } from 'rxjs/operator/ignoreElements';
+import { materialize as materialize$1 } from 'rxjs/operator/materialize';
+import { map as map$1 } from 'rxjs/operator/map';
 import { Inject, Injectable, InjectionToken, NgModule, Optional } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { filter } from 'rxjs/operator/filter';
-import { groupBy } from 'rxjs/operator/groupBy';
-import { mergeMap } from 'rxjs/operator/mergeMap';
-import { exhaustMap } from 'rxjs/operator/exhaustMap';
-import { dematerialize } from 'rxjs/operator/dematerialize';
-import { Subject } from 'rxjs/Subject';
+import { Observable as Observable$1 } from 'rxjs/Observable';
+import { filter as filter$1 } from 'rxjs/operator/filter';
+import { groupBy as groupBy$1 } from 'rxjs/operator/groupBy';
+import { mergeMap as mergeMap$1 } from 'rxjs/operator/mergeMap';
+import { exhaustMap as exhaustMap$1 } from 'rxjs/operator/exhaustMap';
+import { dematerialize as dematerialize$1 } from 'rxjs/operator/dematerialize';
+import { Subject as Subject$1 } from 'rxjs/Subject';
 var METADATA_KEY = '__@ngrx/effects__';
 /**
  * @param {?} sourceProto
@@ -81,10 +81,10 @@ function mergeEffects(sourceInstance) {
             ? sourceInstance[propertyName]()
             : sourceInstance[propertyName];
         if (dispatch === false) {
-            return ignoreElements.call(observable);
+            return ignoreElements$1.call(observable);
         }
-        var /** @type {?} */ materialized$ = materialize.call(observable);
-        return map.call(materialized$, function (notification) { return ({
+        var /** @type {?} */ materialized$ = materialize$1.call(observable);
+        return map$1.call(materialized$, function (notification) { return ({
             effect: sourceInstance[propertyName],
             notification: notification,
             propertyName: propertyName,
@@ -92,7 +92,7 @@ function mergeEffects(sourceInstance) {
             sourceInstance: sourceInstance,
         }); });
     });
-    return merge.apply(void 0, observables);
+    return merge$1.apply(void 0, observables);
 }
 /**
  * @param {?} sourceInstance
@@ -138,10 +138,10 @@ var Actions = (function (_super) {
         for (var _i = 0; _i < arguments.length; _i++) {
             allowedTypes[_i] = arguments[_i];
         }
-        return filter.call(this, function (action) { return allowedTypes.some(function (type) { return type === action.type; }); });
+        return filter$1.call(this, function (action) { return allowedTypes.some(function (type) { return type === action.type; }); });
     };
     return Actions;
-}(Observable));
+}(Observable$1));
 Actions.decorators = [
     { type: Injectable },
 ];
@@ -149,7 +149,7 @@ Actions.decorators = [
  * @nocollapse
  */
 Actions.ctorParameters = function () { return [
-    { type: Observable, decorators: [{ type: Inject, args: [ScannedActionsSubject,] },] },
+    { type: Observable$1, decorators: [{ type: Inject, args: [ScannedActionsSubject,] },] },
 ]; };
 /**
  * @param {?} output
@@ -268,13 +268,13 @@ var EffectSources = (function (_super) {
      */
     EffectSources.prototype.toActions = function () {
         var _this = this;
-        return mergeMap.call(groupBy.call(this, getSourceForInstance), function (source$) { return dematerialize.call(filter.call(map.call(exhaustMap.call(source$, resolveEffectSource), function (output) {
+        return mergeMap$1.call(groupBy$1.call(this, getSourceForInstance), function (source$) { return dematerialize$1.call(filter$1.call(map$1.call(exhaustMap$1.call(source$, resolveEffectSource), function (output) {
             verifyOutput(output, _this.errorReporter);
             return output.notification;
         }), function (notification) { return notification.kind === 'N'; })); });
     };
     return EffectSources;
-}(Subject));
+}(Subject$1));
 EffectSources.decorators = [
     { type: Injectable },
 ];
@@ -289,9 +289,9 @@ var EffectsRunner = (function () {
      * @param {?} effectSources
      * @param {?} store
      */
-    function EffectsRunner(effectSources, store) {
+    function EffectsRunner(effectSources, store$$1) {
         this.effectSources = effectSources;
-        this.store = store;
+        this.store = store$$1;
         this.effectsSubscription = null;
     }
     /**

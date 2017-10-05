@@ -1,8 +1,8 @@
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@ngrx/store'), require('rxjs/observable/merge'), require('rxjs/operator/ignoreElements'), require('rxjs/operator/materialize'), require('rxjs/operator/map'), require('@angular/core'), require('rxjs/Observable'), require('rxjs/operator/filter'), require('rxjs/operator/groupBy'), require('rxjs/operator/mergeMap'), require('rxjs/operator/exhaustMap'), require('rxjs/operator/dematerialize'), require('rxjs/Subject')) :
 	typeof define === 'function' && define.amd ? define(['exports', '@ngrx/store', 'rxjs/observable/merge', 'rxjs/operator/ignoreElements', 'rxjs/operator/materialize', 'rxjs/operator/map', '@angular/core', 'rxjs/Observable', 'rxjs/operator/filter', 'rxjs/operator/groupBy', 'rxjs/operator/mergeMap', 'rxjs/operator/exhaustMap', 'rxjs/operator/dematerialize', 'rxjs/Subject'], factory) :
-	(factory((global.ngrx = global.ngrx || {}, global.ngrx.effects = global.ngrx.effects || {}),global.ngrx.store,global.Rx.Observable,global.Rx.Observable.prototype,global.rxjs_operator_materialize,global.rxjs_operator_map,global.ng.core,global.Rx,global.Rx.Observable.prototype,global.rxjs_operator_groupBy,global.rxjs_operator_mergeMap,global.rxjs_operator_exhaustMap,global.rxjs_operator_dematerialize,global.rxjs_Subject));
-}(this, (function (exports,_ngrx_store,rxjs_observable_merge,rxjs_operator_ignoreElements,rxjs_operator_materialize,rxjs_operator_map,_angular_core,rxjs_Observable,rxjs_operator_filter,rxjs_operator_groupBy,rxjs_operator_mergeMap,rxjs_operator_exhaustMap,rxjs_operator_dematerialize,rxjs_Subject) { 'use strict';
+	(factory((global.ngrx = global.ngrx || {}, global.ngrx.effects = {}),global.ngrx.store,global.Rx.Observable,global.Rx.Observable.prototype,global.materialize,global.map,global.ng.core,global.Rx,global.Rx.Observable.prototype,global.groupBy,global.mergeMap,global.exhaustMap,global.dematerialize,global.Subject));
+}(this, (function (exports,store,merge,ignoreElements,materialize,map,core,Observable,filter,groupBy,mergeMap,exhaustMap,dematerialize,Subject) { 'use strict';
 
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -52,7 +52,7 @@ function Effect(_a) {
 function getSourceForInstance(instance) {
     return Object.getPrototypeOf(instance);
 }
-var getSourceMetadata = _ngrx_store.compose(getEffectMetadataEntries, getSourceForInstance);
+var getSourceMetadata = store.compose(getEffectMetadataEntries, getSourceForInstance);
 var onRunEffectsKey = 'ngrxOnRunEffects';
 /**
  * @param {?} sourceInstance
@@ -74,10 +74,10 @@ function mergeEffects(sourceInstance) {
             ? sourceInstance[propertyName]()
             : sourceInstance[propertyName];
         if (dispatch === false) {
-            return rxjs_operator_ignoreElements.ignoreElements.call(observable);
+            return ignoreElements.ignoreElements.call(observable);
         }
-        var /** @type {?} */ materialized$ = rxjs_operator_materialize.materialize.call(observable);
-        return rxjs_operator_map.map.call(materialized$, function (notification) { return ({
+        var /** @type {?} */ materialized$ = materialize.materialize.call(observable);
+        return map.map.call(materialized$, function (notification) { return ({
             effect: sourceInstance[propertyName],
             notification: notification,
             propertyName: propertyName,
@@ -85,7 +85,7 @@ function mergeEffects(sourceInstance) {
             sourceInstance: sourceInstance,
         }); });
     });
-    return rxjs_observable_merge.merge.apply(void 0, observables);
+    return merge.merge.apply(void 0, observables);
 }
 /**
  * @param {?} sourceInstance
@@ -131,18 +131,18 @@ var Actions = (function (_super) {
         for (var _i = 0; _i < arguments.length; _i++) {
             allowedTypes[_i] = arguments[_i];
         }
-        return rxjs_operator_filter.filter.call(this, function (action) { return allowedTypes.some(function (type) { return type === action.type; }); });
+        return filter.filter.call(this, function (action) { return allowedTypes.some(function (type) { return type === action.type; }); });
     };
     return Actions;
-}(rxjs_Observable.Observable));
+}(Observable.Observable));
 Actions.decorators = [
-    { type: _angular_core.Injectable },
+    { type: core.Injectable },
 ];
 /**
  * @nocollapse
  */
 Actions.ctorParameters = function () { return [
-    { type: rxjs_Observable.Observable, decorators: [{ type: _angular_core.Inject, args: [_ngrx_store.ScannedActionsSubject,] },] },
+    { type: Observable.Observable, decorators: [{ type: core.Inject, args: [store.ScannedActionsSubject,] },] },
 ]; };
 /**
  * @param {?} output
@@ -205,10 +205,10 @@ function getEffectName(_a) {
     var /** @type {?} */ isMethod = typeof sourceInstance[propertyName] === 'function';
     return "\"" + sourceName + "." + propertyName + (isMethod ? '()' : '') + "\"";
 }
-var IMMEDIATE_EFFECTS = new _angular_core.InjectionToken('ngrx/effects: Immediate Effects');
-var ROOT_EFFECTS = new _angular_core.InjectionToken('ngrx/effects: Root Effects');
-var FEATURE_EFFECTS = new _angular_core.InjectionToken('ngrx/effects: Feature Effects');
-var CONSOLE = new _angular_core.InjectionToken('Browser Console');
+var IMMEDIATE_EFFECTS = new core.InjectionToken('ngrx/effects: Immediate Effects');
+var ROOT_EFFECTS = new core.InjectionToken('ngrx/effects: Root Effects');
+var FEATURE_EFFECTS = new core.InjectionToken('ngrx/effects: Feature Effects');
+var CONSOLE = new core.InjectionToken('Browser Console');
 var ErrorReporter = (function () {
     /**
      * @param {?} console
@@ -231,13 +231,13 @@ var ErrorReporter = (function () {
     return ErrorReporter;
 }());
 ErrorReporter.decorators = [
-    { type: _angular_core.Injectable },
+    { type: core.Injectable },
 ];
 /**
  * @nocollapse
  */
 ErrorReporter.ctorParameters = function () { return [
-    { type: undefined, decorators: [{ type: _angular_core.Inject, args: [CONSOLE,] },] },
+    { type: undefined, decorators: [{ type: core.Inject, args: [CONSOLE,] },] },
 ]; };
 var EffectSources = (function (_super) {
     __extends(EffectSources, _super);
@@ -261,15 +261,15 @@ var EffectSources = (function (_super) {
      */
     EffectSources.prototype.toActions = function () {
         var _this = this;
-        return rxjs_operator_mergeMap.mergeMap.call(rxjs_operator_groupBy.groupBy.call(this, getSourceForInstance), function (source$) { return rxjs_operator_dematerialize.dematerialize.call(rxjs_operator_filter.filter.call(rxjs_operator_map.map.call(rxjs_operator_exhaustMap.exhaustMap.call(source$, resolveEffectSource), function (output) {
+        return mergeMap.mergeMap.call(groupBy.groupBy.call(this, getSourceForInstance), function (source$) { return dematerialize.dematerialize.call(filter.filter.call(map.map.call(exhaustMap.exhaustMap.call(source$, resolveEffectSource), function (output) {
             verifyOutput(output, _this.errorReporter);
             return output.notification;
         }), function (notification) { return notification.kind === 'N'; })); });
     };
     return EffectSources;
-}(rxjs_Subject.Subject));
+}(Subject.Subject));
 EffectSources.decorators = [
-    { type: _angular_core.Injectable },
+    { type: core.Injectable },
 ];
 /**
  * @nocollapse
@@ -282,9 +282,9 @@ var EffectsRunner = (function () {
      * @param {?} effectSources
      * @param {?} store
      */
-    function EffectsRunner(effectSources, store) {
+    function EffectsRunner(effectSources, store$$1) {
         this.effectSources = effectSources;
-        this.store = store;
+        this.store = store$$1;
         this.effectsSubscription = null;
     }
     /**
@@ -309,14 +309,14 @@ var EffectsRunner = (function () {
     return EffectsRunner;
 }());
 EffectsRunner.decorators = [
-    { type: _angular_core.Injectable },
+    { type: core.Injectable },
 ];
 /**
  * @nocollapse
  */
 EffectsRunner.ctorParameters = function () { return [
     { type: EffectSources, },
-    { type: _ngrx_store.Store, },
+    { type: store.Store, },
 ]; };
 var EffectsRootModule = (function () {
     /**
@@ -340,7 +340,7 @@ var EffectsRootModule = (function () {
     return EffectsRootModule;
 }());
 EffectsRootModule.decorators = [
-    { type: _angular_core.NgModule, args: [{},] },
+    { type: core.NgModule, args: [{},] },
 ];
 /**
  * @nocollapse
@@ -348,8 +348,8 @@ EffectsRootModule.decorators = [
 EffectsRootModule.ctorParameters = function () { return [
     { type: EffectSources, },
     { type: EffectsRunner, },
-    { type: Array, decorators: [{ type: _angular_core.Inject, args: [ROOT_EFFECTS,] },] },
-    { type: _ngrx_store.StoreModule, decorators: [{ type: _angular_core.Optional },] },
+    { type: Array, decorators: [{ type: core.Inject, args: [ROOT_EFFECTS,] },] },
+    { type: store.StoreModule, decorators: [{ type: core.Optional },] },
 ]; };
 var EffectsFeatureModule = (function () {
     /**
@@ -364,15 +364,15 @@ var EffectsFeatureModule = (function () {
     return EffectsFeatureModule;
 }());
 EffectsFeatureModule.decorators = [
-    { type: _angular_core.NgModule, args: [{},] },
+    { type: core.NgModule, args: [{},] },
 ];
 /**
  * @nocollapse
  */
 EffectsFeatureModule.ctorParameters = function () { return [
     { type: EffectsRootModule, },
-    { type: Array, decorators: [{ type: _angular_core.Inject, args: [FEATURE_EFFECTS,] },] },
-    { type: _ngrx_store.StoreModule, decorators: [{ type: _angular_core.Optional },] },
+    { type: Array, decorators: [{ type: core.Inject, args: [FEATURE_EFFECTS,] },] },
+    { type: store.StoreModule, decorators: [{ type: core.Optional },] },
 ]; };
 var EffectsModule = (function () {
     function EffectsModule() {
@@ -423,7 +423,7 @@ var EffectsModule = (function () {
     return EffectsModule;
 }());
 EffectsModule.decorators = [
-    { type: _angular_core.NgModule, args: [{},] },
+    { type: core.NgModule, args: [{},] },
 ];
 /**
  * @nocollapse
