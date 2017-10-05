@@ -2,6 +2,9 @@ export interface EffectMetadata {
     propertyName: string;
     dispatch: boolean;
 }
+/**
+ * @ExportDecoratedItems
+ */
 export declare function Effect({dispatch}?: {
     dispatch: boolean;
 }): PropertyDecorator;
