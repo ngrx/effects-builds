@@ -319,17 +319,20 @@ EffectsRunner.ctorParameters = function () { return [
     { type: EffectSources, },
     { type: store.Store, },
 ]; };
+var ROOT_EFFECTS_INIT = '@ngrx/effects/init';
 var EffectsRootModule = (function () {
     /**
      * @param {?} sources
      * @param {?} runner
+     * @param {?} store
      * @param {?} rootEffects
      * @param {?} storeModule
      */
-    function EffectsRootModule(sources, runner, rootEffects, storeModule) {
+    function EffectsRootModule(sources, runner, store$$1, rootEffects, storeModule) {
         this.sources = sources;
         runner.start();
         rootEffects.forEach(function (effectSourceInstance) { return sources.addEffects(effectSourceInstance); });
+        store$$1.dispatch({ type: ROOT_EFFECTS_INIT });
     }
     /**
      * @param {?} effectSourceInstance
@@ -349,6 +352,7 @@ EffectsRootModule.decorators = [
 EffectsRootModule.ctorParameters = function () { return [
     { type: EffectSources, },
     { type: EffectsRunner, },
+    { type: store.Store, },
     { type: Array, decorators: [{ type: core.Inject, args: [ROOT_EFFECTS,] },] },
     { type: store.StoreModule, decorators: [{ type: core.Optional },] },
 ]; };
@@ -462,15 +466,16 @@ exports.Actions = Actions;
 exports.EffectsModule = EffectsModule;
 exports.EffectSources = EffectSources;
 exports.toPayload = toPayload;
-exports.ɵc = EffectsFeatureModule;
+exports.ROOT_EFFECTS_INIT = ROOT_EFFECTS_INIT;
+exports.ɵd = EffectsFeatureModule;
 exports.ɵa = createSourceInstances;
 exports.ɵb = getConsole;
-exports.ɵg = EffectsRootModule;
+exports.ɵc = EffectsRootModule;
 exports.ɵi = EffectsRunner;
 exports.ɵh = ErrorReporter;
-exports.ɵf = CONSOLE;
-exports.ɵe = FEATURE_EFFECTS;
-exports.ɵd = ROOT_EFFECTS;
+exports.ɵg = CONSOLE;
+exports.ɵf = FEATURE_EFFECTS;
+exports.ɵe = ROOT_EFFECTS;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 

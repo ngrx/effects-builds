@@ -310,17 +310,20 @@ EffectsRunner.ctorParameters = () => [
     { type: Store, },
 ];
 
+const ROOT_EFFECTS_INIT = '@ngrx/effects/init';
 class EffectsRootModule {
     /**
      * @param {?} sources
      * @param {?} runner
+     * @param {?} store
      * @param {?} rootEffects
      * @param {?} storeModule
      */
-    constructor(sources, runner, rootEffects, storeModule) {
+    constructor(sources, runner, store$$1, rootEffects, storeModule) {
         this.sources = sources;
         runner.start();
         rootEffects.forEach(effectSourceInstance => sources.addEffects(effectSourceInstance));
+        store$$1.dispatch({ type: ROOT_EFFECTS_INIT });
     }
     /**
      * @param {?} effectSourceInstance
@@ -339,6 +342,7 @@ EffectsRootModule.decorators = [
 EffectsRootModule.ctorParameters = () => [
     { type: EffectSources, },
     { type: EffectsRunner, },
+    { type: Store, },
     { type: Array, decorators: [{ type: Inject, args: [ROOT_EFFECTS,] },] },
     { type: StoreModule, decorators: [{ type: Optional },] },
 ];
@@ -445,5 +449,5 @@ function toPayload(action) {
  * Generated bundle index. Do not edit.
  */
 
-export { Effect, mergeEffects, Actions, EffectsModule, EffectSources, toPayload, EffectsFeatureModule as ɵc, createSourceInstances as ɵa, getConsole as ɵb, EffectsRootModule as ɵg, EffectsRunner as ɵi, ErrorReporter as ɵh, CONSOLE as ɵf, FEATURE_EFFECTS as ɵe, ROOT_EFFECTS as ɵd };
+export { Effect, mergeEffects, Actions, EffectsModule, EffectSources, toPayload, ROOT_EFFECTS_INIT, EffectsFeatureModule as ɵd, createSourceInstances as ɵa, getConsole as ɵb, EffectsRootModule as ɵc, EffectsRunner as ɵi, ErrorReporter as ɵh, CONSOLE as ɵg, FEATURE_EFFECTS as ɵf, ROOT_EFFECTS as ɵe };
 //# sourceMappingURL=effects.js.map
