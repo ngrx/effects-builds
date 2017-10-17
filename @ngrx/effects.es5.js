@@ -42,7 +42,6 @@ function setEffectMetadataEntries(sourceProto, entries) {
     Array.prototype.push.apply(meta, entries);
 }
 /**
- * \@ExportDecoratedItems
  * @param {?=} __0
  * @return {?}
  */
