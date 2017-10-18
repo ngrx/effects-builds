@@ -50,6 +50,18 @@ function getSourceForInstance(instance) {
     return Object.getPrototypeOf(instance);
 }
 const getSourceMetadata = compose(getEffectMetadataEntries, getSourceForInstance);
+/**
+ * @template T
+ * @param {?} instance
+ * @return {?}
+ */
+function getEffectsMetadata(instance) {
+    const /** @type {?} */ metadata = {};
+    getSourceMetadata(instance).forEach(({ propertyName, dispatch }) => {
+        metadata[propertyName] = { dispatch };
+    });
+    return metadata;
+}
 
 const onRunEffectsKey = 'ngrxOnRunEffects';
 /**
@@ -448,5 +460,5 @@ function toPayload(action) {
  * Generated bundle index. Do not edit.
  */
 
-export { Effect, mergeEffects, Actions, EffectsModule, EffectSources, toPayload, ROOT_EFFECTS_INIT, EffectsFeatureModule as ɵd, createSourceInstances as ɵa, getConsole as ɵb, EffectsRootModule as ɵc, EffectsRunner as ɵi, ErrorReporter as ɵh, CONSOLE as ɵg, FEATURE_EFFECTS as ɵf, ROOT_EFFECTS as ɵe };
+export { Effect, getEffectsMetadata, mergeEffects, Actions, EffectsModule, EffectSources, toPayload, ROOT_EFFECTS_INIT, EffectsFeatureModule as ɵd, createSourceInstances as ɵa, getConsole as ɵb, EffectsRootModule as ɵc, EffectsRunner as ɵi, ErrorReporter as ɵh, CONSOLE as ɵg, FEATURE_EFFECTS as ɵf, ROOT_EFFECTS as ɵe };
 //# sourceMappingURL=effects.js.map

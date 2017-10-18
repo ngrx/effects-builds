@@ -38,4 +38,16 @@ export function getSourceForInstance(instance) {
     return Object.getPrototypeOf(instance);
 }
 export const /** @type {?} */ getSourceMetadata = compose(getEffectMetadataEntries, getSourceForInstance);
+/**
+ * @template T
+ * @param {?} instance
+ * @return {?}
+ */
+export function getEffectsMetadata(instance) {
+    const /** @type {?} */ metadata = {};
+    getSourceMetadata(instance).forEach(({ propertyName, dispatch }) => {
+        metadata[propertyName] = { dispatch };
+    });
+    return metadata;
+}
 //# sourceMappingURL=effects_metadata.js.map

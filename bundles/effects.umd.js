@@ -53,6 +53,19 @@ function getSourceForInstance(instance) {
     return Object.getPrototypeOf(instance);
 }
 var getSourceMetadata = store.compose(getEffectMetadataEntries, getSourceForInstance);
+/**
+ * @template T
+ * @param {?} instance
+ * @return {?}
+ */
+function getEffectsMetadata(instance) {
+    var /** @type {?} */ metadata = {};
+    getSourceMetadata(instance).forEach(function (_a) {
+        var propertyName = _a.propertyName, dispatch = _a.dispatch;
+        metadata[propertyName] = { dispatch: dispatch };
+    });
+    return metadata;
+}
 var onRunEffectsKey = 'ngrxOnRunEffects';
 /**
  * @param {?} sourceInstance
@@ -460,6 +473,7 @@ function toPayload(action) {
 }
 
 exports.Effect = Effect;
+exports.getEffectsMetadata = getEffectsMetadata;
 exports.mergeEffects = mergeEffects;
 exports.Actions = Actions;
 exports.EffectsModule = EffectsModule;
