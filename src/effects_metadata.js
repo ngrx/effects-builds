@@ -1,6 +1,20 @@
-import { compose } from '@ngrx/store';
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes} checked by tsc
+ */
+import { compose } from "@ngrx/store";
 const /** @type {?} */ METADATA_KEY = '__@ngrx/effects__';
 const /** @type {?} */ r = Reflect;
+/**
+ * @record
+ */
+export function EffectMetadata() { }
+function EffectMetadata_tsickle_Closure_declarations() {
+    /** @type {?} */
+    EffectMetadata.prototype.propertyName;
+    /** @type {?} */
+    EffectMetadata.prototype.dispatch;
+}
 /**
  * @param {?} sourceProto
  * @return {?}
@@ -16,7 +30,7 @@ function getEffectMetadataEntries(sourceProto) {
 function setEffectMetadataEntries(sourceProto, entries) {
     const /** @type {?} */ constructor = sourceProto.constructor;
     const /** @type {?} */ meta = constructor.hasOwnProperty(METADATA_KEY)
-        ? ((constructor))[METADATA_KEY]
+        ? (/** @type {?} */ (constructor))[METADATA_KEY]
         : Object.defineProperty(constructor, METADATA_KEY, { value: [] })[METADATA_KEY];
     Array.prototype.push.apply(meta, entries);
 }

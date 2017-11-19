@@ -1,11 +1,15 @@
-import { NgModule } from '@angular/core';
-import { EffectSources } from './effect_sources';
-import { Actions } from './actions';
-import { ROOT_EFFECTS, FEATURE_EFFECTS, CONSOLE } from './tokens';
-import { EffectsFeatureModule } from './effects_feature_module';
-import { EffectsRootModule } from './effects_root_module';
-import { EffectsRunner } from './effects_runner';
-import { ErrorReporter } from './error_reporter';
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes} checked by tsc
+ */
+import { NgModule } from "@angular/core";
+import { EffectSources } from "./effect_sources";
+import { Actions } from "./actions";
+import { ROOT_EFFECTS, FEATURE_EFFECTS, CONSOLE } from "./tokens";
+import { EffectsFeatureModule } from "./effects_feature_module";
+import { EffectsRootModule } from "./effects_root_module";
+import { EffectsRunner } from "./effects_runner";
+import { ErrorReporter } from "./error_reporter";
 export class EffectsModule {
     /**
      * @param {?} featureEffects
@@ -54,16 +58,14 @@ export class EffectsModule {
 EffectsModule.decorators = [
     { type: NgModule, args: [{},] },
 ];
-/**
- * @nocollapse
- */
+/** @nocollapse */
 EffectsModule.ctorParameters = () => [];
 function EffectsModule_tsickle_Closure_declarations() {
-    /** @type {?} */
+    /** @type {!Array<{type: !Function, args: (undefined|!Array<?>)}>} */
     EffectsModule.decorators;
     /**
      * @nocollapse
-     * @type {?}
+     * @type {function(): !Array<(null|{type: ?, decorators: (undefined|!Array<{type: !Function, args: (undefined|!Array<?>)}>)})>}
      */
     EffectsModule.ctorParameters;
 }

@@ -1,7 +1,11 @@
-import { NgModule, Inject, Optional } from '@angular/core';
-import { StoreModule } from '@ngrx/store';
-import { EffectsRootModule } from './effects_root_module';
-import { FEATURE_EFFECTS } from './tokens';
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes} checked by tsc
+ */
+import { NgModule, Inject, Optional } from "@angular/core";
+import { StoreModule } from "@ngrx/store";
+import { EffectsRootModule } from "./effects_root_module";
+import { FEATURE_EFFECTS } from "./tokens";
 export class EffectsFeatureModule {
     /**
      * @param {?} root
@@ -16,20 +20,18 @@ export class EffectsFeatureModule {
 EffectsFeatureModule.decorators = [
     { type: NgModule, args: [{},] },
 ];
-/**
- * @nocollapse
- */
+/** @nocollapse */
 EffectsFeatureModule.ctorParameters = () => [
     { type: EffectsRootModule, },
     { type: Array, decorators: [{ type: Inject, args: [FEATURE_EFFECTS,] },] },
     { type: StoreModule, decorators: [{ type: Optional },] },
 ];
 function EffectsFeatureModule_tsickle_Closure_declarations() {
-    /** @type {?} */
+    /** @type {!Array<{type: !Function, args: (undefined|!Array<?>)}>} */
     EffectsFeatureModule.decorators;
     /**
      * @nocollapse
-     * @type {?}
+     * @type {function(): !Array<(null|{type: ?, decorators: (undefined|!Array<{type: !Function, args: (undefined|!Array<?>)}>)})>}
      */
     EffectsFeatureModule.ctorParameters;
     /** @type {?} */

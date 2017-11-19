@@ -1,9 +1,13 @@
-import { merge } from 'rxjs/observable/merge';
-import { ignoreElements } from 'rxjs/operator/ignoreElements';
-import { materialize } from 'rxjs/operator/materialize';
-import { map } from 'rxjs/operator/map';
-import { getSourceMetadata, getSourceForInstance } from './effects_metadata';
-import { isOnRunEffects } from './on_run_effects';
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes} checked by tsc
+ */
+import { merge } from "rxjs/observable/merge";
+import { ignoreElements } from "rxjs/operator/ignoreElements";
+import { materialize } from "rxjs/operator/materialize";
+import { map } from "rxjs/operator/map";
+import { getSourceMetadata, getSourceForInstance } from "./effects_metadata";
+import { isOnRunEffects } from "./on_run_effects";
 /**
  * @param {?} sourceInstance
  * @return {?}

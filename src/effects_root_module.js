@@ -1,8 +1,12 @@
-import { NgModule, Inject, Optional } from '@angular/core';
-import { StoreModule, Store } from '@ngrx/store';
-import { EffectsRunner } from './effects_runner';
-import { EffectSources } from './effect_sources';
-import { ROOT_EFFECTS } from './tokens';
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes} checked by tsc
+ */
+import { NgModule, Inject, Optional } from "@angular/core";
+import { StoreModule, Store } from "@ngrx/store";
+import { EffectsRunner } from "./effects_runner";
+import { EffectSources } from "./effect_sources";
+import { ROOT_EFFECTS } from "./tokens";
 export const /** @type {?} */ ROOT_EFFECTS_INIT = '@ngrx/effects/init';
 export class EffectsRootModule {
     /**
@@ -29,9 +33,7 @@ export class EffectsRootModule {
 EffectsRootModule.decorators = [
     { type: NgModule, args: [{},] },
 ];
-/**
- * @nocollapse
- */
+/** @nocollapse */
 EffectsRootModule.ctorParameters = () => [
     { type: EffectSources, },
     { type: EffectsRunner, },
@@ -40,11 +42,11 @@ EffectsRootModule.ctorParameters = () => [
     { type: StoreModule, decorators: [{ type: Optional },] },
 ];
 function EffectsRootModule_tsickle_Closure_declarations() {
-    /** @type {?} */
+    /** @type {!Array<{type: !Function, args: (undefined|!Array<?>)}>} */
     EffectsRootModule.decorators;
     /**
      * @nocollapse
-     * @type {?}
+     * @type {function(): !Array<(null|{type: ?, decorators: (undefined|!Array<{type: !Function, args: (undefined|!Array<?>)}>)})>}
      */
     EffectsRootModule.ctorParameters;
     /** @type {?} */

@@ -1,4 +1,24 @@
 /**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes} checked by tsc
+ */
+/**
+ * @record
+ */
+export function EffectNotification() { }
+function EffectNotification_tsickle_Closure_declarations() {
+    /** @type {?} */
+    EffectNotification.prototype.effect;
+    /** @type {?} */
+    EffectNotification.prototype.propertyName;
+    /** @type {?} */
+    EffectNotification.prototype.sourceName;
+    /** @type {?} */
+    EffectNotification.prototype.sourceInstance;
+    /** @type {?} */
+    EffectNotification.prototype.notification;
+}
+/**
  * @param {?} output
  * @param {?} reporter
  * @return {?}

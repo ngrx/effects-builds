@@ -1,5 +1,9 @@
-import { Injectable, Inject } from '@angular/core';
-import { CONSOLE } from './tokens';
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes} checked by tsc
+ */
+import { Injectable, Inject } from "@angular/core";
+import { CONSOLE } from "./tokens";
 export class ErrorReporter {
     /**
      * @param {?} console
@@ -23,18 +27,16 @@ export class ErrorReporter {
 ErrorReporter.decorators = [
     { type: Injectable },
 ];
-/**
- * @nocollapse
- */
+/** @nocollapse */
 ErrorReporter.ctorParameters = () => [
     { type: undefined, decorators: [{ type: Inject, args: [CONSOLE,] },] },
 ];
 function ErrorReporter_tsickle_Closure_declarations() {
-    /** @type {?} */
+    /** @type {!Array<{type: !Function, args: (undefined|!Array<?>)}>} */
     ErrorReporter.decorators;
     /**
      * @nocollapse
-     * @type {?}
+     * @type {function(): !Array<(null|{type: ?, decorators: (undefined|!Array<{type: !Function, args: (undefined|!Array<?>)}>)})>}
      */
     ErrorReporter.ctorParameters;
     /** @type {?} */

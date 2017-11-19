@@ -1,15 +1,19 @@
-import { groupBy } from 'rxjs/operator/groupBy';
-import { mergeMap } from 'rxjs/operator/mergeMap';
-import { exhaustMap } from 'rxjs/operator/exhaustMap';
-import { map } from 'rxjs/operator/map';
-import { dematerialize } from 'rxjs/operator/dematerialize';
-import { filter } from 'rxjs/operator/filter';
-import { Subject } from 'rxjs/Subject';
-import { Injectable } from '@angular/core';
-import { verifyOutput } from './effect_notification';
-import { getSourceForInstance } from './effects_metadata';
-import { resolveEffectSource } from './effects_resolver';
-import { ErrorReporter } from './error_reporter';
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes} checked by tsc
+ */
+import { groupBy } from "rxjs/operator/groupBy";
+import { mergeMap } from "rxjs/operator/mergeMap";
+import { exhaustMap } from "rxjs/operator/exhaustMap";
+import { map } from "rxjs/operator/map";
+import { dematerialize } from "rxjs/operator/dematerialize";
+import { filter } from "rxjs/operator/filter";
+import { Subject } from "rxjs/Subject";
+import { Injectable } from "@angular/core";
+import { verifyOutput } from "./effect_notification";
+import { getSourceForInstance } from "./effects_metadata";
+import { resolveEffectSource } from "./effects_resolver";
+import { ErrorReporter } from "./error_reporter";
 export class EffectSources extends Subject {
     /**
      * @param {?} errorReporter
@@ -26,6 +30,7 @@ export class EffectSources extends Subject {
         this.next(effectSourceInstance);
     }
     /**
+     * \@internal
      * @return {?}
      */
     toActions() {
@@ -38,18 +43,16 @@ export class EffectSources extends Subject {
 EffectSources.decorators = [
     { type: Injectable },
 ];
-/**
- * @nocollapse
- */
+/** @nocollapse */
 EffectSources.ctorParameters = () => [
     { type: ErrorReporter, },
 ];
 function EffectSources_tsickle_Closure_declarations() {
-    /** @type {?} */
+    /** @type {!Array<{type: !Function, args: (undefined|!Array<?>)}>} */
     EffectSources.decorators;
     /**
      * @nocollapse
-     * @type {?}
+     * @type {function(): !Array<(null|{type: ?, decorators: (undefined|!Array<{type: !Function, args: (undefined|!Array<?>)}>)})>}
      */
     EffectSources.ctorParameters;
     /** @type {?} */

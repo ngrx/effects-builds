@@ -12,7 +12,15 @@ import { exhaustMap as exhaustMap$1 } from 'rxjs/operator/exhaustMap';
 import { dematerialize as dematerialize$1 } from 'rxjs/operator/dematerialize';
 import { Subject as Subject$1 } from 'rxjs/Subject';
 
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes} checked by tsc
+ */
 const METADATA_KEY = '__@ngrx/effects__';
+/**
+ * @record
+ */
+
 /**
  * @param {?} sourceProto
  * @return {?}
@@ -28,7 +36,7 @@ function getEffectMetadataEntries(sourceProto) {
 function setEffectMetadataEntries(sourceProto, entries) {
     const /** @type {?} */ constructor = sourceProto.constructor;
     const /** @type {?} */ meta = constructor.hasOwnProperty(METADATA_KEY)
-        ? ((constructor))[METADATA_KEY]
+        ? (/** @type {?} */ (constructor))[METADATA_KEY]
         : Object.defineProperty(constructor, METADATA_KEY, { value: [] })[METADATA_KEY];
     Array.prototype.push.apply(meta, entries);
 }
@@ -63,6 +71,14 @@ function getEffectsMetadata(instance) {
     return metadata;
 }
 
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes} checked by tsc
+ */
+/**
+ * @record
+ */
+
 const onRunEffectsKey = 'ngrxOnRunEffects';
 /**
  * @param {?} sourceInstance
@@ -73,6 +89,10 @@ function isOnRunEffects(sourceInstance) {
     return (onRunEffectsKey in source && typeof source[onRunEffectsKey] === 'function');
 }
 
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes} checked by tsc
+ */
 /**
  * @param {?} sourceInstance
  * @return {?}
@@ -109,6 +129,10 @@ function resolveEffectSource(sourceInstance) {
     return mergedEffects$;
 }
 
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes} checked by tsc
+ */
 class Actions extends Observable$1 {
     /**
      * @param {?=} source
@@ -142,12 +166,18 @@ class Actions extends Observable$1 {
 Actions.decorators = [
     { type: Injectable },
 ];
-/**
- * @nocollapse
- */
+/** @nocollapse */
 Actions.ctorParameters = () => [
     { type: Observable$1, decorators: [{ type: Inject, args: [ScannedActionsSubject,] },] },
 ];
+
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes} checked by tsc
+ */
+/**
+ * @record
+ */
 
 /**
  * @param {?} output
@@ -210,11 +240,19 @@ function getEffectName({ propertyName, sourceInstance, sourceName, }) {
     return `"${sourceName}.${propertyName}${isMethod ? '()' : ''}"`;
 }
 
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes} checked by tsc
+ */
 const IMMEDIATE_EFFECTS = new InjectionToken('ngrx/effects: Immediate Effects');
 const ROOT_EFFECTS = new InjectionToken('ngrx/effects: Root Effects');
 const FEATURE_EFFECTS = new InjectionToken('ngrx/effects: Feature Effects');
 const CONSOLE = new InjectionToken('Browser Console');
 
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes} checked by tsc
+ */
 class ErrorReporter {
     /**
      * @param {?} console
@@ -238,13 +276,15 @@ class ErrorReporter {
 ErrorReporter.decorators = [
     { type: Injectable },
 ];
-/**
- * @nocollapse
- */
+/** @nocollapse */
 ErrorReporter.ctorParameters = () => [
     { type: undefined, decorators: [{ type: Inject, args: [CONSOLE,] },] },
 ];
 
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes} checked by tsc
+ */
 class EffectSources extends Subject$1 {
     /**
      * @param {?} errorReporter
@@ -261,6 +301,7 @@ class EffectSources extends Subject$1 {
         this.next(effectSourceInstance);
     }
     /**
+     * \@internal
      * @return {?}
      */
     toActions() {
@@ -273,13 +314,15 @@ class EffectSources extends Subject$1 {
 EffectSources.decorators = [
     { type: Injectable },
 ];
-/**
- * @nocollapse
- */
+/** @nocollapse */
 EffectSources.ctorParameters = () => [
     { type: ErrorReporter, },
 ];
 
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes} checked by tsc
+ */
 class EffectsRunner {
     /**
      * @param {?} effectSources
@@ -313,14 +356,16 @@ class EffectsRunner {
 EffectsRunner.decorators = [
     { type: Injectable },
 ];
-/**
- * @nocollapse
- */
+/** @nocollapse */
 EffectsRunner.ctorParameters = () => [
     { type: EffectSources, },
     { type: Store, },
 ];
 
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes} checked by tsc
+ */
 const ROOT_EFFECTS_INIT = '@ngrx/effects/init';
 class EffectsRootModule {
     /**
@@ -347,9 +392,7 @@ class EffectsRootModule {
 EffectsRootModule.decorators = [
     { type: NgModule, args: [{},] },
 ];
-/**
- * @nocollapse
- */
+/** @nocollapse */
 EffectsRootModule.ctorParameters = () => [
     { type: EffectSources, },
     { type: EffectsRunner, },
@@ -358,6 +401,10 @@ EffectsRootModule.ctorParameters = () => [
     { type: StoreModule, decorators: [{ type: Optional },] },
 ];
 
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes} checked by tsc
+ */
 class EffectsFeatureModule {
     /**
      * @param {?} root
@@ -372,15 +419,17 @@ class EffectsFeatureModule {
 EffectsFeatureModule.decorators = [
     { type: NgModule, args: [{},] },
 ];
-/**
- * @nocollapse
- */
+/** @nocollapse */
 EffectsFeatureModule.ctorParameters = () => [
     { type: EffectsRootModule, },
     { type: Array, decorators: [{ type: Inject, args: [FEATURE_EFFECTS,] },] },
     { type: StoreModule, decorators: [{ type: Optional },] },
 ];
 
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes} checked by tsc
+ */
 class EffectsModule {
     /**
      * @param {?} featureEffects
@@ -429,9 +478,7 @@ class EffectsModule {
 EffectsModule.decorators = [
     { type: NgModule, args: [{},] },
 ];
-/**
- * @nocollapse
- */
+/** @nocollapse */
 EffectsModule.ctorParameters = () => [];
 /**
  * @param {...?} instances
@@ -448,14 +495,32 @@ function getConsole() {
 }
 
 /**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes} checked by tsc
+ */
+/**
  * @deprecated Since version 4.1. Will be deleted in version 5.0.
  * @param {?} action
  * @return {?}
  */
 function toPayload(action) {
-    return ((action)).payload;
+    return (/** @type {?} */ (action)).payload;
 }
 
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes} checked by tsc
+ */
+
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes} checked by tsc
+ */
+
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes} checked by tsc
+ */
 /**
  * Generated bundle index. Do not edit.
  */

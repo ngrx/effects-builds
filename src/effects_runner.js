@@ -1,6 +1,10 @@
-import { Injectable } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { EffectSources } from './effect_sources';
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes} checked by tsc
+ */
+import { Injectable } from "@angular/core";
+import { Store } from "@ngrx/store";
+import { EffectSources } from "./effect_sources";
 export class EffectsRunner {
     /**
      * @param {?} effectSources
@@ -34,19 +38,17 @@ export class EffectsRunner {
 EffectsRunner.decorators = [
     { type: Injectable },
 ];
-/**
- * @nocollapse
- */
+/** @nocollapse */
 EffectsRunner.ctorParameters = () => [
     { type: EffectSources, },
     { type: Store, },
 ];
 function EffectsRunner_tsickle_Closure_declarations() {
-    /** @type {?} */
+    /** @type {!Array<{type: !Function, args: (undefined|!Array<?>)}>} */
     EffectsRunner.decorators;
     /**
      * @nocollapse
-     * @type {?}
+     * @type {function(): !Array<(null|{type: ?, decorators: (undefined|!Array<{type: !Function, args: (undefined|!Array<?>)}>)})>}
      */
     EffectsRunner.ctorParameters;
     /** @type {?} */

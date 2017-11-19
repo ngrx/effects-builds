@@ -1,7 +1,11 @@
-import { Injectable, Inject } from '@angular/core';
-import { ScannedActionsSubject } from '@ngrx/store';
-import { Observable } from 'rxjs/Observable';
-import { filter } from 'rxjs/operator/filter';
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes} checked by tsc
+ */
+import { Injectable, Inject } from "@angular/core";
+import { ScannedActionsSubject } from "@ngrx/store";
+import { Observable } from "rxjs/Observable";
+import { filter } from "rxjs/operator/filter";
 export class Actions extends Observable {
     /**
      * @param {?=} source
@@ -35,18 +39,16 @@ export class Actions extends Observable {
 Actions.decorators = [
     { type: Injectable },
 ];
-/**
- * @nocollapse
- */
+/** @nocollapse */
 Actions.ctorParameters = () => [
     { type: Observable, decorators: [{ type: Inject, args: [ScannedActionsSubject,] },] },
 ];
 function Actions_tsickle_Closure_declarations() {
-    /** @type {?} */
+    /** @type {!Array<{type: !Function, args: (undefined|!Array<?>)}>} */
     Actions.decorators;
     /**
      * @nocollapse
-     * @type {?}
+     * @type {function(): !Array<(null|{type: ?, decorators: (undefined|!Array<{type: !Function, args: (undefined|!Array<?>)}>)})>}
      */
     Actions.ctorParameters;
 }

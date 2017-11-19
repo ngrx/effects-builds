@@ -21,7 +21,14 @@ import { mergeMap as mergeMap$1 } from 'rxjs/operator/mergeMap';
 import { exhaustMap as exhaustMap$1 } from 'rxjs/operator/exhaustMap';
 import { dematerialize as dematerialize$1 } from 'rxjs/operator/dematerialize';
 import { Subject as Subject$1 } from 'rxjs/Subject';
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes} checked by tsc
+ */
 var METADATA_KEY = '__@ngrx/effects__';
+/**
+ * @record
+ */
 /**
  * @param {?} sourceProto
  * @return {?}
@@ -73,6 +80,13 @@ function getEffectsMetadata(instance) {
     });
     return metadata;
 }
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes} checked by tsc
+ */
+/**
+ * @record
+ */
 var onRunEffectsKey = 'ngrxOnRunEffects';
 /**
  * @param {?} sourceInstance
@@ -82,6 +96,10 @@ function isOnRunEffects(sourceInstance) {
     var /** @type {?} */ source = getSourceForInstance(sourceInstance);
     return (onRunEffectsKey in source && typeof source[onRunEffectsKey] === 'function');
 }
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes} checked by tsc
+ */
 /**
  * @param {?} sourceInstance
  * @return {?}
@@ -118,6 +136,10 @@ function resolveEffectSource(sourceInstance) {
     }
     return mergedEffects$;
 }
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes} checked by tsc
+ */
 var Actions = (function (_super) {
     __extends(Actions, _super);
     /**
@@ -158,12 +180,17 @@ var Actions = (function (_super) {
 Actions.decorators = [
     { type: Injectable },
 ];
-/**
- * @nocollapse
- */
+/** @nocollapse */
 Actions.ctorParameters = function () { return [
     { type: Observable$1, decorators: [{ type: Inject, args: [ScannedActionsSubject,] },] },
 ]; };
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes} checked by tsc
+ */
+/**
+ * @record
+ */
 /**
  * @param {?} output
  * @param {?} reporter
@@ -225,10 +252,18 @@ function getEffectName(_a) {
     var /** @type {?} */ isMethod = typeof sourceInstance[propertyName] === 'function';
     return "\"" + sourceName + "." + propertyName + (isMethod ? '()' : '') + "\"";
 }
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes} checked by tsc
+ */
 var IMMEDIATE_EFFECTS = new InjectionToken('ngrx/effects: Immediate Effects');
 var ROOT_EFFECTS = new InjectionToken('ngrx/effects: Root Effects');
 var FEATURE_EFFECTS = new InjectionToken('ngrx/effects: Feature Effects');
 var CONSOLE = new InjectionToken('Browser Console');
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes} checked by tsc
+ */
 var ErrorReporter = (function () {
     /**
      * @param {?} console
@@ -253,12 +288,14 @@ var ErrorReporter = (function () {
 ErrorReporter.decorators = [
     { type: Injectable },
 ];
-/**
- * @nocollapse
- */
+/** @nocollapse */
 ErrorReporter.ctorParameters = function () { return [
     { type: undefined, decorators: [{ type: Inject, args: [CONSOLE,] },] },
 ]; };
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes} checked by tsc
+ */
 var EffectSources = (function (_super) {
     __extends(EffectSources, _super);
     /**
@@ -277,6 +314,7 @@ var EffectSources = (function (_super) {
         this.next(effectSourceInstance);
     };
     /**
+     * \@internal
      * @return {?}
      */
     EffectSources.prototype.toActions = function () {
@@ -291,12 +329,14 @@ var EffectSources = (function (_super) {
 EffectSources.decorators = [
     { type: Injectable },
 ];
-/**
- * @nocollapse
- */
+/** @nocollapse */
 EffectSources.ctorParameters = function () { return [
     { type: ErrorReporter, },
 ]; };
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes} checked by tsc
+ */
 var EffectsRunner = (function () {
     /**
      * @param {?} effectSources
@@ -331,13 +371,15 @@ var EffectsRunner = (function () {
 EffectsRunner.decorators = [
     { type: Injectable },
 ];
-/**
- * @nocollapse
- */
+/** @nocollapse */
 EffectsRunner.ctorParameters = function () { return [
     { type: EffectSources, },
     { type: Store, },
 ]; };
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes} checked by tsc
+ */
 var ROOT_EFFECTS_INIT = '@ngrx/effects/init';
 var EffectsRootModule = (function () {
     /**
@@ -365,9 +407,7 @@ var EffectsRootModule = (function () {
 EffectsRootModule.decorators = [
     { type: NgModule, args: [{},] },
 ];
-/**
- * @nocollapse
- */
+/** @nocollapse */
 EffectsRootModule.ctorParameters = function () { return [
     { type: EffectSources, },
     { type: EffectsRunner, },
@@ -375,6 +415,10 @@ EffectsRootModule.ctorParameters = function () { return [
     { type: Array, decorators: [{ type: Inject, args: [ROOT_EFFECTS,] },] },
     { type: StoreModule, decorators: [{ type: Optional },] },
 ]; };
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes} checked by tsc
+ */
 var EffectsFeatureModule = (function () {
     /**
      * @param {?} root
@@ -390,14 +434,16 @@ var EffectsFeatureModule = (function () {
 EffectsFeatureModule.decorators = [
     { type: NgModule, args: [{},] },
 ];
-/**
- * @nocollapse
- */
+/** @nocollapse */
 EffectsFeatureModule.ctorParameters = function () { return [
     { type: EffectsRootModule, },
     { type: Array, decorators: [{ type: Inject, args: [FEATURE_EFFECTS,] },] },
     { type: StoreModule, decorators: [{ type: Optional },] },
 ]; };
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes} checked by tsc
+ */
 var EffectsModule = (function () {
     function EffectsModule() {
     }
@@ -449,9 +495,7 @@ var EffectsModule = (function () {
 EffectsModule.decorators = [
     { type: NgModule, args: [{},] },
 ];
-/**
- * @nocollapse
- */
+/** @nocollapse */
 EffectsModule.ctorParameters = function () { return []; };
 /**
  * @param {...?} instances
@@ -471,6 +515,10 @@ function getConsole() {
     return console;
 }
 /**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes} checked by tsc
+ */
+/**
  * @deprecated Since version 4.1. Will be deleted in version 5.0.
  * @param {?} action
  * @return {?}
@@ -478,6 +526,18 @@ function getConsole() {
 function toPayload(action) {
     return ((action)).payload;
 }
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes} checked by tsc
+ */
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes} checked by tsc
+ */
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes} checked by tsc
+ */
 /**
  * Generated bundle index. Do not edit.
  */
