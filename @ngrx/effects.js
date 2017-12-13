@@ -195,13 +195,12 @@ function verifyOutput(output, reporter) {
  */
 function reportErrorThrown(output, reporter) {
     if (output.notification.kind === 'E') {
-        const /** @type {?} */ errorReason = `Effect ${getEffectName(output)} threw an error`;
-        reporter.report(errorReason, {
-            Source: output.sourceInstance,
-            Effect: output.effect,
-            Error: output.notification.error,
-            Notification: output.notification,
-        });
+        const /** @type {?} */ errorReason = /** @type {?} */ (new Error(`Effect ${getEffectName(output)} threw an error`));
+        errorReason.Source = output.sourceInstance;
+        errorReason.Effect = output.effect;
+        errorReason.Error = output.notification.error;
+        errorReason.Notification = output.notification;
+        reporter.handleError(errorReason);
     }
 }
 /**
@@ -214,13 +213,12 @@ function reportInvalidActions(output, reporter) {
         const /** @type {?} */ action = output.notification.value;
         const /** @type {?} */ isInvalidAction = !isAction(action);
         if (isInvalidAction) {
-            const /** @type {?} */ errorReason = `Effect ${getEffectName(output)} dispatched an invalid action`;
-            reporter.report(errorReason, {
-                Source: output.sourceInstance,
-                Effect: output.effect,
-                Dispatched: action,
-                Notification: output.notification,
-            });
+            const /** @type {?} */ errorReason = /** @type {?} */ (new Error(`Effect ${getEffectName(output)} dispatched an invalid action`));
+            errorReason.Source = output.sourceInstance;
+            errorReason.Effect = output.effect;
+            errorReason.Dispatched = action;
+            errorReason.Notification = output.notification;
+            reporter.handleError(errorReason);
         }
     }
 }
@@ -253,6 +251,14 @@ const CONSOLE = new InjectionToken('Browser Console');
  * @fileoverview added by tsickle
  * @suppress {checkTypes} checked by tsc
  */
+/**
+ * @record
+ */
+
+/**
+ * @record
+ */
+
 class ErrorReporter {
     /**
      * @param {?} console
@@ -261,14 +267,13 @@ class ErrorReporter {
         this.console = console;
     }
     /**
-     * @param {?} reason
-     * @param {?} details
+     * @param {?} error
      * @return {?}
      */
-    report(reason, details) {
-        this.console.group(reason);
-        for (let /** @type {?} */ key in details) {
-            this.console.error(`${key}:`, details[key]);
+    handleError(error) {
+        this.console.group(error.message);
+        for (let /** @type {?} */ key in error) {
+            this.console.error(`${key}:`, error[key]);
         }
         this.console.groupEnd();
     }
@@ -525,5 +530,5 @@ function toPayload(action) {
  * Generated bundle index. Do not edit.
  */
 
-export { Effect, getEffectsMetadata, mergeEffects, Actions, EffectsModule, EffectSources, toPayload, ROOT_EFFECTS_INIT, EffectsFeatureModule as ɵd, createSourceInstances as ɵa, getConsole as ɵb, EffectsRootModule as ɵc, EffectsRunner as ɵi, ErrorReporter as ɵh, CONSOLE as ɵg, FEATURE_EFFECTS as ɵf, ROOT_EFFECTS as ɵe };
+export { Effect, getEffectsMetadata, mergeEffects, Actions, EffectsModule, EffectSources, toPayload, ErrorReporter, ROOT_EFFECTS_INIT, EffectsFeatureModule as ɵd, createSourceInstances as ɵa, getConsole as ɵb, EffectsRootModule as ɵc, EffectsRunner as ɵh, CONSOLE as ɵg, FEATURE_EFFECTS as ɵf, ROOT_EFFECTS as ɵe };
 //# sourceMappingURL=effects.js.map
