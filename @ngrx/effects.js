@@ -1,4 +1,4 @@
-import { ScannedActionsSubject, Store, StoreModule, compose } from '@ngrx/store';
+import { ScannedActionsSubject, Store, StoreFeatureModule, StoreRootModule, compose } from '@ngrx/store';
 import { merge as merge$1 } from 'rxjs/observable/merge';
 import { ignoreElements as ignoreElements$1 } from 'rxjs/operator/ignoreElements';
 import { materialize as materialize$1 } from 'rxjs/operator/materialize';
@@ -388,9 +388,10 @@ class EffectsRootModule {
      * @param {?} runner
      * @param {?} store
      * @param {?} rootEffects
-     * @param {?} storeModule
+     * @param {?} storeRootModule
+     * @param {?} storeFeatureModule
      */
-    constructor(sources, runner, store$$1, rootEffects, storeModule) {
+    constructor(sources, runner, store$$1, rootEffects, storeRootModule, storeFeatureModule) {
         this.sources = sources;
         runner.start();
         rootEffects.forEach(effectSourceInstance => sources.addEffects(effectSourceInstance));
@@ -413,7 +414,8 @@ EffectsRootModule.ctorParameters = () => [
     { type: EffectsRunner, },
     { type: Store, },
     { type: Array, decorators: [{ type: Inject, args: [ROOT_EFFECTS,] },] },
-    { type: StoreModule, decorators: [{ type: Optional },] },
+    { type: StoreRootModule, decorators: [{ type: Optional },] },
+    { type: StoreFeatureModule, decorators: [{ type: Optional },] },
 ];
 
 /**
@@ -424,9 +426,10 @@ class EffectsFeatureModule {
     /**
      * @param {?} root
      * @param {?} effectSourceGroups
-     * @param {?} storeModule
+     * @param {?} storeRootModule
+     * @param {?} storeFeatureModule
      */
-    constructor(root, effectSourceGroups, storeModule) {
+    constructor(root, effectSourceGroups, storeRootModule, storeFeatureModule) {
         this.root = root;
         effectSourceGroups.forEach(group => group.forEach(effectSourceInstance => root.addEffects(effectSourceInstance)));
     }
@@ -438,7 +441,8 @@ EffectsFeatureModule.decorators = [
 EffectsFeatureModule.ctorParameters = () => [
     { type: EffectsRootModule, },
     { type: Array, decorators: [{ type: Inject, args: [FEATURE_EFFECTS,] },] },
-    { type: StoreModule, decorators: [{ type: Optional },] },
+    { type: StoreRootModule, decorators: [{ type: Optional },] },
+    { type: StoreFeatureModule, decorators: [{ type: Optional },] },
 ];
 
 /**

@@ -397,9 +397,10 @@ var EffectsRootModule = (function () {
      * @param {?} runner
      * @param {?} store
      * @param {?} rootEffects
-     * @param {?} storeModule
+     * @param {?} storeRootModule
+     * @param {?} storeFeatureModule
      */
-    function EffectsRootModule(sources, runner, store$$1, rootEffects, storeModule) {
+    function EffectsRootModule(sources, runner, store$$1, rootEffects, storeRootModule, storeFeatureModule) {
         this.sources = sources;
         runner.start();
         rootEffects.forEach(function (effectSourceInstance) { return sources.addEffects(effectSourceInstance); });
@@ -423,7 +424,8 @@ EffectsRootModule.ctorParameters = function () { return [
     { type: EffectsRunner, },
     { type: store.Store, },
     { type: Array, decorators: [{ type: core.Inject, args: [ROOT_EFFECTS,] },] },
-    { type: store.StoreModule, decorators: [{ type: core.Optional },] },
+    { type: store.StoreRootModule, decorators: [{ type: core.Optional },] },
+    { type: store.StoreFeatureModule, decorators: [{ type: core.Optional },] },
 ]; };
 /**
  * @fileoverview added by tsickle
@@ -433,9 +435,10 @@ var EffectsFeatureModule = (function () {
     /**
      * @param {?} root
      * @param {?} effectSourceGroups
-     * @param {?} storeModule
+     * @param {?} storeRootModule
+     * @param {?} storeFeatureModule
      */
-    function EffectsFeatureModule(root, effectSourceGroups, storeModule) {
+    function EffectsFeatureModule(root, effectSourceGroups, storeRootModule, storeFeatureModule) {
         this.root = root;
         effectSourceGroups.forEach(function (group) { return group.forEach(function (effectSourceInstance) { return root.addEffects(effectSourceInstance); }); });
     }
@@ -448,7 +451,8 @@ EffectsFeatureModule.decorators = [
 EffectsFeatureModule.ctorParameters = function () { return [
     { type: EffectsRootModule, },
     { type: Array, decorators: [{ type: core.Inject, args: [FEATURE_EFFECTS,] },] },
-    { type: store.StoreModule, decorators: [{ type: core.Optional },] },
+    { type: store.StoreRootModule, decorators: [{ type: core.Optional },] },
+    { type: store.StoreFeatureModule, decorators: [{ type: core.Optional },] },
 ]; };
 /**
  * @fileoverview added by tsickle

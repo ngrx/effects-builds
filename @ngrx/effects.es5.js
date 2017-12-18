@@ -8,7 +8,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-import { ScannedActionsSubject, Store, StoreModule, compose } from '@ngrx/store';
+import { ScannedActionsSubject, Store, StoreFeatureModule, StoreRootModule, compose } from '@ngrx/store';
 import { merge as merge$1 } from 'rxjs/observable/merge';
 import { ignoreElements as ignoreElements$1 } from 'rxjs/operator/ignoreElements';
 import { materialize as materialize$1 } from 'rxjs/operator/materialize';
@@ -404,9 +404,10 @@ var EffectsRootModule = (function () {
      * @param {?} runner
      * @param {?} store
      * @param {?} rootEffects
-     * @param {?} storeModule
+     * @param {?} storeRootModule
+     * @param {?} storeFeatureModule
      */
-    function EffectsRootModule(sources, runner, store$$1, rootEffects, storeModule) {
+    function EffectsRootModule(sources, runner, store$$1, rootEffects, storeRootModule, storeFeatureModule) {
         this.sources = sources;
         runner.start();
         rootEffects.forEach(function (effectSourceInstance) { return sources.addEffects(effectSourceInstance); });
@@ -430,7 +431,8 @@ EffectsRootModule.ctorParameters = function () { return [
     { type: EffectsRunner, },
     { type: Store, },
     { type: Array, decorators: [{ type: Inject, args: [ROOT_EFFECTS,] },] },
-    { type: StoreModule, decorators: [{ type: Optional },] },
+    { type: StoreRootModule, decorators: [{ type: Optional },] },
+    { type: StoreFeatureModule, decorators: [{ type: Optional },] },
 ]; };
 /**
  * @fileoverview added by tsickle
@@ -440,9 +442,10 @@ var EffectsFeatureModule = (function () {
     /**
      * @param {?} root
      * @param {?} effectSourceGroups
-     * @param {?} storeModule
+     * @param {?} storeRootModule
+     * @param {?} storeFeatureModule
      */
-    function EffectsFeatureModule(root, effectSourceGroups, storeModule) {
+    function EffectsFeatureModule(root, effectSourceGroups, storeRootModule, storeFeatureModule) {
         this.root = root;
         effectSourceGroups.forEach(function (group) { return group.forEach(function (effectSourceInstance) { return root.addEffects(effectSourceInstance); }); });
     }
@@ -455,7 +458,8 @@ EffectsFeatureModule.decorators = [
 EffectsFeatureModule.ctorParameters = function () { return [
     { type: EffectsRootModule, },
     { type: Array, decorators: [{ type: Inject, args: [FEATURE_EFFECTS,] },] },
-    { type: StoreModule, decorators: [{ type: Optional },] },
+    { type: StoreRootModule, decorators: [{ type: Optional },] },
+    { type: StoreFeatureModule, decorators: [{ type: Optional },] },
 ]; };
 /**
  * @fileoverview added by tsickle
