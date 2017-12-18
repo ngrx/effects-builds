@@ -166,7 +166,7 @@ var Actions = (function (_super) {
         for (var _i = 0; _i < arguments.length; _i++) {
             allowedTypes[_i] = arguments[_i];
         }
-        return filter.filter.call(this, function (action) { return allowedTypes.some(function (type) { return type === action.type; }); });
+        return ofType.apply(void 0, allowedTypes)(/** @type {?} */ (this.source));
     };
     return Actions;
 }(Observable.Observable));
@@ -177,6 +177,20 @@ Actions.decorators = [
 Actions.ctorParameters = function () { return [
     { type: Observable.Observable, decorators: [{ type: core.Inject, args: [store.ScannedActionsSubject,] },] },
 ]; };
+/**
+ * @template T
+ * @param {...?} allowedTypes
+ * @return {?}
+ */
+function ofType() {
+    var allowedTypes = [];
+    for (var _i = 0; _i < arguments.length; _i++) {
+        allowedTypes[_i] = arguments[_i];
+    }
+    return function ofTypeOperator(source$) {
+        return filter.filter.call(source$, function (action) { return allowedTypes.some(function (type) { return type === action.type; }); });
+    };
+}
 /**
  * @fileoverview added by tsickle
  * @suppress {checkTypes} checked by tsc
@@ -527,6 +541,7 @@ exports.Effect = Effect;
 exports.getEffectsMetadata = getEffectsMetadata;
 exports.mergeEffects = mergeEffects;
 exports.Actions = Actions;
+exports.ofType = ofType;
 exports.EffectsModule = EffectsModule;
 exports.EffectSources = EffectSources;
 exports.toPayload = toPayload;

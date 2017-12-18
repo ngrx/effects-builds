@@ -173,7 +173,7 @@ var Actions = (function (_super) {
         for (var _i = 0; _i < arguments.length; _i++) {
             allowedTypes[_i] = arguments[_i];
         }
-        return filter$1.call(this, function (action) { return allowedTypes.some(function (type) { return type === action.type; }); });
+        return ofType.apply(void 0, allowedTypes)(/** @type {?} */ (this.source));
     };
     return Actions;
 }(Observable$1));
@@ -184,6 +184,20 @@ Actions.decorators = [
 Actions.ctorParameters = function () { return [
     { type: Observable$1, decorators: [{ type: Inject, args: [ScannedActionsSubject,] },] },
 ]; };
+/**
+ * @template T
+ * @param {...?} allowedTypes
+ * @return {?}
+ */
+function ofType() {
+    var allowedTypes = [];
+    for (var _i = 0; _i < arguments.length; _i++) {
+        allowedTypes[_i] = arguments[_i];
+    }
+    return function ofTypeOperator(source$) {
+        return filter$1.call(source$, function (action) { return allowedTypes.some(function (type) { return type === action.type; }); });
+    };
+}
 /**
  * @fileoverview added by tsickle
  * @suppress {checkTypes} checked by tsc
@@ -544,5 +558,5 @@ function toPayload(action) {
 /**
  * Generated bundle index. Do not edit.
  */
-export { Effect, getEffectsMetadata, mergeEffects, Actions, EffectsModule, EffectSources, toPayload, ErrorReporter, ROOT_EFFECTS_INIT, EffectsFeatureModule as ɵd, createSourceInstances as ɵa, getConsole as ɵb, EffectsRootModule as ɵc, EffectsRunner as ɵh, CONSOLE as ɵg, FEATURE_EFFECTS as ɵf, ROOT_EFFECTS as ɵe };
+export { Effect, getEffectsMetadata, mergeEffects, Actions, ofType, EffectsModule, EffectSources, toPayload, ErrorReporter, ROOT_EFFECTS_INIT, EffectsFeatureModule as ɵd, createSourceInstances as ɵa, getConsole as ɵb, EffectsRootModule as ɵc, EffectsRunner as ɵh, CONSOLE as ɵg, FEATURE_EFFECTS as ɵf, ROOT_EFFECTS as ɵe };
 //# sourceMappingURL=effects.es5.js.map

@@ -160,7 +160,7 @@ class Actions extends Observable$1 {
      * @return {?}
      */
     ofType(...allowedTypes) {
-        return filter$1.call(this, (action) => allowedTypes.some(type => type === action.type));
+        return ofType(...allowedTypes)(/** @type {?} */ (this.source));
     }
 }
 Actions.decorators = [
@@ -170,6 +170,16 @@ Actions.decorators = [
 Actions.ctorParameters = () => [
     { type: Observable$1, decorators: [{ type: Inject, args: [ScannedActionsSubject,] },] },
 ];
+/**
+ * @template T
+ * @param {...?} allowedTypes
+ * @return {?}
+ */
+function ofType(...allowedTypes) {
+    return function ofTypeOperator(source$) {
+        return filter$1.call(source$, (action) => allowedTypes.some(type => type === action.type));
+    };
+}
 
 /**
  * @fileoverview added by tsickle
@@ -530,5 +540,5 @@ function toPayload(action) {
  * Generated bundle index. Do not edit.
  */
 
-export { Effect, getEffectsMetadata, mergeEffects, Actions, EffectsModule, EffectSources, toPayload, ErrorReporter, ROOT_EFFECTS_INIT, EffectsFeatureModule as ɵd, createSourceInstances as ɵa, getConsole as ɵb, EffectsRootModule as ɵc, EffectsRunner as ɵh, CONSOLE as ɵg, FEATURE_EFFECTS as ɵf, ROOT_EFFECTS as ɵe };
+export { Effect, getEffectsMetadata, mergeEffects, Actions, ofType, EffectsModule, EffectSources, toPayload, ErrorReporter, ROOT_EFFECTS_INIT, EffectsFeatureModule as ɵd, createSourceInstances as ɵa, getConsole as ɵb, EffectsRootModule as ɵc, EffectsRunner as ɵh, CONSOLE as ɵg, FEATURE_EFFECTS as ɵf, ROOT_EFFECTS as ɵe };
 //# sourceMappingURL=effects.js.map
