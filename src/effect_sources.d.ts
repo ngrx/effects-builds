@@ -1,7 +1,7 @@
 import { Subject } from 'rxjs/Subject';
-import { ErrorReporter } from './error_reporter';
+import { ErrorHandler } from '@angular/core';
 export declare class EffectSources extends Subject<any> {
-    private errorReporter;
-    constructor(errorReporter: ErrorReporter);
+    private errorHandler;
+    constructor(errorHandler: ErrorHandler);
     addEffects(effectSourceInstance: any): void;
 }

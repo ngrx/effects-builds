@@ -4,4 +4,3 @@ export declare class EffectsModule {
     static forRoot(rootEffects: Type<any>[]): ModuleWithProviders;
 }
 export declare function createSourceInstances(...instances: any[]): any[];
-export declare function getConsole(): Console;

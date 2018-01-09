@@ -13,7 +13,7 @@ import { merge as merge$1 } from 'rxjs/observable/merge';
 import { ignoreElements as ignoreElements$1 } from 'rxjs/operator/ignoreElements';
 import { materialize as materialize$1 } from 'rxjs/operator/materialize';
 import { map as map$1 } from 'rxjs/operator/map';
-import { Inject, Injectable, InjectionToken, NgModule, Optional } from '@angular/core';
+import { ErrorHandler, Inject, Injectable, InjectionToken, NgModule, Optional } from '@angular/core';
 import { Observable as Observable$1 } from 'rxjs/Observable';
 import { filter as filter$1 } from 'rxjs/operator/filter';
 import { groupBy as groupBy$1 } from 'rxjs/operator/groupBy';
@@ -221,12 +221,7 @@ function verifyOutput(output, reporter) {
  */
 function reportErrorThrown(output, reporter) {
     if (output.notification.kind === 'E') {
-        var /** @type {?} */ errorReason = (new Error("Effect " + getEffectName(output) + " threw an error"));
-        errorReason.Source = output.sourceInstance;
-        errorReason.Effect = output.effect;
-        errorReason.Error = output.notification.error;
-        errorReason.Notification = output.notification;
-        reporter.handleError(errorReason);
+        reporter.handleError(output.notification.error);
     }
 }
 /**
@@ -239,12 +234,7 @@ function reportInvalidActions(output, reporter) {
         var /** @type {?} */ action = output.notification.value;
         var /** @type {?} */ isInvalidAction = !isAction(action);
         if (isInvalidAction) {
-            var /** @type {?} */ errorReason = (new Error("Effect " + getEffectName(output) + " dispatched an invalid action"));
-            errorReason.Source = output.sourceInstance;
-            errorReason.Effect = output.effect;
-            errorReason.Dispatched = action;
-            errorReason.Notification = output.notification;
-            reporter.handleError(errorReason);
+            reporter.handleError(new Error("Effect " + getEffectName(output) + " dispatched an invalid action: " + action));
         }
     }
 }
@@ -268,59 +258,14 @@ function getEffectName(_a) {
  * @fileoverview added by tsickle
  * @suppress {checkTypes} checked by tsc
  */
-var IMMEDIATE_EFFECTS = new InjectionToken('ngrx/effects: Immediate Effects');
-var ROOT_EFFECTS = new InjectionToken('ngrx/effects: Root Effects');
-var FEATURE_EFFECTS = new InjectionToken('ngrx/effects: Feature Effects');
-var CONSOLE = new InjectionToken('Browser Console');
-/**
- * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
- */
-/**
- * @record
- */
-/**
- * @record
- */
-var ErrorReporter = (function () {
-    /**
-     * @param {?} console
-     */
-    function ErrorReporter(console) {
-        this.console = console;
-    }
-    /**
-     * @param {?} error
-     * @return {?}
-     */
-    ErrorReporter.prototype.handleError = function (error) {
-        this.console.group(error.message);
-        for (var /** @type {?} */ key in error) {
-            this.console.error(key + ":", error[key]);
-        }
-        this.console.groupEnd();
-    };
-    return ErrorReporter;
-}());
-ErrorReporter.decorators = [
-    { type: Injectable },
-];
-/** @nocollapse */
-ErrorReporter.ctorParameters = function () { return [
-    { type: undefined, decorators: [{ type: Inject, args: [CONSOLE,] },] },
-]; };
-/**
- * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
- */
 var EffectSources = (function (_super) {
     __extends(EffectSources, _super);
     /**
-     * @param {?} errorReporter
+     * @param {?} errorHandler
      */
-    function EffectSources(errorReporter) {
+    function EffectSources(errorHandler) {
         var _this = _super.call(this) || this;
-        _this.errorReporter = errorReporter;
+        _this.errorHandler = errorHandler;
         return _this;
     }
     /**
@@ -337,7 +282,7 @@ var EffectSources = (function (_super) {
     EffectSources.prototype.toActions = function () {
         var _this = this;
         return mergeMap$1.call(groupBy$1.call(this, getSourceForInstance), function (source$) { return dematerialize$1.call(filter$1.call(map$1.call(exhaustMap$1.call(source$, resolveEffectSource), function (output) {
-            verifyOutput(output, _this.errorReporter);
+            verifyOutput(output, _this.errorHandler);
             return output.notification;
         }), function (notification) { return notification.kind === 'N'; })); });
     };
@@ -348,8 +293,15 @@ EffectSources.decorators = [
 ];
 /** @nocollapse */
 EffectSources.ctorParameters = function () { return [
-    { type: ErrorReporter, },
+    { type: ErrorHandler, },
 ]; };
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes} checked by tsc
+ */
+var IMMEDIATE_EFFECTS = new InjectionToken('ngrx/effects: Immediate Effects');
+var ROOT_EFFECTS = new InjectionToken('ngrx/effects: Root Effects');
+var FEATURE_EFFECTS = new InjectionToken('ngrx/effects: Feature Effects');
 /**
  * @fileoverview added by tsickle
  * @suppress {checkTypes} checked by tsc
@@ -496,17 +448,12 @@ var EffectsModule = (function () {
             providers: [
                 EffectsRunner,
                 EffectSources,
-                ErrorReporter,
                 Actions,
                 rootEffects,
                 {
                     provide: ROOT_EFFECTS,
                     deps: rootEffects,
                     useFactory: createSourceInstances,
-                },
-                {
-                    provide: CONSOLE,
-                    useFactory: getConsole,
                 },
             ],
         };
@@ -528,12 +475,6 @@ function createSourceInstances() {
         instances[_i] = arguments[_i];
     }
     return instances;
-}
-/**
- * @return {?}
- */
-function getConsole() {
-    return console;
 }
 /**
  * @fileoverview added by tsickle
@@ -562,5 +503,5 @@ function toPayload(action) {
 /**
  * Generated bundle index. Do not edit.
  */
-export { Effect, getEffectsMetadata, mergeEffects, Actions, ofType, EffectsModule, EffectSources, toPayload, ErrorReporter, ROOT_EFFECTS_INIT, EffectsFeatureModule as ɵd, createSourceInstances as ɵa, getConsole as ɵb, EffectsRootModule as ɵc, EffectsRunner as ɵh, CONSOLE as ɵg, FEATURE_EFFECTS as ɵf, ROOT_EFFECTS as ɵe };
+export { Effect, getEffectsMetadata, mergeEffects, Actions, ofType, EffectsModule, EffectSources, toPayload, ROOT_EFFECTS_INIT, EffectsFeatureModule as ɵc, createSourceInstances as ɵa, EffectsRootModule as ɵb, EffectsRunner as ɵf, FEATURE_EFFECTS as ɵe, ROOT_EFFECTS as ɵd };
 //# sourceMappingURL=effects.es5.js.map

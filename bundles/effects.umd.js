@@ -214,12 +214,7 @@ function verifyOutput(output, reporter) {
  */
 function reportErrorThrown(output, reporter) {
     if (output.notification.kind === 'E') {
-        var /** @type {?} */ errorReason = (new Error("Effect " + getEffectName(output) + " threw an error"));
-        errorReason.Source = output.sourceInstance;
-        errorReason.Effect = output.effect;
-        errorReason.Error = output.notification.error;
-        errorReason.Notification = output.notification;
-        reporter.handleError(errorReason);
+        reporter.handleError(output.notification.error);
     }
 }
 /**
@@ -232,12 +227,7 @@ function reportInvalidActions(output, reporter) {
         var /** @type {?} */ action = output.notification.value;
         var /** @type {?} */ isInvalidAction = !isAction(action);
         if (isInvalidAction) {
-            var /** @type {?} */ errorReason = (new Error("Effect " + getEffectName(output) + " dispatched an invalid action"));
-            errorReason.Source = output.sourceInstance;
-            errorReason.Effect = output.effect;
-            errorReason.Dispatched = action;
-            errorReason.Notification = output.notification;
-            reporter.handleError(errorReason);
+            reporter.handleError(new Error("Effect " + getEffectName(output) + " dispatched an invalid action: " + action));
         }
     }
 }
@@ -261,59 +251,14 @@ function getEffectName(_a) {
  * @fileoverview added by tsickle
  * @suppress {checkTypes} checked by tsc
  */
-var IMMEDIATE_EFFECTS = new core.InjectionToken('ngrx/effects: Immediate Effects');
-var ROOT_EFFECTS = new core.InjectionToken('ngrx/effects: Root Effects');
-var FEATURE_EFFECTS = new core.InjectionToken('ngrx/effects: Feature Effects');
-var CONSOLE = new core.InjectionToken('Browser Console');
-/**
- * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
- */
-/**
- * @record
- */
-/**
- * @record
- */
-var ErrorReporter = (function () {
-    /**
-     * @param {?} console
-     */
-    function ErrorReporter(console) {
-        this.console = console;
-    }
-    /**
-     * @param {?} error
-     * @return {?}
-     */
-    ErrorReporter.prototype.handleError = function (error) {
-        this.console.group(error.message);
-        for (var /** @type {?} */ key in error) {
-            this.console.error(key + ":", error[key]);
-        }
-        this.console.groupEnd();
-    };
-    return ErrorReporter;
-}());
-ErrorReporter.decorators = [
-    { type: core.Injectable },
-];
-/** @nocollapse */
-ErrorReporter.ctorParameters = function () { return [
-    { type: undefined, decorators: [{ type: core.Inject, args: [CONSOLE,] },] },
-]; };
-/**
- * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
- */
 var EffectSources = (function (_super) {
     __extends(EffectSources, _super);
     /**
-     * @param {?} errorReporter
+     * @param {?} errorHandler
      */
-    function EffectSources(errorReporter) {
+    function EffectSources(errorHandler) {
         var _this = _super.call(this) || this;
-        _this.errorReporter = errorReporter;
+        _this.errorHandler = errorHandler;
         return _this;
     }
     /**
@@ -330,7 +275,7 @@ var EffectSources = (function (_super) {
     EffectSources.prototype.toActions = function () {
         var _this = this;
         return mergeMap.mergeMap.call(groupBy.groupBy.call(this, getSourceForInstance), function (source$) { return dematerialize.dematerialize.call(filter.filter.call(map.map.call(exhaustMap.exhaustMap.call(source$, resolveEffectSource), function (output) {
-            verifyOutput(output, _this.errorReporter);
+            verifyOutput(output, _this.errorHandler);
             return output.notification;
         }), function (notification) { return notification.kind === 'N'; })); });
     };
@@ -341,8 +286,15 @@ EffectSources.decorators = [
 ];
 /** @nocollapse */
 EffectSources.ctorParameters = function () { return [
-    { type: ErrorReporter, },
+    { type: core.ErrorHandler, },
 ]; };
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes} checked by tsc
+ */
+var IMMEDIATE_EFFECTS = new core.InjectionToken('ngrx/effects: Immediate Effects');
+var ROOT_EFFECTS = new core.InjectionToken('ngrx/effects: Root Effects');
+var FEATURE_EFFECTS = new core.InjectionToken('ngrx/effects: Feature Effects');
 /**
  * @fileoverview added by tsickle
  * @suppress {checkTypes} checked by tsc
@@ -489,17 +441,12 @@ var EffectsModule = (function () {
             providers: [
                 EffectsRunner,
                 EffectSources,
-                ErrorReporter,
                 Actions,
                 rootEffects,
                 {
                     provide: ROOT_EFFECTS,
                     deps: rootEffects,
                     useFactory: createSourceInstances,
-                },
-                {
-                    provide: CONSOLE,
-                    useFactory: getConsole,
                 },
             ],
         };
@@ -523,12 +470,6 @@ function createSourceInstances() {
     return instances;
 }
 /**
- * @return {?}
- */
-function getConsole() {
-    return console;
-}
-/**
  * @fileoverview added by tsickle
  * @suppress {checkTypes} checked by tsc
  */
@@ -549,16 +490,13 @@ exports.ofType = ofType;
 exports.EffectsModule = EffectsModule;
 exports.EffectSources = EffectSources;
 exports.toPayload = toPayload;
-exports.ErrorReporter = ErrorReporter;
 exports.ROOT_EFFECTS_INIT = ROOT_EFFECTS_INIT;
-exports.ɵd = EffectsFeatureModule;
+exports.ɵc = EffectsFeatureModule;
 exports.ɵa = createSourceInstances;
-exports.ɵb = getConsole;
-exports.ɵc = EffectsRootModule;
-exports.ɵh = EffectsRunner;
-exports.ɵg = CONSOLE;
-exports.ɵf = FEATURE_EFFECTS;
-exports.ɵe = ROOT_EFFECTS;
+exports.ɵb = EffectsRootModule;
+exports.ɵf = EffectsRunner;
+exports.ɵe = FEATURE_EFFECTS;
+exports.ɵd = ROOT_EFFECTS;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 

@@ -3,7 +3,7 @@ import { merge as merge$1 } from 'rxjs/observable/merge';
 import { ignoreElements as ignoreElements$1 } from 'rxjs/operator/ignoreElements';
 import { materialize as materialize$1 } from 'rxjs/operator/materialize';
 import { map as map$1 } from 'rxjs/operator/map';
-import { Inject, Injectable, InjectionToken, NgModule, Optional } from '@angular/core';
+import { ErrorHandler, Inject, Injectable, InjectionToken, NgModule, Optional } from '@angular/core';
 import { Observable as Observable$1 } from 'rxjs/Observable';
 import { filter as filter$1 } from 'rxjs/operator/filter';
 import { groupBy as groupBy$1 } from 'rxjs/operator/groupBy';
@@ -205,12 +205,7 @@ function verifyOutput(output, reporter) {
  */
 function reportErrorThrown(output, reporter) {
     if (output.notification.kind === 'E') {
-        const /** @type {?} */ errorReason = /** @type {?} */ (new Error(`Effect ${getEffectName(output)} threw an error`));
-        errorReason.Source = output.sourceInstance;
-        errorReason.Effect = output.effect;
-        errorReason.Error = output.notification.error;
-        errorReason.Notification = output.notification;
-        reporter.handleError(errorReason);
+        reporter.handleError(output.notification.error);
     }
 }
 /**
@@ -223,12 +218,7 @@ function reportInvalidActions(output, reporter) {
         const /** @type {?} */ action = output.notification.value;
         const /** @type {?} */ isInvalidAction = !isAction(action);
         if (isInvalidAction) {
-            const /** @type {?} */ errorReason = /** @type {?} */ (new Error(`Effect ${getEffectName(output)} dispatched an invalid action`));
-            errorReason.Source = output.sourceInstance;
-            errorReason.Effect = output.effect;
-            errorReason.Dispatched = action;
-            errorReason.Notification = output.notification;
-            reporter.handleError(errorReason);
+            reporter.handleError(new Error(`Effect ${getEffectName(output)} dispatched an invalid action: ${action}`));
         }
     }
 }
@@ -252,61 +242,13 @@ function getEffectName({ propertyName, sourceInstance, sourceName, }) {
  * @fileoverview added by tsickle
  * @suppress {checkTypes} checked by tsc
  */
-const IMMEDIATE_EFFECTS = new InjectionToken('ngrx/effects: Immediate Effects');
-const ROOT_EFFECTS = new InjectionToken('ngrx/effects: Root Effects');
-const FEATURE_EFFECTS = new InjectionToken('ngrx/effects: Feature Effects');
-const CONSOLE = new InjectionToken('Browser Console');
-
-/**
- * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
- */
-/**
- * @record
- */
-
-/**
- * @record
- */
-
-class ErrorReporter {
-    /**
-     * @param {?} console
-     */
-    constructor(console) {
-        this.console = console;
-    }
-    /**
-     * @param {?} error
-     * @return {?}
-     */
-    handleError(error) {
-        this.console.group(error.message);
-        for (let /** @type {?} */ key in error) {
-            this.console.error(`${key}:`, error[key]);
-        }
-        this.console.groupEnd();
-    }
-}
-ErrorReporter.decorators = [
-    { type: Injectable },
-];
-/** @nocollapse */
-ErrorReporter.ctorParameters = () => [
-    { type: undefined, decorators: [{ type: Inject, args: [CONSOLE,] },] },
-];
-
-/**
- * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
- */
 class EffectSources extends Subject$1 {
     /**
-     * @param {?} errorReporter
+     * @param {?} errorHandler
      */
-    constructor(errorReporter) {
+    constructor(errorHandler) {
         super();
-        this.errorReporter = errorReporter;
+        this.errorHandler = errorHandler;
     }
     /**
      * @param {?} effectSourceInstance
@@ -321,7 +263,7 @@ class EffectSources extends Subject$1 {
      */
     toActions() {
         return mergeMap$1.call(groupBy$1.call(this, getSourceForInstance), (source$) => dematerialize$1.call(filter$1.call(map$1.call(exhaustMap$1.call(source$, resolveEffectSource), (output) => {
-            verifyOutput(output, this.errorReporter);
+            verifyOutput(output, this.errorHandler);
             return output.notification;
         }), (notification) => notification.kind === 'N')));
     }
@@ -331,8 +273,16 @@ EffectSources.decorators = [
 ];
 /** @nocollapse */
 EffectSources.ctorParameters = () => [
-    { type: ErrorReporter, },
+    { type: ErrorHandler, },
 ];
+
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes} checked by tsc
+ */
+const IMMEDIATE_EFFECTS = new InjectionToken('ngrx/effects: Immediate Effects');
+const ROOT_EFFECTS = new InjectionToken('ngrx/effects: Root Effects');
+const FEATURE_EFFECTS = new InjectionToken('ngrx/effects: Feature Effects');
 
 /**
  * @fileoverview added by tsickle
@@ -478,17 +428,12 @@ class EffectsModule {
             providers: [
                 EffectsRunner,
                 EffectSources,
-                ErrorReporter,
                 Actions,
                 rootEffects,
                 {
                     provide: ROOT_EFFECTS,
                     deps: rootEffects,
                     useFactory: createSourceInstances,
-                },
-                {
-                    provide: CONSOLE,
-                    useFactory: getConsole,
                 },
             ],
         };
@@ -505,12 +450,6 @@ EffectsModule.ctorParameters = () => [];
  */
 function createSourceInstances(...instances) {
     return instances;
-}
-/**
- * @return {?}
- */
-function getConsole() {
-    return console;
 }
 
 /**
@@ -544,5 +483,5 @@ function toPayload(action) {
  * Generated bundle index. Do not edit.
  */
 
-export { Effect, getEffectsMetadata, mergeEffects, Actions, ofType, EffectsModule, EffectSources, toPayload, ErrorReporter, ROOT_EFFECTS_INIT, EffectsFeatureModule as ɵd, createSourceInstances as ɵa, getConsole as ɵb, EffectsRootModule as ɵc, EffectsRunner as ɵh, CONSOLE as ɵg, FEATURE_EFFECTS as ɵf, ROOT_EFFECTS as ɵe };
+export { Effect, getEffectsMetadata, mergeEffects, Actions, ofType, EffectsModule, EffectSources, toPayload, ROOT_EFFECTS_INIT, EffectsFeatureModule as ɵc, createSourceInstances as ɵa, EffectsRootModule as ɵb, EffectsRunner as ɵf, FEATURE_EFFECTS as ɵe, ROOT_EFFECTS as ɵd };
 //# sourceMappingURL=effects.js.map
