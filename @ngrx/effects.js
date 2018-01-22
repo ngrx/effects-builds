@@ -456,19 +456,6 @@ function createSourceInstances(...instances) {
  * @fileoverview added by tsickle
  * @suppress {checkTypes} checked by tsc
  */
-/**
- * @deprecated Since version 4.1. Will be deleted in version 5.0.
- * @param {?} action
- * @return {?}
- */
-function toPayload(action) {
-    return (/** @type {?} */ (action)).payload;
-}
-
-/**
- * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
- */
 
 /**
  * @fileoverview added by tsickle
@@ -483,5 +470,5 @@ function toPayload(action) {
  * Generated bundle index. Do not edit.
  */
 
-export { Effect, getEffectsMetadata, mergeEffects, Actions, ofType, EffectsModule, EffectSources, toPayload, ROOT_EFFECTS_INIT, EffectsFeatureModule as ɵc, createSourceInstances as ɵa, EffectsRootModule as ɵb, EffectsRunner as ɵf, FEATURE_EFFECTS as ɵe, ROOT_EFFECTS as ɵd };
+export { Effect, getEffectsMetadata, mergeEffects, Actions, ofType, EffectsModule, EffectSources, ROOT_EFFECTS_INIT, EffectsFeatureModule as ɵc, createSourceInstances as ɵa, EffectsRootModule as ɵb, EffectsRunner as ɵf, FEATURE_EFFECTS as ɵe, ROOT_EFFECTS as ɵd };
 //# sourceMappingURL=effects.js.map

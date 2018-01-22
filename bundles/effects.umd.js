@@ -469,18 +469,6 @@ function createSourceInstances() {
     }
     return instances;
 }
-/**
- * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
- */
-/**
- * @deprecated Since version 4.1. Will be deleted in version 5.0.
- * @param {?} action
- * @return {?}
- */
-function toPayload(action) {
-    return ((action)).payload;
-}
 
 exports.Effect = Effect;
 exports.getEffectsMetadata = getEffectsMetadata;
@@ -489,7 +477,6 @@ exports.Actions = Actions;
 exports.ofType = ofType;
 exports.EffectsModule = EffectsModule;
 exports.EffectSources = EffectSources;
-exports.toPayload = toPayload;
 exports.ROOT_EFFECTS_INIT = ROOT_EFFECTS_INIT;
 exports.ɵc = EffectsFeatureModule;
 exports.ɵa = createSourceInstances;
