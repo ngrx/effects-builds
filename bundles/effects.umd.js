@@ -166,7 +166,7 @@ var Actions = (function (_super) {
         for (var _i = 0; _i < arguments.length; _i++) {
             allowedTypes[_i] = arguments[_i];
         }
-        return ofType.apply(void 0, allowedTypes)(/** @type {?} */ (this.source));
+        return ofType.apply(void 0, allowedTypes)(/** @type {?} */ (this));
     };
     return Actions;
 }(Observable.Observable));

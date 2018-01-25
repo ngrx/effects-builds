@@ -160,7 +160,7 @@ class Actions extends Observable$1 {
      * @return {?}
      */
     ofType(...allowedTypes) {
-        return ofType(...allowedTypes)(/** @type {?} */ (this.source));
+        return ofType(...allowedTypes)(/** @type {?} */ (this));
     }
 }
 Actions.decorators = [
