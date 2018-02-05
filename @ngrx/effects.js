@@ -5,11 +5,12 @@ import { materialize as materialize$1 } from 'rxjs/operator/materialize';
 import { map as map$1 } from 'rxjs/operator/map';
 import { ErrorHandler, Inject, Injectable, InjectionToken, NgModule, Optional } from '@angular/core';
 import { Observable as Observable$1 } from 'rxjs/Observable';
-import { filter as filter$1 } from 'rxjs/operator/filter';
+import { filter } from 'rxjs/operators';
 import { groupBy as groupBy$1 } from 'rxjs/operator/groupBy';
 import { mergeMap as mergeMap$1 } from 'rxjs/operator/mergeMap';
 import { exhaustMap as exhaustMap$1 } from 'rxjs/operator/exhaustMap';
 import { dematerialize as dematerialize$1 } from 'rxjs/operator/dematerialize';
+import { filter as filter$2 } from 'rxjs/operator/filter';
 import { Subject as Subject$1 } from 'rxjs/Subject';
 
 /**
@@ -160,7 +161,7 @@ class Actions extends Observable$1 {
      * @return {?}
      */
     ofType(...allowedTypes) {
-        return ofType(...allowedTypes)(/** @type {?} */ (this));
+        return /** @type {?} */ (ofType(...allowedTypes)(/** @type {?} */ (this)));
     }
 }
 Actions.decorators = [
@@ -176,9 +177,7 @@ Actions.ctorParameters = () => [
  * @return {?}
  */
 function ofType(...allowedTypes) {
-    return function ofTypeOperator(source$) {
-        return filter$1.call(source$, (action) => allowedTypes.some(type => type === action.type));
-    };
+    return filter((action) => allowedTypes.some(type => type === action.type));
 }
 
 /**
@@ -262,7 +261,7 @@ class EffectSources extends Subject$1 {
      * @return {?}
      */
     toActions() {
-        return mergeMap$1.call(groupBy$1.call(this, getSourceForInstance), (source$) => dematerialize$1.call(filter$1.call(map$1.call(exhaustMap$1.call(source$, resolveEffectSource), (output) => {
+        return mergeMap$1.call(groupBy$1.call(this, getSourceForInstance), (source$) => dematerialize$1.call(filter$2.call(map$1.call(exhaustMap$1.call(source$, resolveEffectSource), (output) => {
             verifyOutput(output, this.errorHandler);
             return output.notification;
         }), (notification) => notification.kind === 'N')));

@@ -1,8 +1,8 @@
 (function (global, factory) {
-	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@ngrx/store'), require('rxjs/observable/merge'), require('rxjs/operator/ignoreElements'), require('rxjs/operator/materialize'), require('rxjs/operator/map'), require('@angular/core'), require('rxjs/Observable'), require('rxjs/operator/filter'), require('rxjs/operator/groupBy'), require('rxjs/operator/mergeMap'), require('rxjs/operator/exhaustMap'), require('rxjs/operator/dematerialize'), require('rxjs/Subject')) :
-	typeof define === 'function' && define.amd ? define(['exports', '@ngrx/store', 'rxjs/observable/merge', 'rxjs/operator/ignoreElements', 'rxjs/operator/materialize', 'rxjs/operator/map', '@angular/core', 'rxjs/Observable', 'rxjs/operator/filter', 'rxjs/operator/groupBy', 'rxjs/operator/mergeMap', 'rxjs/operator/exhaustMap', 'rxjs/operator/dematerialize', 'rxjs/Subject'], factory) :
-	(factory((global.ngrx = global.ngrx || {}, global.ngrx.effects = {}),global.ngrx.store,global.Rx.Observable,global.Rx.Observable.prototype,global.materialize,global.map,global.ng.core,global.Rx,global.Rx.Observable.prototype,global.groupBy,global.mergeMap,global.exhaustMap,global.dematerialize,global.Subject));
-}(this, (function (exports,store,merge,ignoreElements,materialize,map,core,Observable,filter,groupBy,mergeMap,exhaustMap,dematerialize,Subject) { 'use strict';
+	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@ngrx/store'), require('rxjs/observable/merge'), require('rxjs/operator/ignoreElements'), require('rxjs/operator/materialize'), require('rxjs/operator/map'), require('@angular/core'), require('rxjs/Observable'), require('rxjs/operators'), require('rxjs/operator/groupBy'), require('rxjs/operator/mergeMap'), require('rxjs/operator/exhaustMap'), require('rxjs/operator/dematerialize'), require('rxjs/operator/filter'), require('rxjs/Subject')) :
+	typeof define === 'function' && define.amd ? define(['exports', '@ngrx/store', 'rxjs/observable/merge', 'rxjs/operator/ignoreElements', 'rxjs/operator/materialize', 'rxjs/operator/map', '@angular/core', 'rxjs/Observable', 'rxjs/operators', 'rxjs/operator/groupBy', 'rxjs/operator/mergeMap', 'rxjs/operator/exhaustMap', 'rxjs/operator/dematerialize', 'rxjs/operator/filter', 'rxjs/Subject'], factory) :
+	(factory((global.ngrx = global.ngrx || {}, global.ngrx.effects = {}),global.ngrx.store,global.Rx.Observable,global.Rx.Observable.prototype,global.materialize,global.map,global.ng.core,global.Rx,global.operators,global.groupBy,global.mergeMap,global.exhaustMap,global.dematerialize,global.Rx.Observable.prototype,global.Subject));
+}(this, (function (exports,store,merge,ignoreElements,materialize,map,core,Observable,operators,groupBy,mergeMap,exhaustMap,dematerialize,filter$1,Subject) { 'use strict';
 
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -166,7 +166,7 @@ var Actions = (function (_super) {
         for (var _i = 0; _i < arguments.length; _i++) {
             allowedTypes[_i] = arguments[_i];
         }
-        return ofType.apply(void 0, allowedTypes)(/** @type {?} */ (this));
+        return (ofType.apply(void 0, allowedTypes)(/** @type {?} */ (this)));
     };
     return Actions;
 }(Observable.Observable));
@@ -187,9 +187,7 @@ function ofType() {
     for (var _i = 0; _i < arguments.length; _i++) {
         allowedTypes[_i] = arguments[_i];
     }
-    return function ofTypeOperator(source$) {
-        return filter.filter.call(source$, function (action) { return allowedTypes.some(function (type) { return type === action.type; }); });
-    };
+    return operators.filter(function (action) { return allowedTypes.some(function (type) { return type === action.type; }); });
 }
 /**
  * @fileoverview added by tsickle
@@ -274,7 +272,7 @@ var EffectSources = (function (_super) {
      */
     EffectSources.prototype.toActions = function () {
         var _this = this;
-        return mergeMap.mergeMap.call(groupBy.groupBy.call(this, getSourceForInstance), function (source$) { return dematerialize.dematerialize.call(filter.filter.call(map.map.call(exhaustMap.exhaustMap.call(source$, resolveEffectSource), function (output) {
+        return mergeMap.mergeMap.call(groupBy.groupBy.call(this, getSourceForInstance), function (source$) { return dematerialize.dematerialize.call(filter$1.filter.call(map.map.call(exhaustMap.exhaustMap.call(source$, resolveEffectSource), function (output) {
             verifyOutput(output, _this.errorHandler);
             return output.notification;
         }), function (notification) { return notification.kind === 'N'; })); });

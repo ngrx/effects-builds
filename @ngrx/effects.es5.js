@@ -15,11 +15,12 @@ import { materialize as materialize$1 } from 'rxjs/operator/materialize';
 import { map as map$1 } from 'rxjs/operator/map';
 import { ErrorHandler, Inject, Injectable, InjectionToken, NgModule, Optional } from '@angular/core';
 import { Observable as Observable$1 } from 'rxjs/Observable';
-import { filter as filter$1 } from 'rxjs/operator/filter';
+import { filter } from 'rxjs/operators';
 import { groupBy as groupBy$1 } from 'rxjs/operator/groupBy';
 import { mergeMap as mergeMap$1 } from 'rxjs/operator/mergeMap';
 import { exhaustMap as exhaustMap$1 } from 'rxjs/operator/exhaustMap';
 import { dematerialize as dematerialize$1 } from 'rxjs/operator/dematerialize';
+import { filter as filter$2 } from 'rxjs/operator/filter';
 import { Subject as Subject$1 } from 'rxjs/Subject';
 /**
  * @fileoverview added by tsickle
@@ -173,7 +174,7 @@ var Actions = (function (_super) {
         for (var _i = 0; _i < arguments.length; _i++) {
             allowedTypes[_i] = arguments[_i];
         }
-        return ofType.apply(void 0, allowedTypes)(/** @type {?} */ (this));
+        return (ofType.apply(void 0, allowedTypes)(/** @type {?} */ (this)));
     };
     return Actions;
 }(Observable$1));
@@ -194,9 +195,7 @@ function ofType() {
     for (var _i = 0; _i < arguments.length; _i++) {
         allowedTypes[_i] = arguments[_i];
     }
-    return function ofTypeOperator(source$) {
-        return filter$1.call(source$, function (action) { return allowedTypes.some(function (type) { return type === action.type; }); });
-    };
+    return filter(function (action) { return allowedTypes.some(function (type) { return type === action.type; }); });
 }
 /**
  * @fileoverview added by tsickle
@@ -281,7 +280,7 @@ var EffectSources = (function (_super) {
      */
     EffectSources.prototype.toActions = function () {
         var _this = this;
-        return mergeMap$1.call(groupBy$1.call(this, getSourceForInstance), function (source$) { return dematerialize$1.call(filter$1.call(map$1.call(exhaustMap$1.call(source$, resolveEffectSource), function (output) {
+        return mergeMap$1.call(groupBy$1.call(this, getSourceForInstance), function (source$) { return dematerialize$1.call(filter$2.call(map$1.call(exhaustMap$1.call(source$, resolveEffectSource), function (output) {
             verifyOutput(output, _this.errorHandler);
             return output.notification;
         }), function (notification) { return notification.kind === 'N'; })); });
