@@ -47,10 +47,10 @@ function setEffectMetadataEntries(sourceProto, entries) {
  */
 function Effect(_a) {
     var dispatch = (_a === void 0 ? { dispatch: true } : _a).dispatch;
-    return function (target, propertyName) {
+    return (function (target, propertyName) {
         var /** @type {?} */ metadata = { propertyName: propertyName, dispatch: dispatch };
         setEffectMetadataEntries(target, [metadata]);
-    };
+    } /*TODO(#823)*/);
 }
 /**
  * @param {?} instance
@@ -69,7 +69,7 @@ function getEffectsMetadata(instance) {
     var /** @type {?} */ metadata = {};
     getSourceMetadata(instance).forEach(function (_a) {
         var propertyName = _a.propertyName, dispatch = _a.dispatch;
-        metadata[propertyName] = { dispatch: dispatch };
+        ((metadata))[propertyName] = { dispatch: dispatch };
     });
     return metadata;
 }

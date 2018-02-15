@@ -46,10 +46,10 @@ function setEffectMetadataEntries(sourceProto, entries) {
  * @return {?}
  */
 function Effect({ dispatch } = { dispatch: true }) {
-    return function (target, propertyName) {
+    return /** @type {?} */ (function (target, propertyName) {
         const /** @type {?} */ metadata = { propertyName, dispatch };
         setEffectMetadataEntries(target, [metadata]);
-    };
+    } /*TODO(#823)*/);
 }
 /**
  * @param {?} instance
@@ -67,7 +67,7 @@ const getSourceMetadata = compose(getEffectMetadataEntries, getSourceForInstance
 function getEffectsMetadata(instance) {
     const /** @type {?} */ metadata = {};
     getSourceMetadata(instance).forEach(({ propertyName, dispatch }) => {
-        metadata[propertyName] = { dispatch };
+        (/** @type {?} */ (metadata))[propertyName] = { dispatch };
     });
     return metadata;
 }
