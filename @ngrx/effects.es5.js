@@ -55,7 +55,7 @@ function setEffectMetadataEntries(sourceProto, entries) {
  */
 function Effect(_a) {
     var dispatch = (_a === void 0 ? { dispatch: true } : _a).dispatch;
-    return (function (target, propertyName) {
+    return /** @type {?} */ (function (target, propertyName) {
         var /** @type {?} */ metadata = { propertyName: propertyName, dispatch: dispatch };
         setEffectMetadataEntries(target, [metadata]);
     } /*TODO(#823)*/);
@@ -141,7 +141,7 @@ function resolveEffectSource(sourceInstance) {
  * @fileoverview added by tsickle
  * @suppress {checkTypes} checked by tsc
  */
-var Actions = (function (_super) {
+var Actions = /** @class */ (function (_super) {
     __extends(Actions, _super);
     /**
      * @param {?=} source
@@ -174,7 +174,7 @@ var Actions = (function (_super) {
         for (var _i = 0; _i < arguments.length; _i++) {
             allowedTypes[_i] = arguments[_i];
         }
-        return (ofType.apply(void 0, allowedTypes)(/** @type {?} */ (this)));
+        return /** @type {?} */ (ofType.apply(void 0, allowedTypes)(/** @type {?} */ (this)));
     };
     return Actions;
 }(Observable$1));
@@ -257,7 +257,7 @@ function getEffectName(_a) {
  * @fileoverview added by tsickle
  * @suppress {checkTypes} checked by tsc
  */
-var EffectSources = (function (_super) {
+var EffectSources = /** @class */ (function (_super) {
     __extends(EffectSources, _super);
     /**
      * @param {?} errorHandler
@@ -305,7 +305,7 @@ var FEATURE_EFFECTS = new InjectionToken('ngrx/effects: Feature Effects');
  * @fileoverview added by tsickle
  * @suppress {checkTypes} checked by tsc
  */
-var EffectsRunner = (function () {
+var EffectsRunner = /** @class */ (function () {
     /**
      * @param {?} effectSources
      * @param {?} store
@@ -349,7 +349,7 @@ EffectsRunner.ctorParameters = function () { return [
  * @suppress {checkTypes} checked by tsc
  */
 var ROOT_EFFECTS_INIT = '@ngrx/effects/init';
-var EffectsRootModule = (function () {
+var EffectsRootModule = /** @class */ (function () {
     /**
      * @param {?} sources
      * @param {?} runner
@@ -389,7 +389,7 @@ EffectsRootModule.ctorParameters = function () { return [
  * @fileoverview added by tsickle
  * @suppress {checkTypes} checked by tsc
  */
-var EffectsFeatureModule = (function () {
+var EffectsFeatureModule = /** @class */ (function () {
     /**
      * @param {?} root
      * @param {?} effectSourceGroups
@@ -416,7 +416,7 @@ EffectsFeatureModule.ctorParameters = function () { return [
  * @fileoverview added by tsickle
  * @suppress {checkTypes} checked by tsc
  */
-var EffectsModule = (function () {
+var EffectsModule = /** @class */ (function () {
     function EffectsModule() {
     }
     /**
