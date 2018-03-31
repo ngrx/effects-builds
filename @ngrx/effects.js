@@ -1,17 +1,7 @@
 import { ScannedActionsSubject, Store, StoreFeatureModule, StoreRootModule, compose } from '@ngrx/store';
-import { merge as merge$1 } from 'rxjs/observable/merge';
-import { ignoreElements as ignoreElements$1 } from 'rxjs/operator/ignoreElements';
-import { materialize as materialize$1 } from 'rxjs/operator/materialize';
-import { map as map$1 } from 'rxjs/operator/map';
+import { Observable, Subject, merge } from 'rxjs';
+import { dematerialize, exhaustMap, filter, groupBy, ignoreElements, map, materialize, mergeMap } from 'rxjs/operators';
 import { ErrorHandler, Inject, Injectable, InjectionToken, NgModule, Optional } from '@angular/core';
-import { Observable as Observable$1 } from 'rxjs/Observable';
-import { filter } from 'rxjs/operators';
-import { groupBy as groupBy$1 } from 'rxjs/operator/groupBy';
-import { mergeMap as mergeMap$1 } from 'rxjs/operator/mergeMap';
-import { exhaustMap as exhaustMap$1 } from 'rxjs/operator/exhaustMap';
-import { dematerialize as dematerialize$1 } from 'rxjs/operator/dematerialize';
-import { filter as filter$2 } from 'rxjs/operator/filter';
-import { Subject as Subject$1 } from 'rxjs/Subject';
 
 /**
  * @fileoverview added by tsickle
@@ -105,18 +95,18 @@ function mergeEffects(sourceInstance) {
             ? sourceInstance[propertyName]()
             : sourceInstance[propertyName];
         if (dispatch === false) {
-            return ignoreElements$1.call(observable);
+            return observable.pipe(ignoreElements());
         }
-        const /** @type {?} */ materialized$ = materialize$1.call(observable);
-        return map$1.call(materialized$, (notification) => ({
+        const /** @type {?} */ materialized$ = observable.pipe(materialize());
+        return materialized$.pipe(map((notification) => ({
             effect: sourceInstance[propertyName],
             notification,
             propertyName,
             sourceName,
             sourceInstance,
-        }));
+        })));
     });
-    return merge$1(...observables);
+    return merge(...observables);
 }
 /**
  * @param {?} sourceInstance
@@ -134,7 +124,10 @@ function resolveEffectSource(sourceInstance) {
  * @fileoverview added by tsickle
  * @suppress {checkTypes} checked by tsc
  */
-class Actions extends Observable$1 {
+/**
+ * @template V
+ */
+class Actions extends Observable {
     /**
      * @param {?=} source
      */
@@ -169,7 +162,7 @@ Actions.decorators = [
 ];
 /** @nocollapse */
 Actions.ctorParameters = () => [
-    { type: Observable$1, decorators: [{ type: Inject, args: [ScannedActionsSubject,] },] },
+    { type: Observable, decorators: [{ type: Inject, args: [ScannedActionsSubject,] },] },
 ];
 /**
  * @template T
@@ -241,7 +234,7 @@ function getEffectName({ propertyName, sourceInstance, sourceName, }) {
  * @fileoverview added by tsickle
  * @suppress {checkTypes} checked by tsc
  */
-class EffectSources extends Subject$1 {
+class EffectSources extends Subject {
     /**
      * @param {?} errorHandler
      */
@@ -261,10 +254,10 @@ class EffectSources extends Subject$1 {
      * @return {?}
      */
     toActions() {
-        return mergeMap$1.call(groupBy$1.call(this, getSourceForInstance), (source$) => dematerialize$1.call(filter$2.call(map$1.call(exhaustMap$1.call(source$, resolveEffectSource), (output) => {
+        return this.pipe(groupBy(getSourceForInstance), mergeMap(source$ => source$.pipe(exhaustMap(resolveEffectSource), map(output => {
             verifyOutput(output, this.errorHandler);
             return output.notification;
-        }), (notification) => notification.kind === 'N')));
+        }), filter((notification) => notification.kind === 'N'), dematerialize())));
     }
 }
 EffectSources.decorators = [

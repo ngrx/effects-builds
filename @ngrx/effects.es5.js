@@ -9,19 +9,9 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 import { ScannedActionsSubject, Store, StoreFeatureModule, StoreRootModule, compose } from '@ngrx/store';
-import { merge as merge$1 } from 'rxjs/observable/merge';
-import { ignoreElements as ignoreElements$1 } from 'rxjs/operator/ignoreElements';
-import { materialize as materialize$1 } from 'rxjs/operator/materialize';
-import { map as map$1 } from 'rxjs/operator/map';
+import { Observable, Subject, merge } from 'rxjs';
+import { dematerialize, exhaustMap, filter, groupBy, ignoreElements, map, materialize, mergeMap } from 'rxjs/operators';
 import { ErrorHandler, Inject, Injectable, InjectionToken, NgModule, Optional } from '@angular/core';
-import { Observable as Observable$1 } from 'rxjs/Observable';
-import { filter } from 'rxjs/operators';
-import { groupBy as groupBy$1 } from 'rxjs/operator/groupBy';
-import { mergeMap as mergeMap$1 } from 'rxjs/operator/mergeMap';
-import { exhaustMap as exhaustMap$1 } from 'rxjs/operator/exhaustMap';
-import { dematerialize as dematerialize$1 } from 'rxjs/operator/dematerialize';
-import { filter as filter$2 } from 'rxjs/operator/filter';
-import { Subject as Subject$1 } from 'rxjs/Subject';
 /**
  * @fileoverview added by tsickle
  * @suppress {checkTypes} checked by tsc
@@ -113,18 +103,18 @@ function mergeEffects(sourceInstance) {
             ? sourceInstance[propertyName]()
             : sourceInstance[propertyName];
         if (dispatch === false) {
-            return ignoreElements$1.call(observable);
+            return observable.pipe(ignoreElements());
         }
-        var /** @type {?} */ materialized$ = materialize$1.call(observable);
-        return map$1.call(materialized$, function (notification) { return ({
+        var /** @type {?} */ materialized$ = observable.pipe(materialize());
+        return materialized$.pipe(map(function (notification) { return ({
             effect: sourceInstance[propertyName],
             notification: notification,
             propertyName: propertyName,
             sourceName: sourceName,
             sourceInstance: sourceInstance,
-        }); });
+        }); }));
     });
-    return merge$1.apply(void 0, observables);
+    return merge.apply(void 0, observables);
 }
 /**
  * @param {?} sourceInstance
@@ -140,6 +130,9 @@ function resolveEffectSource(sourceInstance) {
 /**
  * @fileoverview added by tsickle
  * @suppress {checkTypes} checked by tsc
+ */
+/**
+ * @template V
  */
 var Actions = /** @class */ (function (_super) {
     __extends(Actions, _super);
@@ -177,13 +170,13 @@ var Actions = /** @class */ (function (_super) {
         return /** @type {?} */ (ofType.apply(void 0, allowedTypes)(/** @type {?} */ (this)));
     };
     return Actions;
-}(Observable$1));
+}(Observable));
 Actions.decorators = [
     { type: Injectable },
 ];
 /** @nocollapse */
 Actions.ctorParameters = function () { return [
-    { type: Observable$1, decorators: [{ type: Inject, args: [ScannedActionsSubject,] },] },
+    { type: Observable, decorators: [{ type: Inject, args: [ScannedActionsSubject,] },] },
 ]; };
 /**
  * @template T
@@ -280,13 +273,13 @@ var EffectSources = /** @class */ (function (_super) {
      */
     EffectSources.prototype.toActions = function () {
         var _this = this;
-        return mergeMap$1.call(groupBy$1.call(this, getSourceForInstance), function (source$) { return dematerialize$1.call(filter$2.call(map$1.call(exhaustMap$1.call(source$, resolveEffectSource), function (output) {
+        return this.pipe(groupBy(getSourceForInstance), mergeMap(function (source$) { return source$.pipe(exhaustMap(resolveEffectSource), map(function (output) {
             verifyOutput(output, _this.errorHandler);
             return output.notification;
-        }), function (notification) { return notification.kind === 'N'; })); });
+        }), filter(function (notification) { return notification.kind === 'N'; }), dematerialize()); }));
     };
     return EffectSources;
-}(Subject$1));
+}(Subject));
 EffectSources.decorators = [
     { type: Injectable },
 ];
