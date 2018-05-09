@@ -434,8 +434,6 @@ class EffectsModule {
 EffectsModule.decorators = [
     { type: NgModule, args: [{},] },
 ];
-/** @nocollapse */
-EffectsModule.ctorParameters = () => [];
 /**
  * @param {...?} instances
  * @return {?}

@@ -457,8 +457,6 @@ var EffectsModule = /** @class */ (function () {
 EffectsModule.decorators = [
     { type: core.NgModule, args: [{},] },
 ];
-/** @nocollapse */
-EffectsModule.ctorParameters = function () { return []; };
 /**
  * @param {...?} instances
  * @return {?}
