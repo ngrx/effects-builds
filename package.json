@@ -1,6 +1,6 @@
 {
   "name": "@ngrx/effects",
-  "version": "0.0.0-PLACEHOLDER",
+  "version": "v6.0.0-beta.1+35.sha-e711c28",
   "description": "Side effect model for @ngrx/store",
   "repository": {
     "type": "git",
@@ -13,12 +13,27 @@
   },
   "homepage": "https://github.com/ngrx/platform#readme",
   "peerDependencies": {
-    "@angular/core": "NG_VERSION",
-    "@ngrx/store": "0.0.0-PLACEHOLDER",
-    "rxjs": "RXJS_VERSION"
+    "@angular/core": "^6.0.0",
+    "@ngrx/store": "v6.0.0-beta.1+35.sha-e711c28",
+    "rxjs": "^5.6.0-forward-compat.0 || ^6.0.0"
   },
   "ng-update": {
-    "packageGroup": "NG_UPDATE_PACKAGE_GROUP"
+    "packageGroup": [
+      "@ngrx/effects",
+      "@ngrx/entity",
+      "@ngrx/router-store",
+      "@ngrx/schematics",
+      "@ngrx/store",
+      "@ngrx/store-devtools"
+    ]
   },
-  "sideEffects": false
+  "sideEffects": false,
+  "main": "./bundles/effects.umd.js",
+  "fesm5": "./fesm5/effects.js",
+  "fesm2015": "./fesm2015/effects.js",
+  "esm5": "./esm5/effects.js",
+  "esm2015": "./esm2015/effects.js",
+  "typings": "./effects.d.ts",
+  "module": "./fesm5/effects.js",
+  "es2015": "./fesm2015/effects.js"
 }

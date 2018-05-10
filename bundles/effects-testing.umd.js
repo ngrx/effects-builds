@@ -1,7 +1,12 @@
+/**
+ * @license NgRx v6.0.0-beta.1+35.sha-e711c28
+ * (c) 2015-2018 Brandon Roberts, Mike Ryan, Rob Wormald, Victor Savkin
+ * License: MIT
+ */
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@ngrx/effects'), require('rxjs')) :
 	typeof define === 'function' && define.amd ? define('@ngrx/effects/testing', ['exports', '@ngrx/effects', 'rxjs'], factory) :
-	(factory((global.ngrx = global.ngrx || {}, global.ngrx.effects = global.ngrx.effects || {}, global.ngrx.effects.testing = {}),global.ngrx.effects,global.Rx));
+	(factory((global.ngrx = global.ngrx || {}, global.ngrx.effects = global.ngrx.effects || {}, global.ngrx.effects.testing = {}),global['@ngrx/effects'],global.rxjs));
 }(this, (function (exports,effects,rxjs) { 'use strict';
 
 function provideMockActions(factoryOrSource) {
@@ -15,6 +20,10 @@ function provideMockActions(factoryOrSource) {
         },
     };
 }
+
+/**
+ * Generated bundle index. Do not edit.
+ */
 
 exports.provideMockActions = provideMockActions;
 

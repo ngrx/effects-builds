@@ -1,1 +1,4 @@
-export * from './src/testing';
+/**
+ * Generated bundle index. Do not edit.
+ */
+export * from './index';
