@@ -1,5 +1,5 @@
 /**
- * @license NgRx 6.0.1+34.sha-a17cfee
+ * @license NgRx 6.0.1+36.sha-e7ae8a2
  * (c) 2015-2018 Brandon Roberts, Mike Ryan, Rob Wormald, Victor Savkin
  * License: MIT
  */
@@ -15,16 +15,21 @@ import { ErrorHandler, Inject, Injectable, InjectionToken, NgModule, Optional } 
 const METADATA_KEY = '__@ngrx/effects__';
 /**
  * @record
+ * @template T
  */
 
 /**
+ * @template T
  * @param {?} sourceProto
  * @return {?}
  */
 function getEffectMetadataEntries(sourceProto) {
-    return sourceProto.constructor[METADATA_KEY] || [];
+    return sourceProto.constructor.hasOwnProperty(METADATA_KEY)
+        ? (/** @type {?} */ (sourceProto.constructor))[METADATA_KEY]
+        : [];
 }
 /**
+ * @template T
  * @param {?} sourceProto
  * @param {?} entries
  * @return {?}
@@ -37,23 +42,32 @@ function setEffectMetadataEntries(sourceProto, entries) {
     Array.prototype.push.apply(meta, entries);
 }
 /**
+ * @template T
  * @param {?=} __0
  * @return {?}
  */
-function Effect({ dispatch } = { dispatch: true }) {
+function Effect({ dispatch = true } = {}) {
     return /** @type {?} */ (function (target, propertyName) {
         const /** @type {?} */ metadata = { propertyName, dispatch };
         setEffectMetadataEntries(target, [metadata]);
-    } /*TODO(#823)*/);
+    });
 }
 /**
+ * @template T
  * @param {?} instance
  * @return {?}
  */
 function getSourceForInstance(instance) {
     return Object.getPrototypeOf(instance);
 }
-const getSourceMetadata = compose(getEffectMetadataEntries, getSourceForInstance);
+/**
+ * @template T
+ * @param {?} instance
+ * @return {?}
+ */
+function getSourceMetadata(instance) {
+    return compose(getEffectMetadataEntries, getSourceForInstance)(instance);
+}
 /**
  * @template T
  * @param {?} instance
@@ -61,9 +75,9 @@ const getSourceMetadata = compose(getEffectMetadataEntries, getSourceForInstance
  */
 function getEffectsMetadata(instance) {
     const /** @type {?} */ metadata = {};
-    getSourceMetadata(instance).forEach(({ propertyName, dispatch }) => {
-        (/** @type {?} */ (metadata))[propertyName] = { dispatch };
-    });
+    for (const { propertyName, dispatch } of getSourceMetadata(instance)) {
+        metadata[propertyName] = { dispatch };
+    }
     return metadata;
 }
 

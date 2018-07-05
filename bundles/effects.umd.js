@@ -1,5 +1,5 @@
 /**
- * @license NgRx 6.0.1+34.sha-a17cfee
+ * @license NgRx 6.0.1+36.sha-e7ae8a2
  * (c) 2015-2018 Brandon Roberts, Mike Ryan, Rob Wormald, Victor Savkin
  * License: MIT
  */
@@ -9,9 +9,21 @@
 	(factory((global.ngrx = global.ngrx || {}, global.ngrx.effects = {}),global['@ngrx/store'],global.rxjs,global.rxjs.operators,global.ng.core));
 }(this, (function (exports,store,rxjs,operators,core) { 'use strict';
 
+var __values = (undefined && undefined.__values) || function (o) {
+    var m = typeof Symbol === "function" && o[Symbol.iterator], i = 0;
+    if (m) return m.call(o);
+    return {
+        next: function () {
+            if (o && i >= o.length) o = void 0;
+            return { value: o && o[i++], done: !o };
+        }
+    };
+};
 var METADATA_KEY = '__@ngrx/effects__';
 function getEffectMetadataEntries(sourceProto) {
-    return sourceProto.constructor[METADATA_KEY] || [];
+    return sourceProto.constructor.hasOwnProperty(METADATA_KEY)
+        ? sourceProto.constructor[METADATA_KEY]
+        : [];
 }
 function setEffectMetadataEntries(sourceProto, entries) {
     var constructor = sourceProto.constructor;
@@ -21,23 +33,35 @@ function setEffectMetadataEntries(sourceProto, entries) {
     Array.prototype.push.apply(meta, entries);
 }
 function Effect(_a) {
-    var dispatch = (_a === void 0 ? { dispatch: true } : _a).dispatch;
+    var _b = (_a === void 0 ? {} : _a).dispatch, dispatch = _b === void 0 ? true : _b;
     return function (target, propertyName) {
         var metadata = { propertyName: propertyName, dispatch: dispatch };
         setEffectMetadataEntries(target, [metadata]);
-    } /*TODO(#823)*/;
+    };
 }
 function getSourceForInstance(instance) {
     return Object.getPrototypeOf(instance);
 }
-var getSourceMetadata = store.compose(getEffectMetadataEntries, getSourceForInstance);
+function getSourceMetadata(instance) {
+    return store.compose(getEffectMetadataEntries, getSourceForInstance)(instance);
+}
 function getEffectsMetadata(instance) {
     var metadata = {};
-    getSourceMetadata(instance).forEach(function (_a) {
-        var propertyName = _a.propertyName, dispatch = _a.dispatch;
-        metadata[propertyName] = { dispatch: dispatch };
-    });
+    try {
+        for (var _a = __values(getSourceMetadata(instance)), _b = _a.next(); !_b.done; _b = _a.next()) {
+            var _c = _b.value, propertyName = _c.propertyName, dispatch = _c.dispatch;
+            metadata[propertyName] = { dispatch: dispatch };
+        }
+    }
+    catch (e_1_1) { e_1 = { error: e_1_1 }; }
+    finally {
+        try {
+            if (_b && !_b.done && (_d = _a.return)) _d.call(_a);
+        }
+        finally { if (e_1) throw e_1.error; }
+    }
     return metadata;
+    var e_1, _d;
 }
 
 var onRunEffectsKey = 'ngrxOnRunEffects';

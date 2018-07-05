@@ -1,6 +1,10 @@
 import { Observable } from 'rxjs';
 import { EffectNotification } from './effect_notification';
+export declare type onRunEffectsFn = (resolvedEffects$: Observable<EffectNotification>) => Observable<EffectNotification>;
 export interface OnRunEffects {
-    ngrxOnRunEffects(resolvedEffects$: Observable<EffectNotification>): Observable<EffectNotification>;
+    ngrxOnRunEffects: onRunEffectsFn;
 }
-export declare function isOnRunEffects(sourceInstance: Object): sourceInstance is OnRunEffects;
+export declare const onRunEffectsKey: keyof OnRunEffects;
+export declare function isOnRunEffects(sourceInstance: {
+    [onRunEffectsKey]?: onRunEffectsFn;
+}): sourceInstance is OnRunEffects;
