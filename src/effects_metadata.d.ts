@@ -1,5 +1,5 @@
 export interface EffectMetadata<T> {
-    propertyName: keyof T;
+    propertyName: string;
     dispatch: boolean;
 }
 export declare function Effect<T>({dispatch}?: {
@@ -8,7 +8,7 @@ export declare function Effect<T>({dispatch}?: {
 export declare function getSourceForInstance<T>(instance: T): T;
 export declare function getSourceMetadata<T>(instance: T): Array<EffectMetadata<T>>;
 export declare type EffectsMetadata<T> = {
-    [key in keyof T]?: {
+    [key: string]: {
         dispatch: boolean;
     };
 };

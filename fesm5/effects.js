@@ -1,12 +1,12 @@
 /**
- * @license NgRx 6.0.1+42.sha-8f05f1f
+ * @license NgRx 6.0.1+104.sha-de1198f
  * (c) 2015-2018 Brandon Roberts, Mike Ryan, Rob Wormald, Victor Savkin
  * License: MIT
  */
-import { ScannedActionsSubject, Store, StoreFeatureModule, StoreRootModule, compose } from '@ngrx/store';
-import { Observable, Subject, merge } from 'rxjs';
-import { dematerialize, exhaustMap, filter, groupBy, ignoreElements, map, materialize, mergeMap } from 'rxjs/operators';
-import { ErrorHandler, Inject, Injectable, InjectionToken, NgModule, Optional } from '@angular/core';
+import { compose, ScannedActionsSubject, Store, StoreRootModule, StoreFeatureModule } from '@ngrx/store';
+import { merge, Observable, Subject } from 'rxjs';
+import { ignoreElements, map, materialize, filter, dematerialize, exhaustMap, groupBy, mergeMap } from 'rxjs/operators';
+import { Inject, Injectable, ErrorHandler, InjectionToken, NgModule, Optional } from '@angular/core';
 
 var __values = (undefined && undefined.__values) || function (o) {
     var m = typeof Symbol === "function" && o[Symbol.iterator], i = 0;
@@ -33,6 +33,8 @@ function setEffectMetadataEntries(sourceProto, entries) {
 }
 function Effect(_a) {
     var _b = (_a === void 0 ? {} : _a).dispatch, dispatch = _b === void 0 ? true : _b;
+    // Once TS is >= 2.8 replace with <Key extends Extract<keyof T, string>>
+    // for propertyName.
     return function (target, propertyName) {
         var metadata = { propertyName: propertyName, dispatch: dispatch };
         setEffectMetadataEntries(target, [metadata]);
@@ -100,15 +102,13 @@ function mergeEffects(sourceInstance) {
             return observable.pipe(ignoreElements());
         }
         var materialized$ = observable.pipe(materialize());
-        return materialized$.pipe(map(function (notification) {
-            return ({
-                effect: sourceInstance[propertyName],
-                notification: notification,
-                propertyName: propertyName,
-                sourceName: sourceName,
-                sourceInstance: sourceInstance,
-            });
-        }));
+        return materialized$.pipe(map(function (notification) { return ({
+            effect: sourceInstance[propertyName],
+            notification: notification,
+            propertyName: propertyName,
+            sourceName: sourceName,
+            sourceInstance: sourceInstance,
+        }); }));
     });
     return merge.apply(void 0, __spread(observables));
 }
@@ -165,6 +165,9 @@ var Actions = /** @class */ (function (_super) {
         observable.operator = operator;
         return observable;
     };
+    /**
+     * @deprecated from 6.1.0. Use the pipeable `ofType` operator instead.
+     */
     Actions.prototype.ofType = function () {
         var allowedTypes = [];
         for (var _i = 0; _i < arguments.length; _i++) {
@@ -177,7 +180,7 @@ var Actions = /** @class */ (function (_super) {
     ];
     /** @nocollapse */
     Actions.ctorParameters = function () { return [
-        { type: Observable, decorators: [{ type: Inject, args: [ScannedActionsSubject,] },] },
+        { type: Observable, decorators: [{ type: Inject, args: [ScannedActionsSubject,] }] }
     ]; };
     return Actions;
 }(Observable));
@@ -205,7 +208,7 @@ function reportInvalidActions(output, reporter) {
         var action = output.notification.value;
         var isInvalidAction = !isAction(action);
         if (isInvalidAction) {
-            reporter.handleError(new Error("Effect " + getEffectName(output) + " dispatched an invalid action: " + action));
+            reporter.handleError(new Error("Effect " + getEffectName(output) + " dispatched an invalid action: " + stringify(action)));
         }
     }
 }
@@ -216,6 +219,14 @@ function getEffectName(_a) {
     var propertyName = _a.propertyName, sourceInstance = _a.sourceInstance, sourceName = _a.sourceName;
     var isMethod = typeof sourceInstance[propertyName] === 'function';
     return "\"" + sourceName + "." + propertyName + (isMethod ? '()' : '') + "\"";
+}
+function stringify(action) {
+    try {
+        return JSON.stringify(action);
+    }
+    catch (_a) {
+        return action;
+    }
 }
 
 var __extends$1 = (undefined && undefined.__extends) || (function () {
@@ -241,15 +252,9 @@ var EffectSources = /** @class */ (function (_super) {
     /**
      * @internal
      */
-    /**
-       * @internal
-       */
-    EffectSources.prototype.toActions = /**
-       * @internal
-       */
-    function () {
+    EffectSources.prototype.toActions = function () {
         var _this = this;
-        return this.pipe(groupBy(getSourceForInstance), mergeMap(function (source$) {
+        return this.pipe(groupBy(function (source) { return source; }), mergeMap(function (source$) {
             return source$.pipe(exhaustMap(resolveEffectSource), map(function (output) {
                 verifyOutput(output, _this.errorHandler);
                 return output.notification;
@@ -263,7 +268,7 @@ var EffectSources = /** @class */ (function (_super) {
     ];
     /** @nocollapse */
     EffectSources.ctorParameters = function () { return [
-        { type: ErrorHandler, },
+        { type: ErrorHandler }
     ]; };
     return EffectSources;
 }(Subject));
@@ -273,9 +278,9 @@ var ROOT_EFFECTS = new InjectionToken('ngrx/effects: Root Effects');
 var FEATURE_EFFECTS = new InjectionToken('ngrx/effects: Feature Effects');
 
 var EffectsRunner = /** @class */ (function () {
-    function EffectsRunner(effectSources, store$$1) {
+    function EffectsRunner(effectSources, store) {
         this.effectSources = effectSources;
-        this.store = store$$1;
+        this.store = store;
         this.effectsSubscription = null;
     }
     EffectsRunner.prototype.start = function () {
@@ -296,21 +301,21 @@ var EffectsRunner = /** @class */ (function () {
     ];
     /** @nocollapse */
     EffectsRunner.ctorParameters = function () { return [
-        { type: EffectSources, },
-        { type: Store, },
+        { type: EffectSources },
+        { type: Store }
     ]; };
     return EffectsRunner;
 }());
 
 var ROOT_EFFECTS_INIT = '@ngrx/effects/init';
 var EffectsRootModule = /** @class */ (function () {
-    function EffectsRootModule(sources, runner, store$$1, rootEffects, storeRootModule, storeFeatureModule) {
+    function EffectsRootModule(sources, runner, store, rootEffects, storeRootModule, storeFeatureModule) {
         this.sources = sources;
         runner.start();
         rootEffects.forEach(function (effectSourceInstance) {
             return sources.addEffects(effectSourceInstance);
         });
-        store$$1.dispatch({ type: ROOT_EFFECTS_INIT });
+        store.dispatch({ type: ROOT_EFFECTS_INIT });
     }
     EffectsRootModule.prototype.addEffects = function (effectSourceInstance) {
         this.sources.addEffects(effectSourceInstance);
@@ -320,12 +325,12 @@ var EffectsRootModule = /** @class */ (function () {
     ];
     /** @nocollapse */
     EffectsRootModule.ctorParameters = function () { return [
-        { type: EffectSources, },
-        { type: EffectsRunner, },
-        { type: Store, },
-        { type: Array, decorators: [{ type: Inject, args: [ROOT_EFFECTS,] },] },
-        { type: StoreRootModule, decorators: [{ type: Optional },] },
-        { type: StoreFeatureModule, decorators: [{ type: Optional },] },
+        { type: EffectSources },
+        { type: EffectsRunner },
+        { type: Store },
+        { type: Array, decorators: [{ type: Inject, args: [ROOT_EFFECTS,] }] },
+        { type: StoreRootModule, decorators: [{ type: Optional }] },
+        { type: StoreFeatureModule, decorators: [{ type: Optional }] }
     ]; };
     return EffectsRootModule;
 }());
@@ -344,10 +349,10 @@ var EffectsFeatureModule = /** @class */ (function () {
     ];
     /** @nocollapse */
     EffectsFeatureModule.ctorParameters = function () { return [
-        { type: EffectsRootModule, },
-        { type: Array, decorators: [{ type: Inject, args: [FEATURE_EFFECTS,] },] },
-        { type: StoreRootModule, decorators: [{ type: Optional },] },
-        { type: StoreFeatureModule, decorators: [{ type: Optional },] },
+        { type: EffectsRootModule },
+        { type: Array, decorators: [{ type: Inject, args: [FEATURE_EFFECTS,] }] },
+        { type: StoreRootModule, decorators: [{ type: Optional }] },
+        { type: StoreFeatureModule, decorators: [{ type: Optional }] }
     ]; };
     return EffectsFeatureModule;
 }());

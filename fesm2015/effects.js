@@ -1,23 +1,19 @@
 /**
- * @license NgRx 6.0.1+42.sha-8f05f1f
+ * @license NgRx 6.0.1+104.sha-de1198f
  * (c) 2015-2018 Brandon Roberts, Mike Ryan, Rob Wormald, Victor Savkin
  * License: MIT
  */
-import { ScannedActionsSubject, Store, StoreFeatureModule, StoreRootModule, compose } from '@ngrx/store';
-import { Observable, Subject, merge } from 'rxjs';
-import { dematerialize, exhaustMap, filter, groupBy, ignoreElements, map, materialize, mergeMap } from 'rxjs/operators';
-import { ErrorHandler, Inject, Injectable, InjectionToken, NgModule, Optional } from '@angular/core';
+import { compose, ScannedActionsSubject, Store, StoreRootModule, StoreFeatureModule } from '@ngrx/store';
+import { merge, Observable, Subject } from 'rxjs';
+import { ignoreElements, map, materialize, filter, dematerialize, exhaustMap, groupBy, mergeMap } from 'rxjs/operators';
+import { Inject, Injectable, ErrorHandler, InjectionToken, NgModule, Optional } from '@angular/core';
 
 /**
  * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
+ * @suppress {checkTypes,extraRequire,uselessCode} checked by tsc
  */
+/** @type {?} */
 const METADATA_KEY = '__@ngrx/effects__';
-/**
- * @record
- * @template T
- */
-
 /**
  * @template T
  * @param {?} sourceProto
@@ -35,8 +31,10 @@ function getEffectMetadataEntries(sourceProto) {
  * @return {?}
  */
 function setEffectMetadataEntries(sourceProto, entries) {
-    const /** @type {?} */ constructor = sourceProto.constructor;
-    const /** @type {?} */ meta = constructor.hasOwnProperty(METADATA_KEY)
+    /** @type {?} */
+    const constructor = sourceProto.constructor;
+    /** @type {?} */
+    const meta = constructor.hasOwnProperty(METADATA_KEY)
         ? (/** @type {?} */ (constructor))[METADATA_KEY]
         : Object.defineProperty(constructor, METADATA_KEY, { value: [] })[METADATA_KEY];
     Array.prototype.push.apply(meta, entries);
@@ -47,8 +45,11 @@ function setEffectMetadataEntries(sourceProto, entries) {
  * @return {?}
  */
 function Effect({ dispatch = true } = {}) {
+    // Once TS is >= 2.8 replace with <Key extends Extract<keyof T, string>>
+    // for propertyName.
     return /** @type {?} */ (function (target, propertyName) {
-        const /** @type {?} */ metadata = { propertyName, dispatch };
+        /** @type {?} */
+        const metadata = { propertyName, dispatch };
         setEffectMetadataEntries(target, [metadata]);
     });
 }
@@ -74,7 +75,8 @@ function getSourceMetadata(instance) {
  * @return {?}
  */
 function getEffectsMetadata(instance) {
-    const /** @type {?} */ metadata = {};
+    /** @type {?} */
+    const metadata = {};
     for (const { propertyName, dispatch } of getSourceMetadata(instance)) {
         metadata[propertyName] = { dispatch };
     }
@@ -83,40 +85,42 @@ function getEffectsMetadata(instance) {
 
 /**
  * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
+ * @suppress {checkTypes,extraRequire,uselessCode} checked by tsc
  */
-/**
- * @record
- */
-
+/** @type {?} */
 const onRunEffectsKey = 'ngrxOnRunEffects';
 /**
  * @param {?} sourceInstance
  * @return {?}
  */
 function isOnRunEffects(sourceInstance) {
-    const /** @type {?} */ source = getSourceForInstance(sourceInstance);
+    /** @type {?} */
+    const source = getSourceForInstance(sourceInstance);
     return (onRunEffectsKey in source && typeof source[onRunEffectsKey] === 'function');
 }
 
 /**
  * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
+ * @suppress {checkTypes,extraRequire,uselessCode} checked by tsc
  */
 /**
  * @param {?} sourceInstance
  * @return {?}
  */
 function mergeEffects(sourceInstance) {
-    const /** @type {?} */ sourceName = getSourceForInstance(sourceInstance).constructor.name;
-    const /** @type {?} */ observables = getSourceMetadata(sourceInstance).map(({ propertyName, dispatch }) => {
-        const /** @type {?} */ observable = typeof sourceInstance[propertyName] === 'function'
+    /** @type {?} */
+    const sourceName = getSourceForInstance(sourceInstance).constructor.name;
+    /** @type {?} */
+    const observables = getSourceMetadata(sourceInstance).map(({ propertyName, dispatch }) => {
+        /** @type {?} */
+        const observable = typeof sourceInstance[propertyName] === 'function'
             ? sourceInstance[propertyName]()
             : sourceInstance[propertyName];
         if (dispatch === false) {
             return observable.pipe(ignoreElements());
         }
-        const /** @type {?} */ materialized$ = observable.pipe(materialize());
+        /** @type {?} */
+        const materialized$ = observable.pipe(materialize());
         return materialized$.pipe(map((notification) => ({
             effect: sourceInstance[propertyName],
             notification,
@@ -132,7 +136,8 @@ function mergeEffects(sourceInstance) {
  * @return {?}
  */
 function resolveEffectSource(sourceInstance) {
-    const /** @type {?} */ mergedEffects$ = mergeEffects(sourceInstance);
+    /** @type {?} */
+    const mergedEffects$ = mergeEffects(sourceInstance);
     if (isOnRunEffects(sourceInstance)) {
         return sourceInstance.ngrxOnRunEffects(mergedEffects$);
     }
@@ -141,7 +146,7 @@ function resolveEffectSource(sourceInstance) {
 
 /**
  * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
+ * @suppress {checkTypes,extraRequire,uselessCode} checked by tsc
  */
 /**
  * @template V
@@ -162,12 +167,14 @@ class Actions extends Observable {
      * @return {?}
      */
     lift(operator) {
-        const /** @type {?} */ observable = new Actions();
+        /** @type {?} */
+        const observable = new Actions();
         observable.source = this;
         observable.operator = operator;
         return observable;
     }
     /**
+     * @deprecated from 6.1.0. Use the pipeable `ofType` operator instead.
      * @template V2
      * @param {...?} allowedTypes
      * @return {?}
@@ -181,7 +188,7 @@ Actions.decorators = [
 ];
 /** @nocollapse */
 Actions.ctorParameters = () => [
-    { type: Observable, decorators: [{ type: Inject, args: [ScannedActionsSubject,] },] },
+    { type: Observable, decorators: [{ type: Inject, args: [ScannedActionsSubject,] }] }
 ];
 /**
  * @template T
@@ -194,12 +201,8 @@ function ofType(...allowedTypes) {
 
 /**
  * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
+ * @suppress {checkTypes,extraRequire,uselessCode} checked by tsc
  */
-/**
- * @record
- */
-
 /**
  * @param {?} output
  * @param {?} reporter
@@ -226,10 +229,12 @@ function reportErrorThrown(output, reporter) {
  */
 function reportInvalidActions(output, reporter) {
     if (output.notification.kind === 'N') {
-        const /** @type {?} */ action = output.notification.value;
-        const /** @type {?} */ isInvalidAction = !isAction(action);
+        /** @type {?} */
+        const action = output.notification.value;
+        /** @type {?} */
+        const isInvalidAction = !isAction(action);
         if (isInvalidAction) {
-            reporter.handleError(new Error(`Effect ${getEffectName(output)} dispatched an invalid action: ${action}`));
+            reporter.handleError(new Error(`Effect ${getEffectName(output)} dispatched an invalid action: ${stringify(action)}`));
         }
     }
 }
@@ -245,13 +250,26 @@ function isAction(action) {
  * @return {?}
  */
 function getEffectName({ propertyName, sourceInstance, sourceName, }) {
-    const /** @type {?} */ isMethod = typeof sourceInstance[propertyName] === 'function';
+    /** @type {?} */
+    const isMethod = typeof sourceInstance[propertyName] === 'function';
     return `"${sourceName}.${propertyName}${isMethod ? '()' : ''}"`;
+}
+/**
+ * @param {?} action
+ * @return {?}
+ */
+function stringify(action) {
+    try {
+        return JSON.stringify(action);
+    }
+    catch (_a) {
+        return action;
+    }
 }
 
 /**
  * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
+ * @suppress {checkTypes,extraRequire,uselessCode} checked by tsc
  */
 class EffectSources extends Subject {
     /**
@@ -273,7 +291,7 @@ class EffectSources extends Subject {
      * @return {?}
      */
     toActions() {
-        return this.pipe(groupBy(getSourceForInstance), mergeMap(source$ => source$.pipe(exhaustMap(resolveEffectSource), map(output => {
+        return this.pipe(groupBy(source => source), mergeMap(source$ => source$.pipe(exhaustMap(resolveEffectSource), map(output => {
             verifyOutput(output, this.errorHandler);
             return output.notification;
         }), filter((notification) => notification.kind === 'N'), dematerialize())));
@@ -284,29 +302,32 @@ EffectSources.decorators = [
 ];
 /** @nocollapse */
 EffectSources.ctorParameters = () => [
-    { type: ErrorHandler, },
+    { type: ErrorHandler }
 ];
 
 /**
  * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
+ * @suppress {checkTypes,extraRequire,uselessCode} checked by tsc
  */
+/** @type {?} */
 const IMMEDIATE_EFFECTS = new InjectionToken('ngrx/effects: Immediate Effects');
+/** @type {?} */
 const ROOT_EFFECTS = new InjectionToken('ngrx/effects: Root Effects');
+/** @type {?} */
 const FEATURE_EFFECTS = new InjectionToken('ngrx/effects: Feature Effects');
 
 /**
  * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
+ * @suppress {checkTypes,extraRequire,uselessCode} checked by tsc
  */
 class EffectsRunner {
     /**
      * @param {?} effectSources
      * @param {?} store
      */
-    constructor(effectSources, store$$1) {
+    constructor(effectSources, store) {
         this.effectSources = effectSources;
-        this.store = store$$1;
+        this.store = store;
         this.effectsSubscription = null;
     }
     /**
@@ -334,14 +355,15 @@ EffectsRunner.decorators = [
 ];
 /** @nocollapse */
 EffectsRunner.ctorParameters = () => [
-    { type: EffectSources, },
-    { type: Store, },
+    { type: EffectSources },
+    { type: Store }
 ];
 
 /**
  * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
+ * @suppress {checkTypes,extraRequire,uselessCode} checked by tsc
  */
+/** @type {?} */
 const ROOT_EFFECTS_INIT = '@ngrx/effects/init';
 class EffectsRootModule {
     /**
@@ -352,11 +374,11 @@ class EffectsRootModule {
      * @param {?} storeRootModule
      * @param {?} storeFeatureModule
      */
-    constructor(sources, runner, store$$1, rootEffects, storeRootModule, storeFeatureModule) {
+    constructor(sources, runner, store, rootEffects, storeRootModule, storeFeatureModule) {
         this.sources = sources;
         runner.start();
         rootEffects.forEach(effectSourceInstance => sources.addEffects(effectSourceInstance));
-        store$$1.dispatch({ type: ROOT_EFFECTS_INIT });
+        store.dispatch({ type: ROOT_EFFECTS_INIT });
     }
     /**
      * @param {?} effectSourceInstance
@@ -371,17 +393,17 @@ EffectsRootModule.decorators = [
 ];
 /** @nocollapse */
 EffectsRootModule.ctorParameters = () => [
-    { type: EffectSources, },
-    { type: EffectsRunner, },
-    { type: Store, },
-    { type: Array, decorators: [{ type: Inject, args: [ROOT_EFFECTS,] },] },
-    { type: StoreRootModule, decorators: [{ type: Optional },] },
-    { type: StoreFeatureModule, decorators: [{ type: Optional },] },
+    { type: EffectSources },
+    { type: EffectsRunner },
+    { type: Store },
+    { type: Array, decorators: [{ type: Inject, args: [ROOT_EFFECTS,] }] },
+    { type: StoreRootModule, decorators: [{ type: Optional }] },
+    { type: StoreFeatureModule, decorators: [{ type: Optional }] }
 ];
 
 /**
  * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
+ * @suppress {checkTypes,extraRequire,uselessCode} checked by tsc
  */
 class EffectsFeatureModule {
     /**
@@ -400,15 +422,15 @@ EffectsFeatureModule.decorators = [
 ];
 /** @nocollapse */
 EffectsFeatureModule.ctorParameters = () => [
-    { type: EffectsRootModule, },
-    { type: Array, decorators: [{ type: Inject, args: [FEATURE_EFFECTS,] },] },
-    { type: StoreRootModule, decorators: [{ type: Optional },] },
-    { type: StoreFeatureModule, decorators: [{ type: Optional },] },
+    { type: EffectsRootModule },
+    { type: Array, decorators: [{ type: Inject, args: [FEATURE_EFFECTS,] }] },
+    { type: StoreRootModule, decorators: [{ type: Optional }] },
+    { type: StoreFeatureModule, decorators: [{ type: Optional }] }
 ];
 
 /**
  * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
+ * @suppress {checkTypes,extraRequire,uselessCode} checked by tsc
  */
 class EffectsModule {
     /**
@@ -463,22 +485,17 @@ function createSourceInstances(...instances) {
 
 /**
  * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
+ * @suppress {checkTypes,extraRequire,uselessCode} checked by tsc
  */
 
 /**
  * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
+ * @suppress {checkTypes,extraRequire,uselessCode} checked by tsc
  */
 
 /**
  * @fileoverview added by tsickle
- * @suppress {checkTypes} checked by tsc
- */
-/**
- * DO NOT EDIT
- *
- * This file is automatically generated at build
+ * @suppress {checkTypes,extraRequire,uselessCode} checked by tsc
  */
 
 /**
