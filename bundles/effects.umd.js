@@ -1,5 +1,5 @@
 /**
- * @license NgRx 6.0.1+105.sha-fa21f29
+ * @license NgRx 6.0.1+106.sha-15a4b58
  * (c) 2015-2018 Brandon Roberts, Mike Ryan, Rob Wormald, Victor Savkin
  * License: MIT
  */
@@ -336,12 +336,19 @@
         return EffectsRootModule;
     }());
 
+    var UPDATE_EFFECTS = '@ngrx/effects/update-effects';
     var EffectsFeatureModule = /** @class */ (function () {
-        function EffectsFeatureModule(root, effectSourceGroups, storeRootModule, storeFeatureModule) {
-            this.root = root;
+        function EffectsFeatureModule(root, store$$1, effectSourceGroups, storeRootModule, storeFeatureModule) {
             effectSourceGroups.forEach(function (group) {
-                return group.forEach(function (effectSourceInstance) {
-                    return root.addEffects(effectSourceInstance);
+                var effectSourceNames = [];
+                group.forEach(function (effectSourceInstance) {
+                    root.addEffects(effectSourceInstance);
+                    var constructor = getSourceForInstance(effectSourceInstance).constructor;
+                    effectSourceNames.push(constructor.name);
+                });
+                store$$1.dispatch({
+                    type: UPDATE_EFFECTS,
+                    effects: effectSourceNames,
                 });
             });
         }
@@ -351,6 +358,7 @@
         /** @nocollapse */
         EffectsFeatureModule.ctorParameters = function () { return [
             { type: EffectsRootModule },
+            { type: store.Store },
             { type: Array, decorators: [{ type: core.Inject, args: [FEATURE_EFFECTS,] }] },
             { type: store.StoreRootModule, decorators: [{ type: core.Optional }] },
             { type: store.StoreFeatureModule, decorators: [{ type: core.Optional }] }
@@ -428,6 +436,7 @@
     exports.EffectsModule = EffectsModule;
     exports.EffectSources = EffectSources;
     exports.ROOT_EFFECTS_INIT = ROOT_EFFECTS_INIT;
+    exports.UPDATE_EFFECTS = UPDATE_EFFECTS;
 
     Object.defineProperty(exports, '__esModule', { value: true });
 

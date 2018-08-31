@@ -1,5 +1,5 @@
 /**
- * @license NgRx 6.0.1+105.sha-fa21f29
+ * @license NgRx 6.0.1+106.sha-15a4b58
  * (c) 2015-2018 Brandon Roberts, Mike Ryan, Rob Wormald, Victor Savkin
  * License: MIT
  */
@@ -335,12 +335,19 @@ var EffectsRootModule = /** @class */ (function () {
     return EffectsRootModule;
 }());
 
+var UPDATE_EFFECTS = '@ngrx/effects/update-effects';
 var EffectsFeatureModule = /** @class */ (function () {
-    function EffectsFeatureModule(root, effectSourceGroups, storeRootModule, storeFeatureModule) {
-        this.root = root;
+    function EffectsFeatureModule(root, store, effectSourceGroups, storeRootModule, storeFeatureModule) {
         effectSourceGroups.forEach(function (group) {
-            return group.forEach(function (effectSourceInstance) {
-                return root.addEffects(effectSourceInstance);
+            var effectSourceNames = [];
+            group.forEach(function (effectSourceInstance) {
+                root.addEffects(effectSourceInstance);
+                var constructor = getSourceForInstance(effectSourceInstance).constructor;
+                effectSourceNames.push(constructor.name);
+            });
+            store.dispatch({
+                type: UPDATE_EFFECTS,
+                effects: effectSourceNames,
             });
         });
     }
@@ -350,6 +357,7 @@ var EffectsFeatureModule = /** @class */ (function () {
     /** @nocollapse */
     EffectsFeatureModule.ctorParameters = function () { return [
         { type: EffectsRootModule },
+        { type: Store },
         { type: Array, decorators: [{ type: Inject, args: [FEATURE_EFFECTS,] }] },
         { type: StoreRootModule, decorators: [{ type: Optional }] },
         { type: StoreFeatureModule, decorators: [{ type: Optional }] }
@@ -413,5 +421,5 @@ function createSourceInstances() {
  * Generated bundle index. Do not edit.
  */
 
-export { EffectsFeatureModule as ɵngrx_modules_effects_effects_c, createSourceInstances as ɵngrx_modules_effects_effects_a, EffectsRootModule as ɵngrx_modules_effects_effects_b, EffectsRunner as ɵngrx_modules_effects_effects_f, FEATURE_EFFECTS as ɵngrx_modules_effects_effects_e, ROOT_EFFECTS as ɵngrx_modules_effects_effects_d, Effect, getEffectsMetadata, mergeEffects, Actions, ofType, EffectsModule, EffectSources, ROOT_EFFECTS_INIT };
+export { EffectsFeatureModule as ɵngrx_modules_effects_effects_c, createSourceInstances as ɵngrx_modules_effects_effects_a, EffectsRootModule as ɵngrx_modules_effects_effects_b, EffectsRunner as ɵngrx_modules_effects_effects_f, FEATURE_EFFECTS as ɵngrx_modules_effects_effects_e, ROOT_EFFECTS as ɵngrx_modules_effects_effects_d, Effect, getEffectsMetadata, mergeEffects, Actions, ofType, EffectsModule, EffectSources, ROOT_EFFECTS_INIT, UPDATE_EFFECTS };
 //# sourceMappingURL=effects.js.map

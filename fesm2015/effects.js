@@ -1,5 +1,5 @@
 /**
- * @license NgRx 6.0.1+105.sha-fa21f29
+ * @license NgRx 6.0.1+106.sha-15a4b58
  * (c) 2015-2018 Brandon Roberts, Mike Ryan, Rob Wormald, Victor Savkin
  * License: MIT
  */
@@ -405,16 +405,30 @@ EffectsRootModule.ctorParameters = () => [
  * @fileoverview added by tsickle
  * @suppress {checkTypes,extraRequire,uselessCode} checked by tsc
  */
+/** @type {?} */
+const UPDATE_EFFECTS = '@ngrx/effects/update-effects';
 class EffectsFeatureModule {
     /**
      * @param {?} root
+     * @param {?} store
      * @param {?} effectSourceGroups
      * @param {?} storeRootModule
      * @param {?} storeFeatureModule
      */
-    constructor(root, effectSourceGroups, storeRootModule, storeFeatureModule) {
-        this.root = root;
-        effectSourceGroups.forEach(group => group.forEach(effectSourceInstance => root.addEffects(effectSourceInstance)));
+    constructor(root, store, effectSourceGroups, storeRootModule, storeFeatureModule) {
+        effectSourceGroups.forEach(group => {
+            /** @type {?} */
+            let effectSourceNames = [];
+            group.forEach(effectSourceInstance => {
+                root.addEffects(effectSourceInstance);
+                const { constructor } = getSourceForInstance(effectSourceInstance);
+                effectSourceNames.push(constructor.name);
+            });
+            store.dispatch(/** @type {?} */ ({
+                type: UPDATE_EFFECTS,
+                effects: effectSourceNames,
+            }));
+        });
     }
 }
 EffectsFeatureModule.decorators = [
@@ -423,6 +437,7 @@ EffectsFeatureModule.decorators = [
 /** @nocollapse */
 EffectsFeatureModule.ctorParameters = () => [
     { type: EffectsRootModule },
+    { type: Store },
     { type: Array, decorators: [{ type: Inject, args: [FEATURE_EFFECTS,] }] },
     { type: StoreRootModule, decorators: [{ type: Optional }] },
     { type: StoreFeatureModule, decorators: [{ type: Optional }] }
@@ -502,5 +517,5 @@ function createSourceInstances(...instances) {
  * Generated bundle index. Do not edit.
  */
 
-export { EffectsFeatureModule as ɵngrx_modules_effects_effects_c, createSourceInstances as ɵngrx_modules_effects_effects_a, EffectsRootModule as ɵngrx_modules_effects_effects_b, EffectsRunner as ɵngrx_modules_effects_effects_f, FEATURE_EFFECTS as ɵngrx_modules_effects_effects_e, ROOT_EFFECTS as ɵngrx_modules_effects_effects_d, Effect, getEffectsMetadata, mergeEffects, Actions, ofType, EffectsModule, EffectSources, ROOT_EFFECTS_INIT };
+export { EffectsFeatureModule as ɵngrx_modules_effects_effects_c, createSourceInstances as ɵngrx_modules_effects_effects_a, EffectsRootModule as ɵngrx_modules_effects_effects_b, EffectsRunner as ɵngrx_modules_effects_effects_f, FEATURE_EFFECTS as ɵngrx_modules_effects_effects_e, ROOT_EFFECTS as ɵngrx_modules_effects_effects_d, Effect, getEffectsMetadata, mergeEffects, Actions, ofType, EffectsModule, EffectSources, ROOT_EFFECTS_INIT, UPDATE_EFFECTS };
 //# sourceMappingURL=effects.js.map
