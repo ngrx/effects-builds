@@ -1,5 +1,5 @@
 /**
- * @license NgRx 6.1.0+60.sha-4ad9a94
+ * @license NgRx 6.1.0+61.sha-40bfcf5
  * (c) 2015-2018 Brandon Roberts, Mike Ryan, Rob Wormald, Victor Savkin
  * License: MIT
  */
@@ -45,8 +45,6 @@ function setEffectMetadataEntries(sourceProto, entries) {
  * @return {?}
  */
 function Effect({ dispatch = true } = {}) {
-    // Once TS is >= 2.8 replace with <Key extends Extract<keyof T, string>>
-    // for propertyName.
     return /** @type {?} */ (function (target, propertyName) {
         /** @type {?} */
         const metadata = { propertyName, dispatch };
