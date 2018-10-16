@@ -1,5 +1,5 @@
 /**
- * @license NgRx 6.1.0+63.sha-1448a0e
+ * @license NgRx 6.1.0+64.sha-8d56a6f
  * (c) 2015-2018 Brandon Roberts, Mike Ryan, Rob Wormald, Victor Savkin
  * License: MIT
  */
@@ -171,15 +171,6 @@ class Actions extends Observable {
         observable.operator = operator;
         return observable;
     }
-    /**
-     * @deprecated from 6.1.0. Use the pipeable `ofType` operator instead.
-     * @template V2
-     * @param {...?} allowedTypes
-     * @return {?}
-     */
-    ofType(...allowedTypes) {
-        return /** @type {?} */ (ofType(...allowedTypes)(/** @type {?} */ (this)));
-    }
 }
 Actions.decorators = [
     { type: Injectable }
@@ -189,7 +180,6 @@ Actions.ctorParameters = () => [
     { type: Observable, decorators: [{ type: Inject, args: [ScannedActionsSubject,] }] }
 ];
 /**
- * @template T
  * @param {...?} allowedTypes
  * @return {?}
  */

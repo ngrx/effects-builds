@@ -1,5 +1,5 @@
 /**
- * @license NgRx 6.1.0+63.sha-1448a0e
+ * @license NgRx 6.1.0+64.sha-8d56a6f
  * (c) 2015-2018 Brandon Roberts, Mike Ryan, Rob Wormald, Victor Savkin
  * License: MIT
  */
@@ -128,26 +128,6 @@ var __extends = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __read$1 = (undefined && undefined.__read) || function (o, n) {
-    var m = typeof Symbol === "function" && o[Symbol.iterator];
-    if (!m) return o;
-    var i = m.call(o), r, ar = [], e;
-    try {
-        while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
-    }
-    catch (error) { e = { error: error }; }
-    finally {
-        try {
-            if (r && !r.done && (m = i["return"])) m.call(i);
-        }
-        finally { if (e) throw e.error; }
-    }
-    return ar;
-};
-var __spread$1 = (undefined && undefined.__spread) || function () {
-    for (var ar = [], i = 0; i < arguments.length; i++) ar = ar.concat(__read$1(arguments[i]));
-    return ar;
-};
 var Actions = /** @class */ (function (_super) {
     __extends(Actions, _super);
     function Actions(source) {
@@ -162,16 +142,6 @@ var Actions = /** @class */ (function (_super) {
         observable.source = this;
         observable.operator = operator;
         return observable;
-    };
-    /**
-     * @deprecated from 6.1.0. Use the pipeable `ofType` operator instead.
-     */
-    Actions.prototype.ofType = function () {
-        var allowedTypes = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-            allowedTypes[_i] = arguments[_i];
-        }
-        return ofType.apply(void 0, __spread$1(allowedTypes))(this);
     };
     Actions.decorators = [
         { type: Injectable }
