@@ -1,5 +1,5 @@
 /**
- * @license NgRx 6.1.0+85.sha-a9e7cbd
+ * @license NgRx 0.0.0-PLACEHOLDER
  * (c) 2015-2018 Brandon Roberts, Mike Ryan, Rob Wormald, Victor Savkin
  * License: MIT
  */
@@ -45,22 +45,22 @@ function getSourceMetadata(instance) {
     return compose(getEffectMetadataEntries, getSourceForInstance)(instance);
 }
 function getEffectsMetadata(instance) {
+    var e_1, _a;
     var metadata = {};
     try {
-        for (var _a = __values(getSourceMetadata(instance)), _b = _a.next(); !_b.done; _b = _a.next()) {
-            var _c = _b.value, propertyName = _c.propertyName, dispatch = _c.dispatch;
+        for (var _b = __values(getSourceMetadata(instance)), _c = _b.next(); !_c.done; _c = _b.next()) {
+            var _d = _c.value, propertyName = _d.propertyName, dispatch = _d.dispatch;
             metadata[propertyName] = { dispatch: dispatch };
         }
     }
     catch (e_1_1) { e_1 = { error: e_1_1 }; }
     finally {
         try {
-            if (_b && !_b.done && (_d = _a.return)) _d.call(_a);
+            if (_c && !_c.done && (_a = _b.return)) _a.call(_b);
         }
         finally { if (e_1) throw e_1.error; }
     }
     return metadata;
-    var e_1, _d;
 }
 
 var onRunEffectsKey = 'ngrxOnRunEffects';
@@ -119,15 +119,30 @@ function resolveEffectSource(sourceInstance) {
 }
 
 var __extends = (undefined && undefined.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __param = (undefined && undefined.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 var Actions = /** @class */ (function (_super) {
     __extends(Actions, _super);
     function Actions(source) {
@@ -137,19 +152,19 @@ var Actions = /** @class */ (function (_super) {
         }
         return _this;
     }
+    Actions_1 = Actions;
     Actions.prototype.lift = function (operator) {
-        var observable = new Actions();
+        var observable = new Actions_1();
         observable.source = this;
         observable.operator = operator;
         return observable;
     };
-    Actions.decorators = [
-        { type: Injectable }
-    ];
-    /** @nocollapse */
-    Actions.ctorParameters = function () { return [
-        { type: Observable, decorators: [{ type: Inject, args: [ScannedActionsSubject,] }] }
-    ]; };
+    var Actions_1;
+    Actions = Actions_1 = __decorate([
+        Injectable(),
+        __param(0, Inject(ScannedActionsSubject)),
+        __metadata("design:paramtypes", [Observable])
+    ], Actions);
     return Actions;
 }(Observable));
 function ofType() {
@@ -198,15 +213,27 @@ function stringify(action) {
 }
 
 var __extends$1 = (undefined && undefined.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __decorate$1 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata$1 = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
 var EffectSources = /** @class */ (function (_super) {
     __extends$1(EffectSources, _super);
     function EffectSources(errorHandler) {
@@ -231,13 +258,10 @@ var EffectSources = /** @class */ (function (_super) {
             }), dematerialize());
         }));
     };
-    EffectSources.decorators = [
-        { type: Injectable }
-    ];
-    /** @nocollapse */
-    EffectSources.ctorParameters = function () { return [
-        { type: ErrorHandler }
-    ]; };
+    EffectSources = __decorate$1([
+        Injectable(),
+        __metadata$1("design:paramtypes", [ErrorHandler])
+    ], EffectSources);
     return EffectSources;
 }(Subject));
 
@@ -245,6 +269,15 @@ var IMMEDIATE_EFFECTS = new InjectionToken('ngrx/effects: Immediate Effects');
 var ROOT_EFFECTS = new InjectionToken('ngrx/effects: Root Effects');
 var FEATURE_EFFECTS = new InjectionToken('ngrx/effects: Feature Effects');
 
+var __decorate$2 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata$2 = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
 var EffectsRunner = /** @class */ (function () {
     function EffectsRunner(effectSources, store) {
         this.effectSources = effectSources;
@@ -264,17 +297,26 @@ var EffectsRunner = /** @class */ (function () {
             this.effectsSubscription = null;
         }
     };
-    EffectsRunner.decorators = [
-        { type: Injectable }
-    ];
-    /** @nocollapse */
-    EffectsRunner.ctorParameters = function () { return [
-        { type: EffectSources },
-        { type: Store }
-    ]; };
+    EffectsRunner = __decorate$2([
+        Injectable(),
+        __metadata$2("design:paramtypes", [EffectSources,
+            Store])
+    ], EffectsRunner);
     return EffectsRunner;
 }());
 
+var __decorate$3 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata$3 = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __param$1 = (undefined && undefined.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 var ROOT_EFFECTS_INIT = '@ngrx/effects/init';
 var EffectsRootModule = /** @class */ (function () {
     function EffectsRootModule(sources, runner, store, rootEffects, storeRootModule, storeFeatureModule) {
@@ -288,21 +330,31 @@ var EffectsRootModule = /** @class */ (function () {
     EffectsRootModule.prototype.addEffects = function (effectSourceInstance) {
         this.sources.addEffects(effectSourceInstance);
     };
-    EffectsRootModule.decorators = [
-        { type: NgModule, args: [{},] }
-    ];
-    /** @nocollapse */
-    EffectsRootModule.ctorParameters = function () { return [
-        { type: EffectSources },
-        { type: EffectsRunner },
-        { type: Store },
-        { type: Array, decorators: [{ type: Inject, args: [ROOT_EFFECTS,] }] },
-        { type: StoreRootModule, decorators: [{ type: Optional }] },
-        { type: StoreFeatureModule, decorators: [{ type: Optional }] }
-    ]; };
+    EffectsRootModule = __decorate$3([
+        NgModule({}),
+        __param$1(3, Inject(ROOT_EFFECTS)),
+        __param$1(4, Optional()),
+        __param$1(5, Optional()),
+        __metadata$3("design:paramtypes", [EffectSources,
+            EffectsRunner,
+            Store, Array, StoreRootModule,
+            StoreFeatureModule])
+    ], EffectsRootModule);
     return EffectsRootModule;
 }());
 
+var __decorate$4 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata$4 = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __param$2 = (undefined && undefined.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 var UPDATE_EFFECTS = '@ngrx/effects/update-effects';
 var EffectsFeatureModule = /** @class */ (function () {
     function EffectsFeatureModule(root, store, effectSourceGroups, storeRootModule, storeFeatureModule) {
@@ -319,20 +371,24 @@ var EffectsFeatureModule = /** @class */ (function () {
             });
         });
     }
-    EffectsFeatureModule.decorators = [
-        { type: NgModule, args: [{},] }
-    ];
-    /** @nocollapse */
-    EffectsFeatureModule.ctorParameters = function () { return [
-        { type: EffectsRootModule },
-        { type: Store },
-        { type: Array, decorators: [{ type: Inject, args: [FEATURE_EFFECTS,] }] },
-        { type: StoreRootModule, decorators: [{ type: Optional }] },
-        { type: StoreFeatureModule, decorators: [{ type: Optional }] }
-    ]; };
+    EffectsFeatureModule = __decorate$4([
+        NgModule({}),
+        __param$2(2, Inject(FEATURE_EFFECTS)),
+        __param$2(3, Optional()),
+        __param$2(4, Optional()),
+        __metadata$4("design:paramtypes", [EffectsRootModule,
+            Store, Array, StoreRootModule,
+            StoreFeatureModule])
+    ], EffectsFeatureModule);
     return EffectsFeatureModule;
 }());
 
+var __decorate$5 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
 var EffectsModule = /** @class */ (function () {
     function EffectsModule() {
     }
@@ -366,9 +422,9 @@ var EffectsModule = /** @class */ (function () {
             ],
         };
     };
-    EffectsModule.decorators = [
-        { type: NgModule, args: [{},] }
-    ];
+    EffectsModule = __decorate$5([
+        NgModule({})
+    ], EffectsModule);
     return EffectsModule;
 }());
 function createSourceInstances() {

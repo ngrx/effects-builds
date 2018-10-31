@@ -1,4 +1,4 @@
-export { Effect, EffectsMetadata, getEffectsMetadata } from './effects_metadata';
+export { Effect, EffectsMetadata, getEffectsMetadata, } from './effects_metadata';
 export { mergeEffects } from './effects_resolver';
 export { Actions, ofType } from './actions';
 export { EffectsModule } from './effects_module';
