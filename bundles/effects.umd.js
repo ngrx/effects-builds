@@ -1,5 +1,5 @@
 /**
- * @license NgRx 7.0.0-beta.0+24.sha-6a754aa.with-local-changes
+ * @license NgRx 7.0.0+1.sha-083be40.with-local-changes
  * (c) 2015-2018 Brandon Roberts, Mike Ryan, Rob Wormald, Victor Savkin
  * License: MIT
  */
@@ -64,12 +64,6 @@
         return metadata;
     }
 
-    var onRunEffectsKey = 'ngrxOnRunEffects';
-    function isOnRunEffects(sourceInstance) {
-        var source = getSourceForInstance(sourceInstance);
-        return (onRunEffectsKey in source && typeof source[onRunEffectsKey] === 'function');
-    }
-
     var __read = (undefined && undefined.__read) || function (o, n) {
         var m = typeof Symbol === "function" && o[Symbol.iterator];
         if (!m) return o;
@@ -110,13 +104,6 @@
             }); }));
         });
         return rxjs.merge.apply(void 0, __spread(observables));
-    }
-    function resolveEffectSource(sourceInstance) {
-        var mergedEffects$ = mergeEffects(sourceInstance);
-        if (isOnRunEffects(sourceInstance)) {
-            return sourceInstance.ngrxOnRunEffects(mergedEffects$);
-        }
-        return mergedEffects$;
     }
 
     var __extends = (undefined && undefined.__extends) || (function () {
@@ -213,6 +200,10 @@
         }
     }
 
+    var onIdentifyEffectsKey = 'ngrxOnIdentifyEffects';
+    var onRunEffectsKey = 'ngrxOnRunEffects';
+    var onInitEffects = 'ngrxOnInitEffects';
+
     var __extends$1 = (undefined && undefined.__extends) || (function () {
         var extendStatics = function (d, b) {
             extendStatics = Object.setPrototypeOf ||
@@ -237,20 +228,25 @@
     };
     var EffectSources = /** @class */ (function (_super) {
         __extends$1(EffectSources, _super);
-        function EffectSources(errorHandler) {
+        function EffectSources(errorHandler, store$$1) {
             var _this = _super.call(this) || this;
             _this.errorHandler = errorHandler;
+            _this.store = store$$1;
             return _this;
         }
         EffectSources.prototype.addEffects = function (effectSourceInstance) {
             this.next(effectSourceInstance);
+            if (onInitEffects in effectSourceInstance &&
+                typeof effectSourceInstance[onInitEffects] === 'function') {
+                this.store.dispatch(effectSourceInstance[onInitEffects]());
+            }
         };
         /**
          * @internal
          */
         EffectSources.prototype.toActions = function () {
             var _this = this;
-            return this.pipe(operators.groupBy(function (source) { return source; }), operators.mergeMap(function (source$) {
+            return this.pipe(operators.groupBy(getSourceForInstance), operators.mergeMap(function (source$) { return source$.pipe(operators.groupBy(effectsInstance)); }), operators.mergeMap(function (source$) {
                 return source$.pipe(operators.exhaustMap(resolveEffectSource), operators.map(function (output) {
                     verifyOutput(output, _this.errorHandler);
                     return output.notification;
@@ -261,10 +257,28 @@
         };
         EffectSources = __decorate$1([
             core.Injectable(),
-            __metadata$1("design:paramtypes", [core.ErrorHandler])
+            __metadata$1("design:paramtypes", [core.ErrorHandler, store.Store])
         ], EffectSources);
         return EffectSources;
     }(rxjs.Subject));
+    function effectsInstance(sourceInstance) {
+        if (onIdentifyEffectsKey in sourceInstance &&
+            typeof sourceInstance[onIdentifyEffectsKey] === 'function') {
+            return sourceInstance[onIdentifyEffectsKey]();
+        }
+        return '';
+    }
+    function resolveEffectSource(sourceInstance) {
+        var mergedEffects$ = mergeEffects(sourceInstance);
+        if (isOnRunEffects(sourceInstance)) {
+            return sourceInstance.ngrxOnRunEffects(mergedEffects$);
+        }
+        return mergedEffects$;
+    }
+    function isOnRunEffects(sourceInstance) {
+        var source = getSourceForInstance(sourceInstance);
+        return (onRunEffectsKey in source && typeof source[onRunEffectsKey] === 'function');
+    }
 
     var IMMEDIATE_EFFECTS = new core.InjectionToken('ngrx/effects: Immediate Effects');
     var ROOT_EFFECTS = new core.InjectionToken('ngrx/effects: Root Effects');
@@ -356,29 +370,20 @@
     var __param$2 = (undefined && undefined.__param) || function (paramIndex, decorator) {
         return function (target, key) { decorator(target, key, paramIndex); }
     };
-    var UPDATE_EFFECTS = '@ngrx/effects/update-effects';
     var EffectsFeatureModule = /** @class */ (function () {
-        function EffectsFeatureModule(root, store$$1, effectSourceGroups, storeRootModule, storeFeatureModule) {
+        function EffectsFeatureModule(root, effectSourceGroups, storeRootModule, storeFeatureModule) {
             effectSourceGroups.forEach(function (group) {
-                var effectSourceNames = [];
-                group.forEach(function (effectSourceInstance) {
-                    root.addEffects(effectSourceInstance);
-                    var constructor = getSourceForInstance(effectSourceInstance).constructor;
-                    effectSourceNames.push(constructor.name);
-                });
-                store$$1.dispatch({
-                    type: UPDATE_EFFECTS,
-                    effects: effectSourceNames,
+                return group.forEach(function (effectSourceInstance) {
+                    return root.addEffects(effectSourceInstance);
                 });
             });
         }
         EffectsFeatureModule = __decorate$4([
             core.NgModule({}),
-            __param$2(2, core.Inject(FEATURE_EFFECTS)),
+            __param$2(1, core.Inject(FEATURE_EFFECTS)),
+            __param$2(2, core.Optional()),
             __param$2(3, core.Optional()),
-            __param$2(4, core.Optional()),
-            __metadata$4("design:paramtypes", [EffectsRootModule,
-                store.Store, Array, store.StoreRootModule,
+            __metadata$4("design:paramtypes", [EffectsRootModule, Array, store.StoreRootModule,
                 store.StoreFeatureModule])
         ], EffectsFeatureModule);
         return EffectsFeatureModule;
@@ -460,7 +465,6 @@
     exports.EffectsModule = EffectsModule;
     exports.EffectSources = EffectSources;
     exports.ROOT_EFFECTS_INIT = ROOT_EFFECTS_INIT;
-    exports.UPDATE_EFFECTS = UPDATE_EFFECTS;
 
     Object.defineProperty(exports, '__esModule', { value: true });
 

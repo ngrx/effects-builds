@@ -1,5 +1,5 @@
 /**
- * @license NgRx 7.0.0-beta.0+24.sha-6a754aa.with-local-changes
+ * @license NgRx 7.0.0+1.sha-083be40.with-local-changes
  * (c) 2015-2018 Brandon Roberts, Mike Ryan, Rob Wormald, Victor Savkin
  * License: MIT
  */
@@ -85,22 +85,6 @@ function getEffectsMetadata(instance) {
  * @fileoverview added by tsickle
  * @suppress {checkTypes,extraRequire,uselessCode} checked by tsc
  */
-/** @type {?} */
-const onRunEffectsKey = 'ngrxOnRunEffects';
-/**
- * @param {?} sourceInstance
- * @return {?}
- */
-function isOnRunEffects(sourceInstance) {
-    /** @type {?} */
-    const source = getSourceForInstance(sourceInstance);
-    return (onRunEffectsKey in source && typeof source[onRunEffectsKey] === 'function');
-}
-
-/**
- * @fileoverview added by tsickle
- * @suppress {checkTypes,extraRequire,uselessCode} checked by tsc
- */
 /**
  * @param {?} sourceInstance
  * @return {?}
@@ -128,18 +112,6 @@ function mergeEffects(sourceInstance) {
         })));
     });
     return merge(...observables);
-}
-/**
- * @param {?} sourceInstance
- * @return {?}
- */
-function resolveEffectSource(sourceInstance) {
-    /** @type {?} */
-    const mergedEffects$ = mergeEffects(sourceInstance);
-    if (isOnRunEffects(sourceInstance)) {
-        return sourceInstance.ngrxOnRunEffects(mergedEffects$);
-    }
-    return mergedEffects$;
 }
 
 /**
@@ -259,13 +231,26 @@ function stringify(action) {
  * @fileoverview added by tsickle
  * @suppress {checkTypes,extraRequire,uselessCode} checked by tsc
  */
+/** @type {?} */
+const onIdentifyEffectsKey = 'ngrxOnIdentifyEffects';
+/** @type {?} */
+const onRunEffectsKey = 'ngrxOnRunEffects';
+/** @type {?} */
+const onInitEffects = 'ngrxOnInitEffects';
+
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes,extraRequire,uselessCode} checked by tsc
+ */
 class EffectSources extends Subject {
     /**
      * @param {?} errorHandler
+     * @param {?} store
      */
-    constructor(errorHandler) {
+    constructor(errorHandler, store) {
         super();
         this.errorHandler = errorHandler;
+        this.store = store;
     }
     /**
      * @param {?} effectSourceInstance
@@ -273,13 +258,17 @@ class EffectSources extends Subject {
      */
     addEffects(effectSourceInstance) {
         this.next(effectSourceInstance);
+        if (onInitEffects in effectSourceInstance &&
+            typeof effectSourceInstance[onInitEffects] === 'function') {
+            this.store.dispatch(effectSourceInstance[onInitEffects]());
+        }
     }
     /**
      * \@internal
      * @return {?}
      */
     toActions() {
-        return this.pipe(groupBy(source => source), mergeMap(source$ => source$.pipe(exhaustMap(resolveEffectSource), map(output => {
+        return this.pipe(groupBy(getSourceForInstance), mergeMap(source$ => source$.pipe(groupBy(effectsInstance))), mergeMap(source$ => source$.pipe(exhaustMap(resolveEffectSource), map(output => {
             verifyOutput(output, this.errorHandler);
             return output.notification;
         }), filter((notification) => notification.kind === 'N'), dematerialize())));
@@ -290,8 +279,41 @@ EffectSources.decorators = [
 ];
 /** @nocollapse */
 EffectSources.ctorParameters = () => [
-    { type: ErrorHandler }
+    { type: ErrorHandler },
+    { type: Store }
 ];
+/**
+ * @param {?} sourceInstance
+ * @return {?}
+ */
+function effectsInstance(sourceInstance) {
+    if (onIdentifyEffectsKey in sourceInstance &&
+        typeof sourceInstance[onIdentifyEffectsKey] === 'function') {
+        return sourceInstance[onIdentifyEffectsKey]();
+    }
+    return '';
+}
+/**
+ * @param {?} sourceInstance
+ * @return {?}
+ */
+function resolveEffectSource(sourceInstance) {
+    /** @type {?} */
+    const mergedEffects$ = mergeEffects(sourceInstance);
+    if (isOnRunEffects(sourceInstance)) {
+        return sourceInstance.ngrxOnRunEffects(mergedEffects$);
+    }
+    return mergedEffects$;
+}
+/**
+ * @param {?} sourceInstance
+ * @return {?}
+ */
+function isOnRunEffects(sourceInstance) {
+    /** @type {?} */
+    const source = getSourceForInstance(sourceInstance);
+    return (onRunEffectsKey in source && typeof source[onRunEffectsKey] === 'function');
+}
 
 /**
  * @fileoverview added by tsickle
@@ -393,30 +415,15 @@ EffectsRootModule.ctorParameters = () => [
  * @fileoverview added by tsickle
  * @suppress {checkTypes,extraRequire,uselessCode} checked by tsc
  */
-/** @type {?} */
-const UPDATE_EFFECTS = '@ngrx/effects/update-effects';
 class EffectsFeatureModule {
     /**
      * @param {?} root
-     * @param {?} store
      * @param {?} effectSourceGroups
      * @param {?} storeRootModule
      * @param {?} storeFeatureModule
      */
-    constructor(root, store, effectSourceGroups, storeRootModule, storeFeatureModule) {
-        effectSourceGroups.forEach(group => {
-            /** @type {?} */
-            let effectSourceNames = [];
-            group.forEach(effectSourceInstance => {
-                root.addEffects(effectSourceInstance);
-                const { constructor } = getSourceForInstance(effectSourceInstance);
-                effectSourceNames.push(constructor.name);
-            });
-            store.dispatch(/** @type {?} */ ({
-                type: UPDATE_EFFECTS,
-                effects: effectSourceNames,
-            }));
-        });
+    constructor(root, effectSourceGroups, storeRootModule, storeFeatureModule) {
+        effectSourceGroups.forEach(group => group.forEach(effectSourceInstance => root.addEffects(effectSourceInstance)));
     }
 }
 EffectsFeatureModule.decorators = [
@@ -425,7 +432,6 @@ EffectsFeatureModule.decorators = [
 /** @nocollapse */
 EffectsFeatureModule.ctorParameters = () => [
     { type: EffectsRootModule },
-    { type: Store },
     { type: Array, decorators: [{ type: Inject, args: [FEATURE_EFFECTS,] }] },
     { type: StoreRootModule, decorators: [{ type: Optional }] },
     { type: StoreFeatureModule, decorators: [{ type: Optional }] }
@@ -505,5 +511,5 @@ function createSourceInstances(...instances) {
  * Generated bundle index. Do not edit.
  */
 
-export { EffectsFeatureModule as ɵngrx_modules_effects_effects_c, createSourceInstances as ɵngrx_modules_effects_effects_a, EffectsRootModule as ɵngrx_modules_effects_effects_b, EffectsRunner as ɵngrx_modules_effects_effects_f, FEATURE_EFFECTS as ɵngrx_modules_effects_effects_e, ROOT_EFFECTS as ɵngrx_modules_effects_effects_d, Effect, getEffectsMetadata, mergeEffects, Actions, ofType, EffectsModule, EffectSources, ROOT_EFFECTS_INIT, UPDATE_EFFECTS };
+export { EffectsFeatureModule as ɵngrx_modules_effects_effects_c, createSourceInstances as ɵngrx_modules_effects_effects_a, EffectsRootModule as ɵngrx_modules_effects_effects_b, EffectsRunner as ɵngrx_modules_effects_effects_f, FEATURE_EFFECTS as ɵngrx_modules_effects_effects_e, ROOT_EFFECTS as ɵngrx_modules_effects_effects_d, Effect, getEffectsMetadata, mergeEffects, Actions, ofType, EffectsModule, EffectSources, ROOT_EFFECTS_INIT };
 //# sourceMappingURL=effects.js.map
