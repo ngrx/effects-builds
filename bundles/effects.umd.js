@@ -1,13 +1,13 @@
 /**
- * @license NgRx 7.2.0+36.sha-a7e6303
+ * @license NgRx 7.2.0+37.sha-4bdb66e
  * (c) 2015-2018 Brandon Roberts, Mike Ryan, Rob Wormald, Victor Savkin
  * License: MIT
  */
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@ngrx/store'), require('rxjs'), require('rxjs/operators'), require('@angular/core')) :
     typeof define === 'function' && define.amd ? define('@ngrx/effects', ['exports', '@ngrx/store', 'rxjs', 'rxjs/operators', '@angular/core'], factory) :
-    (factory((global.ngrx = global.ngrx || {}, global.ngrx.effects = {}),global['@ngrx/store'],global.rxjs,global.rxjs.operators,global.ng.core));
-}(this, (function (exports,store,rxjs,operators,core) { 'use strict';
+    (global = global || self, factory((global.ngrx = global.ngrx || {}, global.ngrx.effects = {}), global['@ngrx/store'], global.rxjs, global.rxjs.operators, global.ng.core));
+}(this, function (exports, store, rxjs, operators, core) { 'use strict';
 
     var __values = (undefined && undefined.__values) || function (o) {
         var m = typeof Symbol === "function" && o[Symbol.iterator], i = 0;
@@ -228,10 +228,10 @@
     };
     var EffectSources = /** @class */ (function (_super) {
         __extends$1(EffectSources, _super);
-        function EffectSources(errorHandler, store$$1) {
+        function EffectSources(errorHandler, store) {
             var _this = _super.call(this) || this;
             _this.errorHandler = errorHandler;
-            _this.store = store$$1;
+            _this.store = store;
             return _this;
         }
         EffectSources.prototype.addEffects = function (effectSourceInstance) {
@@ -294,9 +294,9 @@
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
     var EffectsRunner = /** @class */ (function () {
-        function EffectsRunner(effectSources, store$$1) {
+        function EffectsRunner(effectSources, store) {
             this.effectSources = effectSources;
-            this.store = store$$1;
+            this.store = store;
             this.effectsSubscription = null;
         }
         EffectsRunner.prototype.start = function () {
@@ -334,13 +334,13 @@
     };
     var ROOT_EFFECTS_INIT = '@ngrx/effects/init';
     var EffectsRootModule = /** @class */ (function () {
-        function EffectsRootModule(sources, runner, store$$1, rootEffects, storeRootModule, storeFeatureModule) {
+        function EffectsRootModule(sources, runner, store, rootEffects, storeRootModule, storeFeatureModule) {
             this.sources = sources;
             runner.start();
             rootEffects.forEach(function (effectSourceInstance) {
                 return sources.addEffects(effectSourceInstance);
             });
-            store$$1.dispatch({ type: ROOT_EFFECTS_INIT });
+            store.dispatch({ type: ROOT_EFFECTS_INIT });
         }
         EffectsRootModule.prototype.addEffects = function (effectSourceInstance) {
             this.sources.addEffects(effectSourceInstance);
@@ -468,5 +468,5 @@
 
     Object.defineProperty(exports, '__esModule', { value: true });
 
-})));
+}));
 //# sourceMappingURL=effects.umd.js.map

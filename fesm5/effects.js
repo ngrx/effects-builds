@@ -1,12 +1,12 @@
 /**
- * @license NgRx 7.2.0+36.sha-a7e6303
+ * @license NgRx 7.2.0+37.sha-4bdb66e
  * (c) 2015-2018 Brandon Roberts, Mike Ryan, Rob Wormald, Victor Savkin
  * License: MIT
  */
 import { compose, ScannedActionsSubject, Store, StoreRootModule, StoreFeatureModule } from '@ngrx/store';
 import { merge, Observable, Subject } from 'rxjs';
-import { ignoreElements, map, materialize, filter, dematerialize, exhaustMap, groupBy, mergeMap } from 'rxjs/operators';
-import { Inject, Injectable, ErrorHandler, InjectionToken, NgModule, Optional } from '@angular/core';
+import { ignoreElements, materialize, map, filter, groupBy, mergeMap, exhaustMap, dematerialize } from 'rxjs/operators';
+import { Injectable, Inject, ErrorHandler, InjectionToken, NgModule, Optional } from '@angular/core';
 
 var __values = (undefined && undefined.__values) || function (o) {
     var m = typeof Symbol === "function" && o[Symbol.iterator], i = 0;

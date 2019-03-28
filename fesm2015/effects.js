@@ -1,16 +1,16 @@
 /**
- * @license NgRx 7.2.0+36.sha-a7e6303
+ * @license NgRx 7.2.0+37.sha-4bdb66e
  * (c) 2015-2018 Brandon Roberts, Mike Ryan, Rob Wormald, Victor Savkin
  * License: MIT
  */
 import { compose, ScannedActionsSubject, Store, StoreRootModule, StoreFeatureModule } from '@ngrx/store';
 import { merge, Observable, Subject } from 'rxjs';
-import { ignoreElements, map, materialize, filter, dematerialize, exhaustMap, groupBy, mergeMap } from 'rxjs/operators';
-import { Inject, Injectable, ErrorHandler, InjectionToken, NgModule, Optional } from '@angular/core';
+import { ignoreElements, materialize, map, filter, groupBy, mergeMap, exhaustMap, dematerialize } from 'rxjs/operators';
+import { Injectable, Inject, ErrorHandler, InjectionToken, NgModule, Optional } from '@angular/core';
 
 /**
  * @fileoverview added by tsickle
- * @suppress {checkTypes,extraRequire,uselessCode} checked by tsc
+ * @suppress {checkTypes,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
  */
 /** @type {?} */
 const METADATA_KEY = '__@ngrx/effects__';
@@ -21,7 +21,7 @@ const METADATA_KEY = '__@ngrx/effects__';
  */
 function getEffectMetadataEntries(sourceProto) {
     return sourceProto.constructor.hasOwnProperty(METADATA_KEY)
-        ? (/** @type {?} */ (sourceProto.constructor))[METADATA_KEY]
+        ? ((/** @type {?} */ (sourceProto.constructor)))[METADATA_KEY]
         : [];
 }
 /**
@@ -35,7 +35,7 @@ function setEffectMetadataEntries(sourceProto, entries) {
     const constructor = sourceProto.constructor;
     /** @type {?} */
     const meta = constructor.hasOwnProperty(METADATA_KEY)
-        ? (/** @type {?} */ (constructor))[METADATA_KEY]
+        ? ((/** @type {?} */ (constructor)))[METADATA_KEY]
         : Object.defineProperty(constructor, METADATA_KEY, { value: [] })[METADATA_KEY];
     Array.prototype.push.apply(meta, entries);
 }
@@ -45,11 +45,17 @@ function setEffectMetadataEntries(sourceProto, entries) {
  * @return {?}
  */
 function Effect({ dispatch = true } = {}) {
-    return /** @type {?} */ (function (target, propertyName) {
+    return (/** @type {?} */ ((/**
+     * @template K
+     * @param {?} target
+     * @param {?} propertyName
+     * @return {?}
+     */
+    function (target, propertyName) {
         /** @type {?} */
         const metadata = { propertyName, dispatch };
         setEffectMetadataEntries(target, [metadata]);
-    });
+    })));
 }
 /**
  * @template T
@@ -83,7 +89,7 @@ function getEffectsMetadata(instance) {
 
 /**
  * @fileoverview added by tsickle
- * @suppress {checkTypes,extraRequire,uselessCode} checked by tsc
+ * @suppress {checkTypes,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
  */
 /**
  * @param {?} sourceInstance
@@ -93,7 +99,11 @@ function mergeEffects(sourceInstance) {
     /** @type {?} */
     const sourceName = getSourceForInstance(sourceInstance).constructor.name;
     /** @type {?} */
-    const observables = getSourceMetadata(sourceInstance).map(({ propertyName, dispatch }) => {
+    const observables = getSourceMetadata(sourceInstance).map((/**
+     * @param {?} __0
+     * @return {?}
+     */
+    ({ propertyName, dispatch }) => {
         /** @type {?} */
         const observable = typeof sourceInstance[propertyName] === 'function'
             ? sourceInstance[propertyName]()
@@ -103,20 +113,24 @@ function mergeEffects(sourceInstance) {
         }
         /** @type {?} */
         const materialized$ = observable.pipe(materialize());
-        return materialized$.pipe(map((notification) => ({
+        return materialized$.pipe(map((/**
+         * @param {?} notification
+         * @return {?}
+         */
+        (notification) => ({
             effect: sourceInstance[propertyName],
             notification,
             propertyName,
             sourceName,
             sourceInstance,
-        })));
-    });
+        }))));
+    }));
     return merge(...observables);
 }
 
 /**
  * @fileoverview added by tsickle
- * @suppress {checkTypes,extraRequire,uselessCode} checked by tsc
+ * @suppress {checkTypes,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
  */
 /**
  * @template V
@@ -156,12 +170,20 @@ Actions.ctorParameters = () => [
  * @return {?}
  */
 function ofType(...allowedTypes) {
-    return filter((action) => allowedTypes.some(type => type === action.type));
+    return filter((/**
+     * @param {?} action
+     * @return {?}
+     */
+    (action) => allowedTypes.some((/**
+     * @param {?} type
+     * @return {?}
+     */
+    type => type === action.type))));
 }
 
 /**
  * @fileoverview added by tsickle
- * @suppress {checkTypes,extraRequire,uselessCode} checked by tsc
+ * @suppress {checkTypes,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
  */
 /**
  * @param {?} output
@@ -229,7 +251,7 @@ function stringify(action) {
 
 /**
  * @fileoverview added by tsickle
- * @suppress {checkTypes,extraRequire,uselessCode} checked by tsc
+ * @suppress {checkTypes,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
  */
 /** @type {?} */
 const onIdentifyEffectsKey = 'ngrxOnIdentifyEffects';
@@ -240,7 +262,7 @@ const onInitEffects = 'ngrxOnInitEffects';
 
 /**
  * @fileoverview added by tsickle
- * @suppress {checkTypes,extraRequire,uselessCode} checked by tsc
+ * @suppress {checkTypes,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
  */
 class EffectSources extends Subject {
     /**
@@ -268,10 +290,26 @@ class EffectSources extends Subject {
      * @return {?}
      */
     toActions() {
-        return this.pipe(groupBy(getSourceForInstance), mergeMap(source$ => source$.pipe(groupBy(effectsInstance))), mergeMap(source$ => source$.pipe(exhaustMap(resolveEffectSource), map(output => {
+        return this.pipe(groupBy(getSourceForInstance), mergeMap((/**
+         * @param {?} source$
+         * @return {?}
+         */
+        source$ => source$.pipe(groupBy(effectsInstance)))), mergeMap((/**
+         * @param {?} source$
+         * @return {?}
+         */
+        source$ => source$.pipe(exhaustMap(resolveEffectSource), map((/**
+         * @param {?} output
+         * @return {?}
+         */
+        output => {
             verifyOutput(output, this.errorHandler);
             return output.notification;
-        }), filter((notification) => notification.kind === 'N'), dematerialize())));
+        })), filter((/**
+         * @param {?} notification
+         * @return {?}
+         */
+        (notification) => notification.kind === 'N')), dematerialize()))));
     }
 }
 EffectSources.decorators = [
@@ -317,7 +355,7 @@ function isOnRunEffects(sourceInstance) {
 
 /**
  * @fileoverview added by tsickle
- * @suppress {checkTypes,extraRequire,uselessCode} checked by tsc
+ * @suppress {checkTypes,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
  */
 /** @type {?} */
 const IMMEDIATE_EFFECTS = new InjectionToken('ngrx/effects: Immediate Effects');
@@ -328,7 +366,7 @@ const FEATURE_EFFECTS = new InjectionToken('ngrx/effects: Feature Effects');
 
 /**
  * @fileoverview added by tsickle
- * @suppress {checkTypes,extraRequire,uselessCode} checked by tsc
+ * @suppress {checkTypes,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
  */
 class EffectsRunner {
     /**
@@ -371,7 +409,7 @@ EffectsRunner.ctorParameters = () => [
 
 /**
  * @fileoverview added by tsickle
- * @suppress {checkTypes,extraRequire,uselessCode} checked by tsc
+ * @suppress {checkTypes,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
  */
 /** @type {?} */
 const ROOT_EFFECTS_INIT = '@ngrx/effects/init';
@@ -387,7 +425,11 @@ class EffectsRootModule {
     constructor(sources, runner, store, rootEffects, storeRootModule, storeFeatureModule) {
         this.sources = sources;
         runner.start();
-        rootEffects.forEach(effectSourceInstance => sources.addEffects(effectSourceInstance));
+        rootEffects.forEach((/**
+         * @param {?} effectSourceInstance
+         * @return {?}
+         */
+        effectSourceInstance => sources.addEffects(effectSourceInstance)));
         store.dispatch({ type: ROOT_EFFECTS_INIT });
     }
     /**
@@ -413,7 +455,7 @@ EffectsRootModule.ctorParameters = () => [
 
 /**
  * @fileoverview added by tsickle
- * @suppress {checkTypes,extraRequire,uselessCode} checked by tsc
+ * @suppress {checkTypes,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
  */
 class EffectsFeatureModule {
     /**
@@ -423,7 +465,15 @@ class EffectsFeatureModule {
      * @param {?} storeFeatureModule
      */
     constructor(root, effectSourceGroups, storeRootModule, storeFeatureModule) {
-        effectSourceGroups.forEach(group => group.forEach(effectSourceInstance => root.addEffects(effectSourceInstance)));
+        effectSourceGroups.forEach((/**
+         * @param {?} group
+         * @return {?}
+         */
+        group => group.forEach((/**
+         * @param {?} effectSourceInstance
+         * @return {?}
+         */
+        effectSourceInstance => root.addEffects(effectSourceInstance)))));
     }
 }
 EffectsFeatureModule.decorators = [
@@ -439,7 +489,7 @@ EffectsFeatureModule.ctorParameters = () => [
 
 /**
  * @fileoverview added by tsickle
- * @suppress {checkTypes,extraRequire,uselessCode} checked by tsc
+ * @suppress {checkTypes,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
  */
 class EffectsModule {
     /**
@@ -494,17 +544,17 @@ function createSourceInstances(...instances) {
 
 /**
  * @fileoverview added by tsickle
- * @suppress {checkTypes,extraRequire,uselessCode} checked by tsc
+ * @suppress {checkTypes,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
  */
 
 /**
  * @fileoverview added by tsickle
- * @suppress {checkTypes,extraRequire,uselessCode} checked by tsc
+ * @suppress {checkTypes,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
  */
 
 /**
  * @fileoverview added by tsickle
- * @suppress {checkTypes,extraRequire,uselessCode} checked by tsc
+ * @suppress {checkTypes,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
  */
 
 /**

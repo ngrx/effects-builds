@@ -1,5 +1,5 @@
 /**
- * @license NgRx 7.2.0+36.sha-a7e6303
+ * @license NgRx 7.2.0+37.sha-4bdb66e
  * (c) 2015-2018 Brandon Roberts, Mike Ryan, Rob Wormald, Victor Savkin
  * License: MIT
  */
@@ -8,7 +8,7 @@ import { defer } from 'rxjs';
 
 /**
  * @fileoverview added by tsickle
- * @suppress {checkTypes,extraRequire,uselessCode} checked by tsc
+ * @suppress {checkTypes,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
  */
 /**
  * @param {?} factoryOrSource
@@ -17,18 +17,21 @@ import { defer } from 'rxjs';
 function provideMockActions(factoryOrSource) {
     return {
         provide: Actions,
-        useFactory: () => {
+        useFactory: (/**
+         * @return {?}
+         */
+        () => {
             if (typeof factoryOrSource === 'function') {
                 return new Actions(defer(factoryOrSource));
             }
             return new Actions(factoryOrSource);
-        },
+        }),
     };
 }
 
 /**
  * @fileoverview added by tsickle
- * @suppress {checkTypes,extraRequire,uselessCode} checked by tsc
+ * @suppress {checkTypes,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
  */
 
 /**
