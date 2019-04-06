@@ -1,25 +1,14 @@
 /**
- * @license NgRx 7.4.0+20.sha-c9c9a0e
+ * @license NgRx 7.4.0+21.sha-00b550e
  * (c) 2015-2018 Brandon Roberts, Mike Ryan, Rob Wormald, Victor Savkin
  * License: MIT
  */
 (function (global, factory) {
-    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@ngrx/store'), require('rxjs'), require('rxjs/operators'), require('@angular/core')) :
-    typeof define === 'function' && define.amd ? define('@ngrx/effects', ['exports', '@ngrx/store', 'rxjs', 'rxjs/operators', '@angular/core'], factory) :
-    (global = global || self, factory((global.ngrx = global.ngrx || {}, global.ngrx.effects = {}), global['@ngrx/store'], global.rxjs, global.rxjs.operators, global.ng.core));
-}(this, function (exports, store, rxjs, operators, core) { 'use strict';
+    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('tslib'), require('@ngrx/store'), require('rxjs'), require('rxjs/operators'), require('@angular/core')) :
+    typeof define === 'function' && define.amd ? define('@ngrx/effects', ['exports', 'tslib', '@ngrx/store', 'rxjs', 'rxjs/operators', '@angular/core'], factory) :
+    (global = global || self, factory((global.ngrx = global.ngrx || {}, global.ngrx.effects = {}), global.tslib, global['@ngrx/store'], global.rxjs, global.rxjs.operators, global.ng.core));
+}(this, function (exports, tslib_1, store, rxjs, operators, core) { 'use strict';
 
-    var __assign = (undefined && undefined.__assign) || function () {
-        __assign = Object.assign || function(t) {
-            for (var s, i = 1, n = arguments.length; i < n; i++) {
-                s = arguments[i];
-                for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                    t[p] = s[p];
-            }
-            return t;
-        };
-        return __assign.apply(this, arguments);
-    };
     var CREATE_EFFECT_METADATA_KEY = '__@ngrx/effects_create__';
     function createEffect(source, _a) {
         var _b = (_a === void 0 ? {} : _a).dispatch, dispatch = _b === void 0 ? true : _b;
@@ -40,7 +29,7 @@
         })
             .map(function (propertyName) {
             var metaData = instance[propertyName][CREATE_EFFECT_METADATA_KEY];
-            return __assign({ propertyName: propertyName }, metaData);
+            return tslib_1.__assign({ propertyName: propertyName }, metaData);
         });
         return metadata;
     }
@@ -74,21 +63,11 @@
             : [];
     }
 
-    var __values = (undefined && undefined.__values) || function (o) {
-        var m = typeof Symbol === "function" && o[Symbol.iterator], i = 0;
-        if (m) return m.call(o);
-        return {
-            next: function () {
-                if (o && i >= o.length) o = void 0;
-                return { value: o && o[i++], done: !o };
-            }
-        };
-    };
     function getEffectsMetadata(instance) {
         var e_1, _a;
         var metadata = {};
         try {
-            for (var _b = __values(getSourceMetadata(instance)), _c = _b.next(); !_c.done; _c = _b.next()) {
+            for (var _b = tslib_1.__values(getSourceMetadata(instance)), _c = _b.next(); !_c.done; _c = _b.next()) {
                 var _d = _c.value, propertyName = _d.propertyName, dispatch = _d.dispatch;
                 metadata[propertyName] = { dispatch: dispatch };
             }
@@ -110,26 +89,6 @@
         return effects.reduce(function (sources, source) { return sources.concat(source(instance)); }, []);
     }
 
-    var __read = (undefined && undefined.__read) || function (o, n) {
-        var m = typeof Symbol === "function" && o[Symbol.iterator];
-        if (!m) return o;
-        var i = m.call(o), r, ar = [], e;
-        try {
-            while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
-        }
-        catch (error) { e = { error: error }; }
-        finally {
-            try {
-                if (r && !r.done && (m = i["return"])) m.call(i);
-            }
-            finally { if (e) throw e.error; }
-        }
-        return ar;
-    };
-    var __spread = (undefined && undefined.__spread) || function () {
-        for (var ar = [], i = 0; i < arguments.length; i++) ar = ar.concat(__read(arguments[i]));
-        return ar;
-    };
     function mergeEffects(sourceInstance) {
         var sourceName = getSourceForInstance(sourceInstance).constructor.name;
         var observables = getSourceMetadata(sourceInstance).map(function (_a) {
@@ -149,36 +108,11 @@
                 sourceInstance: sourceInstance,
             }); }));
         });
-        return rxjs.merge.apply(void 0, __spread(observables));
+        return rxjs.merge.apply(void 0, tslib_1.__spread(observables));
     }
 
-    var __extends = (undefined && undefined.__extends) || (function () {
-        var extendStatics = function (d, b) {
-            extendStatics = Object.setPrototypeOf ||
-                ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-                function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-            return extendStatics(d, b);
-        };
-        return function (d, b) {
-            extendStatics(d, b);
-            function __() { this.constructor = d; }
-            d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-        };
-    })();
-    var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
-        var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-        if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-        else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-        return c > 3 && r && Object.defineProperty(target, key, r), r;
-    };
-    var __metadata = (undefined && undefined.__metadata) || function (k, v) {
-        if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-    };
-    var __param = (undefined && undefined.__param) || function (paramIndex, decorator) {
-        return function (target, key) { decorator(target, key, paramIndex); }
-    };
     var Actions = /** @class */ (function (_super) {
-        __extends(Actions, _super);
+        tslib_1.__extends(Actions, _super);
         function Actions(source) {
             var _this = _super.call(this) || this;
             if (source) {
@@ -194,10 +128,10 @@
             return observable;
         };
         var Actions_1;
-        Actions = Actions_1 = __decorate([
+        Actions = Actions_1 = tslib_1.__decorate([
             core.Injectable(),
-            __param(0, core.Inject(store.ScannedActionsSubject)),
-            __metadata("design:paramtypes", [rxjs.Observable])
+            tslib_1.__param(0, core.Inject(store.ScannedActionsSubject)),
+            tslib_1.__metadata("design:paramtypes", [rxjs.Observable])
         ], Actions);
         return Actions;
     }(rxjs.Observable));
@@ -257,30 +191,8 @@
     var onRunEffectsKey = 'ngrxOnRunEffects';
     var onInitEffects = 'ngrxOnInitEffects';
 
-    var __extends$1 = (undefined && undefined.__extends) || (function () {
-        var extendStatics = function (d, b) {
-            extendStatics = Object.setPrototypeOf ||
-                ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-                function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-            return extendStatics(d, b);
-        };
-        return function (d, b) {
-            extendStatics(d, b);
-            function __() { this.constructor = d; }
-            d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-        };
-    })();
-    var __decorate$1 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
-        var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-        if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-        else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-        return c > 3 && r && Object.defineProperty(target, key, r), r;
-    };
-    var __metadata$1 = (undefined && undefined.__metadata) || function (k, v) {
-        if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-    };
     var EffectSources = /** @class */ (function (_super) {
-        __extends$1(EffectSources, _super);
+        tslib_1.__extends(EffectSources, _super);
         function EffectSources(errorHandler, store) {
             var _this = _super.call(this) || this;
             _this.errorHandler = errorHandler;
@@ -308,9 +220,9 @@
                 }), operators.dematerialize());
             }));
         };
-        EffectSources = __decorate$1([
+        EffectSources = tslib_1.__decorate([
             core.Injectable(),
-            __metadata$1("design:paramtypes", [core.ErrorHandler, store.Store])
+            tslib_1.__metadata("design:paramtypes", [core.ErrorHandler, store.Store])
         ], EffectSources);
         return EffectSources;
     }(rxjs.Subject));
@@ -337,15 +249,6 @@
     var ROOT_EFFECTS = new core.InjectionToken('ngrx/effects: Root Effects');
     var FEATURE_EFFECTS = new core.InjectionToken('ngrx/effects: Feature Effects');
 
-    var __decorate$2 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
-        var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-        if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-        else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-        return c > 3 && r && Object.defineProperty(target, key, r), r;
-    };
-    var __metadata$2 = (undefined && undefined.__metadata) || function (k, v) {
-        if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-    };
     var EffectsRunner = /** @class */ (function () {
         function EffectsRunner(effectSources, store) {
             this.effectSources = effectSources;
@@ -365,26 +268,14 @@
                 this.effectsSubscription = null;
             }
         };
-        EffectsRunner = __decorate$2([
+        EffectsRunner = tslib_1.__decorate([
             core.Injectable(),
-            __metadata$2("design:paramtypes", [EffectSources,
+            tslib_1.__metadata("design:paramtypes", [EffectSources,
                 store.Store])
         ], EffectsRunner);
         return EffectsRunner;
     }());
 
-    var __decorate$3 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
-        var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-        if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-        else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-        return c > 3 && r && Object.defineProperty(target, key, r), r;
-    };
-    var __metadata$3 = (undefined && undefined.__metadata) || function (k, v) {
-        if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-    };
-    var __param$1 = (undefined && undefined.__param) || function (paramIndex, decorator) {
-        return function (target, key) { decorator(target, key, paramIndex); }
-    };
     var ROOT_EFFECTS_INIT = '@ngrx/effects/init';
     var EffectsRootModule = /** @class */ (function () {
         function EffectsRootModule(sources, runner, store, rootEffects, storeRootModule, storeFeatureModule) {
@@ -398,12 +289,12 @@
         EffectsRootModule.prototype.addEffects = function (effectSourceInstance) {
             this.sources.addEffects(effectSourceInstance);
         };
-        EffectsRootModule = __decorate$3([
+        EffectsRootModule = tslib_1.__decorate([
             core.NgModule({}),
-            __param$1(3, core.Inject(ROOT_EFFECTS)),
-            __param$1(4, core.Optional()),
-            __param$1(5, core.Optional()),
-            __metadata$3("design:paramtypes", [EffectSources,
+            tslib_1.__param(3, core.Inject(ROOT_EFFECTS)),
+            tslib_1.__param(4, core.Optional()),
+            tslib_1.__param(5, core.Optional()),
+            tslib_1.__metadata("design:paramtypes", [EffectSources,
                 EffectsRunner,
                 store.Store, Array, store.StoreRootModule,
                 store.StoreFeatureModule])
@@ -411,18 +302,6 @@
         return EffectsRootModule;
     }());
 
-    var __decorate$4 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
-        var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-        if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-        else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-        return c > 3 && r && Object.defineProperty(target, key, r), r;
-    };
-    var __metadata$4 = (undefined && undefined.__metadata) || function (k, v) {
-        if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-    };
-    var __param$2 = (undefined && undefined.__param) || function (paramIndex, decorator) {
-        return function (target, key) { decorator(target, key, paramIndex); }
-    };
     var EffectsFeatureModule = /** @class */ (function () {
         function EffectsFeatureModule(root, effectSourceGroups, storeRootModule, storeFeatureModule) {
             effectSourceGroups.forEach(function (group) {
@@ -431,23 +310,17 @@
                 });
             });
         }
-        EffectsFeatureModule = __decorate$4([
+        EffectsFeatureModule = tslib_1.__decorate([
             core.NgModule({}),
-            __param$2(1, core.Inject(FEATURE_EFFECTS)),
-            __param$2(2, core.Optional()),
-            __param$2(3, core.Optional()),
-            __metadata$4("design:paramtypes", [EffectsRootModule, Array, store.StoreRootModule,
+            tslib_1.__param(1, core.Inject(FEATURE_EFFECTS)),
+            tslib_1.__param(2, core.Optional()),
+            tslib_1.__param(3, core.Optional()),
+            tslib_1.__metadata("design:paramtypes", [EffectsRootModule, Array, store.StoreRootModule,
                 store.StoreFeatureModule])
         ], EffectsFeatureModule);
         return EffectsFeatureModule;
     }());
 
-    var __decorate$5 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
-        var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-        if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-        else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-        return c > 3 && r && Object.defineProperty(target, key, r), r;
-    };
     var EffectsModule = /** @class */ (function () {
         function EffectsModule() {
         }
@@ -481,7 +354,7 @@
                 ],
             };
         };
-        EffectsModule = __decorate$5([
+        EffectsModule = tslib_1.__decorate([
             core.NgModule({})
         ], EffectsModule);
         return EffectsModule;
