@@ -1,16 +1,10 @@
 import { Observable } from 'rxjs';
 import { Action } from '@ngrx/store';
 import { EffectMetadata } from './models';
-export declare function createEffect<T extends Action>(source: (() => Observable<T>), options: {
+export declare function createEffect<R extends Observable<unknown> | ((...args: any[]) => Observable<unknown>)>(source: () => R, options: {
     dispatch: false;
-}): Observable<T>;
-export declare function createEffect<T extends Action>(source: (() => (...args: any[]) => Observable<T>), options: {
-    dispatch: false;
-}): ((...args: any[]) => Observable<T>);
-export declare function createEffect<T extends Action>(source: (() => Observable<T>), options?: {
+}): R;
+export declare function createEffect<T extends Action, R extends Observable<T> | ((...args: any[]) => Observable<T>)>(source: () => R, options?: {
     dispatch: true;
-}): Observable<T>;
-export declare function createEffect<T extends Action>(source: (() => (...args: any[]) => Observable<T>), options?: {
-    dispatch: true;
-}): ((...args: any[]) => Observable<T>);
+}): R;
 export declare function getCreateEffectMetadata<T>(instance: T): EffectMetadata<T>[];
