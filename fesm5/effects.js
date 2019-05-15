@@ -1,12 +1,12 @@
 /**
- * @license NgRx 8.0.0-beta.1+23.sha-873bc36
+ * @license NgRx 8.0.0-beta.1+24.sha-1ff986f
  * (c) 2015-2018 Brandon Roberts, Mike Ryan, Rob Wormald, Victor Savkin
  * License: MIT
  */
 import { __assign, __values, __spread, __extends, __decorate, __param, __metadata } from 'tslib';
 import { compose, ScannedActionsSubject, Store, StoreRootModule, StoreFeatureModule } from '@ngrx/store';
-import { merge, Observable, Subject } from 'rxjs';
-import { ignoreElements, materialize, map, filter, groupBy, mergeMap, exhaustMap, dematerialize } from 'rxjs/operators';
+import { merge, Observable, Subject, defer, NotificationKind, Notification } from 'rxjs';
+import { ignoreElements, materialize, map, filter, groupBy, mergeMap, exhaustMap, dematerialize, concatMap, finalize } from 'rxjs/operators';
 import { Injectable, Inject, ErrorHandler, InjectionToken, NgModule, Optional } from '@angular/core';
 
 var CREATE_EFFECT_METADATA_KEY = '__@ngrx/effects_create__';
@@ -367,6 +367,51 @@ function createSourceInstances() {
     return instances;
 }
 
+function mapToAction(
+/** Allow to take either config object or project/error functions */
+configOrProject, errorFn) {
+    var _a = typeof configOrProject === 'function'
+        ? {
+            project: configOrProject,
+            error: errorFn,
+            operator: concatMap,
+            complete: undefined,
+            unsubscribe: undefined,
+        }
+        : __assign({}, configOrProject, { operator: configOrProject.operator || concatMap }), project = _a.project, error = _a.error, complete = _a.complete, operator = _a.operator, unsubscribe = _a.unsubscribe;
+    return function (source) {
+        return defer(function () {
+            var subject = new Subject();
+            return merge(source.pipe(operator(function (input, index) {
+                return defer(function () {
+                    var completed = false;
+                    var errored = false;
+                    var projectedCount = 0;
+                    return project(input, index).pipe(materialize(), map(function (notification) {
+                        switch (notification.kind) {
+                            case NotificationKind.ERROR:
+                                errored = true;
+                                return new Notification(NotificationKind.NEXT, error(notification.error, input));
+                            case NotificationKind.COMPLETE:
+                                completed = true;
+                                return complete
+                                    ? new Notification(NotificationKind.NEXT, complete(projectedCount, input))
+                                    : undefined;
+                            default:
+                                ++projectedCount;
+                                return notification;
+                        }
+                    }), filter(function (n) { return n != null; }), dematerialize(), finalize(function () {
+                        if (!completed && !errored && unsubscribe) {
+                            subject.next(unsubscribe(projectedCount, input));
+                        }
+                    }));
+                });
+            })), subject);
+        });
+    };
+}
+
 /**
  * DO NOT EDIT
  *
@@ -377,5 +422,5 @@ function createSourceInstances() {
  * Generated bundle index. Do not edit.
  */
 
-export { EffectsFeatureModule as ɵngrx_modules_effects_effects_c, createSourceInstances as ɵngrx_modules_effects_effects_a, EffectsRootModule as ɵngrx_modules_effects_effects_b, EffectsRunner as ɵngrx_modules_effects_effects_f, FEATURE_EFFECTS as ɵngrx_modules_effects_effects_e, ROOT_EFFECTS as ɵngrx_modules_effects_effects_d, createEffect, Effect, getEffectsMetadata, mergeEffects, Actions, ofType, EffectsModule, EffectSources, ROOT_EFFECTS_INIT };
+export { EffectsFeatureModule as ɵngrx_modules_effects_effects_c, createSourceInstances as ɵngrx_modules_effects_effects_a, EffectsRootModule as ɵngrx_modules_effects_effects_b, EffectsRunner as ɵngrx_modules_effects_effects_f, FEATURE_EFFECTS as ɵngrx_modules_effects_effects_e, ROOT_EFFECTS as ɵngrx_modules_effects_effects_d, createEffect, Effect, getEffectsMetadata, mergeEffects, Actions, ofType, EffectsModule, EffectSources, ROOT_EFFECTS_INIT, mapToAction };
 //# sourceMappingURL=effects.js.map

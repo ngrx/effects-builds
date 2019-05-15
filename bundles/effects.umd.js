@@ -1,5 +1,5 @@
 /**
- * @license NgRx 8.0.0-beta.1+23.sha-873bc36
+ * @license NgRx 8.0.0-beta.1+24.sha-1ff986f
  * (c) 2015-2018 Brandon Roberts, Mike Ryan, Rob Wormald, Victor Savkin
  * License: MIT
  */
@@ -367,6 +367,51 @@
         return instances;
     }
 
+    function mapToAction(
+    /** Allow to take either config object or project/error functions */
+    configOrProject, errorFn) {
+        var _a = typeof configOrProject === 'function'
+            ? {
+                project: configOrProject,
+                error: errorFn,
+                operator: operators.concatMap,
+                complete: undefined,
+                unsubscribe: undefined,
+            }
+            : tslib_1.__assign({}, configOrProject, { operator: configOrProject.operator || operators.concatMap }), project = _a.project, error = _a.error, complete = _a.complete, operator = _a.operator, unsubscribe = _a.unsubscribe;
+        return function (source) {
+            return rxjs.defer(function () {
+                var subject = new rxjs.Subject();
+                return rxjs.merge(source.pipe(operator(function (input, index) {
+                    return rxjs.defer(function () {
+                        var completed = false;
+                        var errored = false;
+                        var projectedCount = 0;
+                        return project(input, index).pipe(operators.materialize(), operators.map(function (notification) {
+                            switch (notification.kind) {
+                                case rxjs.NotificationKind.ERROR:
+                                    errored = true;
+                                    return new rxjs.Notification(rxjs.NotificationKind.NEXT, error(notification.error, input));
+                                case rxjs.NotificationKind.COMPLETE:
+                                    completed = true;
+                                    return complete
+                                        ? new rxjs.Notification(rxjs.NotificationKind.NEXT, complete(projectedCount, input))
+                                        : undefined;
+                                default:
+                                    ++projectedCount;
+                                    return notification;
+                            }
+                        }), operators.filter(function (n) { return n != null; }), operators.dematerialize(), operators.finalize(function () {
+                            if (!completed && !errored && unsubscribe) {
+                                subject.next(unsubscribe(projectedCount, input));
+                            }
+                        }));
+                    });
+                })), subject);
+            });
+        };
+    }
+
     /**
      * DO NOT EDIT
      *
@@ -392,6 +437,7 @@
     exports.EffectsModule = EffectsModule;
     exports.EffectSources = EffectSources;
     exports.ROOT_EFFECTS_INIT = ROOT_EFFECTS_INIT;
+    exports.mapToAction = mapToAction;
 
     Object.defineProperty(exports, '__esModule', { value: true });
 

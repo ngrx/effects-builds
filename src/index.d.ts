@@ -8,4 +8,5 @@ export { EffectsModule } from './effects_module';
 export { EffectSources } from './effect_sources';
 export { EffectNotification } from './effect_notification';
 export { ROOT_EFFECTS_INIT } from './effects_root_module';
+export { mapToAction } from './map_to_action';
 export { OnIdentifyEffects, OnRunEffects, OnInitEffects, } from './lifecycle_hooks';

@@ -1,11 +1,11 @@
 /**
- * @license NgRx 8.0.0-beta.1+23.sha-873bc36
+ * @license NgRx 8.0.0-beta.1+24.sha-1ff986f
  * (c) 2015-2018 Brandon Roberts, Mike Ryan, Rob Wormald, Victor Savkin
  * License: MIT
  */
 import { compose, ScannedActionsSubject, Store, StoreRootModule, StoreFeatureModule } from '@ngrx/store';
-import { merge, Observable, Subject } from 'rxjs';
-import { ignoreElements, materialize, map, filter, groupBy, mergeMap, exhaustMap, dematerialize } from 'rxjs/operators';
+import { merge, Observable, Subject, defer, NotificationKind, Notification } from 'rxjs';
+import { ignoreElements, materialize, map, filter, groupBy, mergeMap, exhaustMap, dematerialize, concatMap, finalize } from 'rxjs/operators';
 import { Injectable, Inject, ErrorHandler, InjectionToken, NgModule, Optional } from '@angular/core';
 
 /**
@@ -633,6 +633,87 @@ function createSourceInstances(...instances) {
  * @fileoverview added by tsickle
  * @suppress {checkTypes,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
  */
+/**
+ * @template Input, OutputAction, ErrorAction, CompleteAction, UnsubscribeAction
+ * @param {?} configOrProject
+ * @param {?=} errorFn
+ * @return {?}
+ */
+function mapToAction(
+/** Allow to take either config object or project/error functions */
+configOrProject, errorFn) {
+    const { project, error, complete, operator, unsubscribe } = typeof configOrProject === 'function'
+        ? {
+            project: configOrProject,
+            error: (/** @type {?} */ (errorFn)),
+            operator: concatMap,
+            complete: undefined,
+            unsubscribe: undefined,
+        }
+        : Object.assign({}, configOrProject, { operator: configOrProject.operator || concatMap });
+    return (/**
+     * @param {?} source
+     * @return {?}
+     */
+    source => defer((/**
+     * @return {?}
+     */
+    () => {
+        /** @type {?} */
+        const subject = new Subject();
+        return merge(source.pipe(operator((/**
+         * @param {?} input
+         * @param {?} index
+         * @return {?}
+         */
+        (input, index) => defer((/**
+         * @return {?}
+         */
+        () => {
+            /** @type {?} */
+            let completed = false;
+            /** @type {?} */
+            let errored = false;
+            /** @type {?} */
+            let projectedCount = 0;
+            return project(input, index).pipe(materialize(), map((/**
+             * @param {?} notification
+             * @return {?}
+             */
+            (notification) => {
+                switch (notification.kind) {
+                    case NotificationKind.ERROR:
+                        errored = true;
+                        return new Notification(NotificationKind.NEXT, error(notification.error, input));
+                    case NotificationKind.COMPLETE:
+                        completed = true;
+                        return complete
+                            ? new Notification(NotificationKind.NEXT, complete(projectedCount, input))
+                            : undefined;
+                    default:
+                        ++projectedCount;
+                        return notification;
+                }
+            })), filter((/**
+             * @param {?} n
+             * @return {?}
+             */
+            (n) => n != null)), dematerialize(), finalize((/**
+             * @return {?}
+             */
+            () => {
+                if (!completed && !errored && unsubscribe) {
+                    subject.next(unsubscribe(projectedCount, input));
+                }
+            })));
+        }))))), subject);
+    })));
+}
+
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
+ */
 
 /**
  * @fileoverview added by tsickle
@@ -648,5 +729,5 @@ function createSourceInstances(...instances) {
  * Generated bundle index. Do not edit.
  */
 
-export { EffectsFeatureModule as ɵngrx_modules_effects_effects_c, createSourceInstances as ɵngrx_modules_effects_effects_a, EffectsRootModule as ɵngrx_modules_effects_effects_b, EffectsRunner as ɵngrx_modules_effects_effects_f, FEATURE_EFFECTS as ɵngrx_modules_effects_effects_e, ROOT_EFFECTS as ɵngrx_modules_effects_effects_d, createEffect, Effect, getEffectsMetadata, mergeEffects, Actions, ofType, EffectsModule, EffectSources, ROOT_EFFECTS_INIT };
+export { EffectsFeatureModule as ɵngrx_modules_effects_effects_c, createSourceInstances as ɵngrx_modules_effects_effects_a, EffectsRootModule as ɵngrx_modules_effects_effects_b, EffectsRunner as ɵngrx_modules_effects_effects_f, FEATURE_EFFECTS as ɵngrx_modules_effects_effects_e, ROOT_EFFECTS as ɵngrx_modules_effects_effects_d, createEffect, Effect, getEffectsMetadata, mergeEffects, Actions, ofType, EffectsModule, EffectSources, ROOT_EFFECTS_INIT, mapToAction };
 //# sourceMappingURL=effects.js.map
