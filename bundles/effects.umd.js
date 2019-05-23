@@ -1,5 +1,5 @@
 /**
- * @license NgRx 8.0.0-beta.2+9.sha-478b225
+ * @license NgRx 8.0.0-beta.2+10.sha-71137e5
  * (c) 2015-2018 Brandon Roberts, Mike Ryan, Rob Wormald, Victor Savkin
  * License: MIT
  */
@@ -10,13 +10,14 @@
 }(this, function (exports, tslib_1, store, rxjs, operators, core) { 'use strict';
 
     var CREATE_EFFECT_METADATA_KEY = '__@ngrx/effects_create__';
-    function createEffect(source, _a) {
-        var _b = (_a === void 0 ? {} : _a).dispatch, dispatch = _b === void 0 ? true : _b;
+    function createEffect(source, config) {
         var effect = source();
+        // Right now both createEffect and @Effect decorator set default values.
+        // Ideally that should only be done in one place that aggregates that info,
+        // for example in mergeEffects().
+        var value = tslib_1.__assign({ dispatch: true, resubscribeOnError: true }, config);
         Object.defineProperty(effect, CREATE_EFFECT_METADATA_KEY, {
-            value: {
-                dispatch: dispatch,
-            },
+            value: value,
         });
         return effect;
     }
@@ -40,9 +41,16 @@
 
     var METADATA_KEY = '__@ngrx/effects__';
     function Effect(_a) {
-        var _b = (_a === void 0 ? {} : _a).dispatch, dispatch = _b === void 0 ? true : _b;
+        var _b = _a === void 0 ? {} : _a, _c = _b.dispatch, dispatch = _c === void 0 ? true : _c, _d = _b.resubscribeOnError, resubscribeOnError = _d === void 0 ? true : _d;
         return function (target, propertyName) {
-            var metadata = { propertyName: propertyName, dispatch: dispatch };
+            // Right now both createEffect and @Effect decorator set default values.
+            // Ideally that should only be done in one place that aggregates that info,
+            // for example in mergeEffects().
+            var metadata = {
+                propertyName: propertyName,
+                dispatch: dispatch,
+                resubscribeOnError: resubscribeOnError,
+            };
             setEffectMetadataEntries(target, [metadata]);
         };
     }
@@ -68,8 +76,8 @@
         var metadata = {};
         try {
             for (var _b = tslib_1.__values(getSourceMetadata(instance)), _c = _b.next(); !_c.done; _c = _b.next()) {
-                var _d = _c.value, propertyName = _d.propertyName, dispatch = _d.dispatch;
-                metadata[propertyName] = { dispatch: dispatch };
+                var _d = _c.value, propertyName = _d.propertyName, dispatch = _d.dispatch, resubscribeOnError = _d.resubscribeOnError;
+                metadata[propertyName] = { dispatch: dispatch, resubscribeOnError: resubscribeOnError };
             }
         }
         catch (e_1_1) { e_1 = { error: e_1_1 }; }
@@ -89,17 +97,25 @@
         return effects.reduce(function (sources, source) { return sources.concat(source(instance)); }, []);
     }
 
-    function mergeEffects(sourceInstance) {
+    function mergeEffects(sourceInstance, errorHandler) {
         var sourceName = getSourceForInstance(sourceInstance).constructor.name;
-        var observables = getSourceMetadata(sourceInstance).map(function (_a) {
-            var propertyName = _a.propertyName, dispatch = _a.dispatch;
-            var observable = typeof sourceInstance[propertyName] === 'function'
+        var observables$ = getSourceMetadata(sourceInstance).map(function (_a) {
+            var propertyName = _a.propertyName, dispatch = _a.dispatch, resubscribeOnError = _a.resubscribeOnError;
+            var observable$ = typeof sourceInstance[propertyName] === 'function'
                 ? sourceInstance[propertyName]()
                 : sourceInstance[propertyName];
+            var resubscribable$ = resubscribeOnError
+                ? observable$.pipe(operators.catchError(function (error) {
+                    if (errorHandler)
+                        errorHandler.handleError(error);
+                    // Return observable that produces this particular effect
+                    return observable$;
+                }))
+                : observable$;
             if (dispatch === false) {
-                return observable.pipe(operators.ignoreElements());
+                return resubscribable$.pipe(operators.ignoreElements());
             }
-            var materialized$ = observable.pipe(operators.materialize());
+            var materialized$ = resubscribable$.pipe(operators.materialize());
             return materialized$.pipe(operators.map(function (notification) { return ({
                 effect: sourceInstance[propertyName],
                 notification: notification,
@@ -108,7 +124,7 @@
                 sourceInstance: sourceInstance,
             }); }));
         });
-        return rxjs.merge.apply(void 0, tslib_1.__spread(observables));
+        return rxjs.merge.apply(void 0, tslib_1.__spread(observables$));
     }
 
     var Actions = /** @class */ (function (_super) {
@@ -152,15 +168,6 @@
         });
     }
 
-    function verifyOutput(output, reporter) {
-        reportErrorThrown(output, reporter);
-        reportInvalidActions(output, reporter);
-    }
-    function reportErrorThrown(output, reporter) {
-        if (output.notification.kind === 'E') {
-            reporter.handleError(output.notification.error);
-        }
-    }
     function reportInvalidActions(output, reporter) {
         if (output.notification.kind === 'N') {
             var action = output.notification.value;
@@ -212,8 +219,8 @@
         EffectSources.prototype.toActions = function () {
             var _this = this;
             return this.pipe(operators.groupBy(getSourceForInstance), operators.mergeMap(function (source$) { return source$.pipe(operators.groupBy(effectsInstance)); }), operators.mergeMap(function (source$) {
-                return source$.pipe(operators.exhaustMap(resolveEffectSource), operators.map(function (output) {
-                    verifyOutput(output, _this.errorHandler);
+                return source$.pipe(operators.exhaustMap(resolveEffectSource(_this.errorHandler)), operators.map(function (output) {
+                    reportInvalidActions(output, _this.errorHandler);
                     return output.notification;
                 }), operators.filter(function (notification) {
                     return notification.kind === 'N';
@@ -233,12 +240,14 @@
         }
         return '';
     }
-    function resolveEffectSource(sourceInstance) {
-        var mergedEffects$ = mergeEffects(sourceInstance);
-        if (isOnRunEffects(sourceInstance)) {
-            return sourceInstance.ngrxOnRunEffects(mergedEffects$);
-        }
-        return mergedEffects$;
+    function resolveEffectSource(errorHandler) {
+        return function (sourceInstance) {
+            var mergedEffects$ = mergeEffects(sourceInstance, errorHandler);
+            if (isOnRunEffects(sourceInstance)) {
+                return sourceInstance.ngrxOnRunEffects(mergedEffects$);
+            }
+            return mergedEffects$;
+        };
     }
     function isOnRunEffects(sourceInstance) {
         var source = getSourceForInstance(sourceInstance);

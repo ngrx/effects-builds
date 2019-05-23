@@ -8,4 +8,4 @@ export interface EffectNotification {
     sourceInstance: any;
     notification: Notification<Action | null | undefined>;
 }
-export declare function verifyOutput(output: EffectNotification, reporter: ErrorHandler): void;
+export declare function reportInvalidActions(output: EffectNotification, reporter: ErrorHandler): void;

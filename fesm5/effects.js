@@ -1,22 +1,23 @@
 /**
- * @license NgRx 8.0.0-beta.2+9.sha-478b225
+ * @license NgRx 8.0.0-beta.2+10.sha-71137e5
  * (c) 2015-2018 Brandon Roberts, Mike Ryan, Rob Wormald, Victor Savkin
  * License: MIT
  */
 import { __assign, __values, __spread, __extends, __decorate, __param, __metadata } from 'tslib';
 import { compose, ScannedActionsSubject, Store, StoreRootModule, StoreFeatureModule } from '@ngrx/store';
 import { merge, Observable, Subject, defer, NotificationKind, Notification } from 'rxjs';
-import { ignoreElements, materialize, map, filter, groupBy, mergeMap, exhaustMap, dematerialize, concatMap, finalize } from 'rxjs/operators';
+import { catchError, ignoreElements, materialize, map, filter, groupBy, mergeMap, exhaustMap, dematerialize, concatMap, finalize } from 'rxjs/operators';
 import { Injectable, Inject, ErrorHandler, InjectionToken, NgModule, Optional } from '@angular/core';
 
 var CREATE_EFFECT_METADATA_KEY = '__@ngrx/effects_create__';
-function createEffect(source, _a) {
-    var _b = (_a === void 0 ? {} : _a).dispatch, dispatch = _b === void 0 ? true : _b;
+function createEffect(source, config) {
     var effect = source();
+    // Right now both createEffect and @Effect decorator set default values.
+    // Ideally that should only be done in one place that aggregates that info,
+    // for example in mergeEffects().
+    var value = __assign({ dispatch: true, resubscribeOnError: true }, config);
     Object.defineProperty(effect, CREATE_EFFECT_METADATA_KEY, {
-        value: {
-            dispatch: dispatch,
-        },
+        value: value,
     });
     return effect;
 }
@@ -40,9 +41,16 @@ function getSourceForInstance(instance) {
 
 var METADATA_KEY = '__@ngrx/effects__';
 function Effect(_a) {
-    var _b = (_a === void 0 ? {} : _a).dispatch, dispatch = _b === void 0 ? true : _b;
+    var _b = _a === void 0 ? {} : _a, _c = _b.dispatch, dispatch = _c === void 0 ? true : _c, _d = _b.resubscribeOnError, resubscribeOnError = _d === void 0 ? true : _d;
     return function (target, propertyName) {
-        var metadata = { propertyName: propertyName, dispatch: dispatch };
+        // Right now both createEffect and @Effect decorator set default values.
+        // Ideally that should only be done in one place that aggregates that info,
+        // for example in mergeEffects().
+        var metadata = {
+            propertyName: propertyName,
+            dispatch: dispatch,
+            resubscribeOnError: resubscribeOnError,
+        };
         setEffectMetadataEntries(target, [metadata]);
     };
 }
@@ -68,8 +76,8 @@ function getEffectsMetadata(instance) {
     var metadata = {};
     try {
         for (var _b = __values(getSourceMetadata(instance)), _c = _b.next(); !_c.done; _c = _b.next()) {
-            var _d = _c.value, propertyName = _d.propertyName, dispatch = _d.dispatch;
-            metadata[propertyName] = { dispatch: dispatch };
+            var _d = _c.value, propertyName = _d.propertyName, dispatch = _d.dispatch, resubscribeOnError = _d.resubscribeOnError;
+            metadata[propertyName] = { dispatch: dispatch, resubscribeOnError: resubscribeOnError };
         }
     }
     catch (e_1_1) { e_1 = { error: e_1_1 }; }
@@ -89,17 +97,25 @@ function getSourceMetadata(instance) {
     return effects.reduce(function (sources, source) { return sources.concat(source(instance)); }, []);
 }
 
-function mergeEffects(sourceInstance) {
+function mergeEffects(sourceInstance, errorHandler) {
     var sourceName = getSourceForInstance(sourceInstance).constructor.name;
-    var observables = getSourceMetadata(sourceInstance).map(function (_a) {
-        var propertyName = _a.propertyName, dispatch = _a.dispatch;
-        var observable = typeof sourceInstance[propertyName] === 'function'
+    var observables$ = getSourceMetadata(sourceInstance).map(function (_a) {
+        var propertyName = _a.propertyName, dispatch = _a.dispatch, resubscribeOnError = _a.resubscribeOnError;
+        var observable$ = typeof sourceInstance[propertyName] === 'function'
             ? sourceInstance[propertyName]()
             : sourceInstance[propertyName];
+        var resubscribable$ = resubscribeOnError
+            ? observable$.pipe(catchError(function (error) {
+                if (errorHandler)
+                    errorHandler.handleError(error);
+                // Return observable that produces this particular effect
+                return observable$;
+            }))
+            : observable$;
         if (dispatch === false) {
-            return observable.pipe(ignoreElements());
+            return resubscribable$.pipe(ignoreElements());
         }
-        var materialized$ = observable.pipe(materialize());
+        var materialized$ = resubscribable$.pipe(materialize());
         return materialized$.pipe(map(function (notification) { return ({
             effect: sourceInstance[propertyName],
             notification: notification,
@@ -108,7 +124,7 @@ function mergeEffects(sourceInstance) {
             sourceInstance: sourceInstance,
         }); }));
     });
-    return merge.apply(void 0, __spread(observables));
+    return merge.apply(void 0, __spread(observables$));
 }
 
 var Actions = /** @class */ (function (_super) {
@@ -152,15 +168,6 @@ function ofType() {
     });
 }
 
-function verifyOutput(output, reporter) {
-    reportErrorThrown(output, reporter);
-    reportInvalidActions(output, reporter);
-}
-function reportErrorThrown(output, reporter) {
-    if (output.notification.kind === 'E') {
-        reporter.handleError(output.notification.error);
-    }
-}
 function reportInvalidActions(output, reporter) {
     if (output.notification.kind === 'N') {
         var action = output.notification.value;
@@ -212,8 +219,8 @@ var EffectSources = /** @class */ (function (_super) {
     EffectSources.prototype.toActions = function () {
         var _this = this;
         return this.pipe(groupBy(getSourceForInstance), mergeMap(function (source$) { return source$.pipe(groupBy(effectsInstance)); }), mergeMap(function (source$) {
-            return source$.pipe(exhaustMap(resolveEffectSource), map(function (output) {
-                verifyOutput(output, _this.errorHandler);
+            return source$.pipe(exhaustMap(resolveEffectSource(_this.errorHandler)), map(function (output) {
+                reportInvalidActions(output, _this.errorHandler);
                 return output.notification;
             }), filter(function (notification) {
                 return notification.kind === 'N';
@@ -233,12 +240,14 @@ function effectsInstance(sourceInstance) {
     }
     return '';
 }
-function resolveEffectSource(sourceInstance) {
-    var mergedEffects$ = mergeEffects(sourceInstance);
-    if (isOnRunEffects(sourceInstance)) {
-        return sourceInstance.ngrxOnRunEffects(mergedEffects$);
-    }
-    return mergedEffects$;
+function resolveEffectSource(errorHandler) {
+    return function (sourceInstance) {
+        var mergedEffects$ = mergeEffects(sourceInstance, errorHandler);
+        if (isOnRunEffects(sourceInstance)) {
+            return sourceInstance.ngrxOnRunEffects(mergedEffects$);
+        }
+        return mergedEffects$;
+    };
 }
 function isOnRunEffects(sourceInstance) {
     var source = getSourceForInstance(sourceInstance);

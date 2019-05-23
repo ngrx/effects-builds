@@ -1,11 +1,11 @@
 /**
- * @license NgRx 8.0.0-beta.2+9.sha-478b225
+ * @license NgRx 8.0.0-beta.2+10.sha-71137e5
  * (c) 2015-2018 Brandon Roberts, Mike Ryan, Rob Wormald, Victor Savkin
  * License: MIT
  */
 import { compose, ScannedActionsSubject, Store, StoreRootModule, StoreFeatureModule } from '@ngrx/store';
 import { merge, Observable, Subject, defer, NotificationKind, Notification } from 'rxjs';
-import { ignoreElements, materialize, map, filter, groupBy, mergeMap, exhaustMap, dematerialize, concatMap, finalize } from 'rxjs/operators';
+import { catchError, ignoreElements, materialize, map, filter, groupBy, mergeMap, exhaustMap, dematerialize, concatMap, finalize } from 'rxjs/operators';
 import { Injectable, Inject, ErrorHandler, InjectionToken, NgModule, Optional } from '@angular/core';
 
 /**
@@ -15,18 +15,21 @@ import { Injectable, Inject, ErrorHandler, InjectionToken, NgModule, Optional } 
 /** @type {?} */
 const CREATE_EFFECT_METADATA_KEY = '__@ngrx/effects_create__';
 /**
- * @template T, R
+ * @template C, T, O, R
  * @param {?} source
- * @param {?=} __1
+ * @param {?=} config
  * @return {?}
  */
-function createEffect(source, { dispatch = true } = {}) {
+function createEffect(source, config) {
     /** @type {?} */
     const effect = source();
+    // Right now both createEffect and @Effect decorator set default values.
+    // Ideally that should only be done in one place that aggregates that info,
+    // for example in mergeEffects().
+    /** @type {?} */
+    const value = Object.assign({ dispatch: true, resubscribeOnError: true }, config);
     Object.defineProperty(effect, CREATE_EFFECT_METADATA_KEY, {
-        value: {
-            dispatch,
-        },
+        value,
     });
     return effect;
 }
@@ -82,7 +85,7 @@ const METADATA_KEY = '__@ngrx/effects__';
  * @param {?=} __0
  * @return {?}
  */
-function Effect({ dispatch = true } = {}) {
+function Effect({ dispatch = true, resubscribeOnError = true, } = {}) {
     return (/** @type {?} */ ((/**
      * @template K
      * @param {?} target
@@ -90,8 +93,15 @@ function Effect({ dispatch = true } = {}) {
      * @return {?}
      */
     function (target, propertyName) {
+        // Right now both createEffect and @Effect decorator set default values.
+        // Ideally that should only be done in one place that aggregates that info,
+        // for example in mergeEffects().
         /** @type {?} */
-        const metadata = { propertyName, dispatch };
+        const metadata = {
+            propertyName,
+            dispatch,
+            resubscribeOnError,
+        };
         setEffectMetadataEntries(target, [metadata]);
     })));
 }
@@ -143,8 +153,8 @@ function getEffectMetadataEntries(sourceProto) {
 function getEffectsMetadata(instance) {
     /** @type {?} */
     const metadata = {};
-    for (const { propertyName, dispatch } of getSourceMetadata(instance)) {
-        metadata[propertyName] = { dispatch };
+    for (const { propertyName, dispatch, resubscribeOnError, } of getSourceMetadata(instance)) {
+        metadata[propertyName] = { dispatch, resubscribeOnError };
     }
     return metadata;
 }
@@ -173,26 +183,40 @@ function getSourceMetadata(instance) {
  */
 /**
  * @param {?} sourceInstance
+ * @param {?=} errorHandler
  * @return {?}
  */
-function mergeEffects(sourceInstance) {
+function mergeEffects(sourceInstance, errorHandler) {
     /** @type {?} */
     const sourceName = getSourceForInstance(sourceInstance).constructor.name;
     /** @type {?} */
-    const observables = getSourceMetadata(sourceInstance).map((/**
+    const observables$ = getSourceMetadata(sourceInstance).map((/**
      * @param {?} __0
      * @return {?}
      */
-    ({ propertyName, dispatch }) => {
+    ({ propertyName, dispatch, resubscribeOnError, }) => {
         /** @type {?} */
-        const observable = typeof sourceInstance[propertyName] === 'function'
+        const observable$ = typeof sourceInstance[propertyName] === 'function'
             ? sourceInstance[propertyName]()
             : sourceInstance[propertyName];
+        /** @type {?} */
+        const resubscribable$ = resubscribeOnError
+            ? observable$.pipe(catchError((/**
+             * @param {?} error
+             * @return {?}
+             */
+            error => {
+                if (errorHandler)
+                    errorHandler.handleError(error);
+                // Return observable that produces this particular effect
+                return observable$;
+            })))
+            : observable$;
         if (dispatch === false) {
-            return observable.pipe(ignoreElements());
+            return resubscribable$.pipe(ignoreElements());
         }
         /** @type {?} */
-        const materialized$ = observable.pipe(materialize());
+        const materialized$ = resubscribable$.pipe(materialize());
         return materialized$.pipe(map((/**
          * @param {?} notification
          * @return {?}
@@ -205,7 +229,7 @@ function mergeEffects(sourceInstance) {
             sourceInstance,
         }))));
     }));
-    return merge(...observables);
+    return merge(...observables$);
 }
 
 /**
@@ -272,25 +296,6 @@ function ofType(...allowedTypes) {
  * @fileoverview added by tsickle
  * @suppress {checkTypes,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
  */
-/**
- * @param {?} output
- * @param {?} reporter
- * @return {?}
- */
-function verifyOutput(output, reporter) {
-    reportErrorThrown(output, reporter);
-    reportInvalidActions(output, reporter);
-}
-/**
- * @param {?} output
- * @param {?} reporter
- * @return {?}
- */
-function reportErrorThrown(output, reporter) {
-    if (output.notification.kind === 'E') {
-        reporter.handleError(output.notification.error);
-    }
-}
 /**
  * @param {?} output
  * @param {?} reporter
@@ -385,12 +390,12 @@ class EffectSources extends Subject {
          * @param {?} source$
          * @return {?}
          */
-        source$ => source$.pipe(exhaustMap(resolveEffectSource), map((/**
+        source$ => source$.pipe(exhaustMap(resolveEffectSource(this.errorHandler)), map((/**
          * @param {?} output
          * @return {?}
          */
         output => {
-            verifyOutput(output, this.errorHandler);
+            reportInvalidActions(output, this.errorHandler);
             return output.notification;
         })), filter((/**
          * @param {?} notification
@@ -419,16 +424,22 @@ function effectsInstance(sourceInstance) {
     return '';
 }
 /**
- * @param {?} sourceInstance
+ * @param {?} errorHandler
  * @return {?}
  */
-function resolveEffectSource(sourceInstance) {
-    /** @type {?} */
-    const mergedEffects$ = mergeEffects(sourceInstance);
-    if (isOnRunEffects(sourceInstance)) {
-        return sourceInstance.ngrxOnRunEffects(mergedEffects$);
-    }
-    return mergedEffects$;
+function resolveEffectSource(errorHandler) {
+    return (/**
+     * @param {?} sourceInstance
+     * @return {?}
+     */
+    sourceInstance => {
+        /** @type {?} */
+        const mergedEffects$ = mergeEffects(sourceInstance, errorHandler);
+        if (isOnRunEffects(sourceInstance)) {
+            return sourceInstance.ngrxOnRunEffects(mergedEffects$);
+        }
+        return mergedEffects$;
+    });
 }
 /**
  * @param {?} sourceInstance
