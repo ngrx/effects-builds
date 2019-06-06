@@ -1,5 +1,5 @@
 /**
- * @license NgRx 8.0.0-rc.1+4.sha-dec4bfa
+ * @license NgRx 8.0.0-rc.1+5.sha-36f14bd
  * (c) 2015-2018 Brandon Roberts, Mike Ryan, Rob Wormald, Victor Savkin
  * License: MIT
  */
@@ -376,7 +376,7 @@
         return instances;
     }
 
-    function mapToAction(
+    function act(
     /** Allow to take either config object or project/error functions */
     configOrProject, errorFn) {
         var _a = typeof configOrProject === 'function'
@@ -446,7 +446,7 @@
     exports.EffectsModule = EffectsModule;
     exports.EffectSources = EffectSources;
     exports.ROOT_EFFECTS_INIT = ROOT_EFFECTS_INIT;
-    exports.mapToAction = mapToAction;
+    exports.act = act;
 
     Object.defineProperty(exports, '__esModule', { value: true });
 

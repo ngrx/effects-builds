@@ -1,5 +1,5 @@
 /**
- * @license NgRx 8.0.0-rc.1+4.sha-dec4bfa
+ * @license NgRx 8.0.0-rc.1+5.sha-36f14bd
  * (c) 2015-2018 Brandon Roberts, Mike Ryan, Rob Wormald, Victor Savkin
  * License: MIT
  */
@@ -650,7 +650,7 @@ function createSourceInstances(...instances) {
  * @param {?=} errorFn
  * @return {?}
  */
-function mapToAction(
+function act(
 /** Allow to take either config object or project/error functions */
 configOrProject, errorFn) {
     const { project, error, complete, operator, unsubscribe } = typeof configOrProject === 'function'
@@ -740,5 +740,5 @@ configOrProject, errorFn) {
  * Generated bundle index. Do not edit.
  */
 
-export { EffectsFeatureModule as ɵngrx_modules_effects_effects_c, createSourceInstances as ɵngrx_modules_effects_effects_a, EffectsRootModule as ɵngrx_modules_effects_effects_b, EffectsRunner as ɵngrx_modules_effects_effects_f, FEATURE_EFFECTS as ɵngrx_modules_effects_effects_e, ROOT_EFFECTS as ɵngrx_modules_effects_effects_d, createEffect, Effect, getEffectsMetadata, mergeEffects, Actions, ofType, EffectsModule, EffectSources, ROOT_EFFECTS_INIT, mapToAction };
+export { EffectsFeatureModule as ɵngrx_modules_effects_effects_c, createSourceInstances as ɵngrx_modules_effects_effects_a, EffectsRootModule as ɵngrx_modules_effects_effects_b, EffectsRunner as ɵngrx_modules_effects_effects_f, FEATURE_EFFECTS as ɵngrx_modules_effects_effects_e, ROOT_EFFECTS as ɵngrx_modules_effects_effects_d, createEffect, Effect, getEffectsMetadata, mergeEffects, Actions, ofType, EffectsModule, EffectSources, ROOT_EFFECTS_INIT, act };
 //# sourceMappingURL=effects.js.map
