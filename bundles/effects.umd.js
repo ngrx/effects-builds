@@ -1,5 +1,5 @@
 /**
- * @license NgRx 8.0.0+5.sha-78153cb
+ * @license NgRx 8.0.0+7.sha-68588c5
  * (c) 2015-2018 Brandon Roberts, Mike Ryan, Rob Wormald, Victor Savkin
  * License: MIT
  */
@@ -401,13 +401,17 @@
                         var projectedCount = 0;
                         return project(input, index).pipe(operators.materialize(), operators.map(function (notification) {
                             switch (notification.kind) {
-                                case rxjs.NotificationKind.ERROR:
+                                case 'E':
                                     errored = true;
-                                    return new rxjs.Notification(rxjs.NotificationKind.NEXT, error(notification.error, input));
-                                case rxjs.NotificationKind.COMPLETE:
+                                    return new rxjs.Notification(
+                                    // TODO: remove any in RxJS 6.5
+                                    'N', error(notification.error, input));
+                                case 'C':
                                     completed = true;
                                     return complete
-                                        ? new rxjs.Notification(rxjs.NotificationKind.NEXT, complete(projectedCount, input))
+                                        ? new rxjs.Notification(
+                                        // TODO: remove any in RxJS 6.5
+                                        'N', complete(projectedCount, input))
                                         : undefined;
                                 default:
                                     ++projectedCount;

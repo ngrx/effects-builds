@@ -1,11 +1,11 @@
 /**
- * @license NgRx 8.0.0+5.sha-78153cb
+ * @license NgRx 8.0.0+7.sha-68588c5
  * (c) 2015-2018 Brandon Roberts, Mike Ryan, Rob Wormald, Victor Savkin
  * License: MIT
  */
 import { __assign, __values, __spread, __extends, __decorate, __param, __metadata } from 'tslib';
 import { compose, ScannedActionsSubject, Store, StoreRootModule, StoreFeatureModule } from '@ngrx/store';
-import { merge, Observable, Subject, defer, NotificationKind, Notification } from 'rxjs';
+import { merge, Observable, Subject, defer, Notification } from 'rxjs';
 import { catchError, ignoreElements, materialize, map, filter, groupBy, mergeMap, exhaustMap, dematerialize, concatMap, finalize } from 'rxjs/operators';
 import { Injectable, Inject, ErrorHandler, InjectionToken, NgModule, Optional } from '@angular/core';
 
@@ -401,13 +401,17 @@ configOrProject, errorFn) {
                     var projectedCount = 0;
                     return project(input, index).pipe(materialize(), map(function (notification) {
                         switch (notification.kind) {
-                            case NotificationKind.ERROR:
+                            case 'E':
                                 errored = true;
-                                return new Notification(NotificationKind.NEXT, error(notification.error, input));
-                            case NotificationKind.COMPLETE:
+                                return new Notification(
+                                // TODO: remove any in RxJS 6.5
+                                'N', error(notification.error, input));
+                            case 'C':
                                 completed = true;
                                 return complete
-                                    ? new Notification(NotificationKind.NEXT, complete(projectedCount, input))
+                                    ? new Notification(
+                                    // TODO: remove any in RxJS 6.5
+                                    'N', complete(projectedCount, input))
                                     : undefined;
                             default:
                                 ++projectedCount;
