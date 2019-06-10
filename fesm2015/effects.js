@@ -1,5 +1,5 @@
 /**
- * @license NgRx 8.0.0+4.sha-878d31c
+ * @license NgRx 8.0.0+5.sha-78153cb
  * (c) 2015-2018 Brandon Roberts, Mike Ryan, Rob Wormald, Victor Savkin
  * License: MIT
  */
@@ -317,7 +317,10 @@ function reportInvalidActions(output, reporter) {
  * @return {?}
  */
 function isAction(action) {
-    return action && action.type && typeof action.type === 'string';
+    return (typeof action !== 'function' &&
+        action &&
+        action.type &&
+        typeof action.type === 'string');
 }
 /**
  * @param {?} __0

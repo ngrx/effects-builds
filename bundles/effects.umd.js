@@ -1,5 +1,5 @@
 /**
- * @license NgRx 8.0.0+4.sha-878d31c
+ * @license NgRx 8.0.0+5.sha-78153cb
  * (c) 2015-2018 Brandon Roberts, Mike Ryan, Rob Wormald, Victor Savkin
  * License: MIT
  */
@@ -178,7 +178,10 @@
         }
     }
     function isAction(action) {
-        return action && action.type && typeof action.type === 'string';
+        return (typeof action !== 'function' &&
+            action &&
+            action.type &&
+            typeof action.type === 'string');
     }
     function getEffectName(_a) {
         var propertyName = _a.propertyName, sourceInstance = _a.sourceInstance, sourceName = _a.sourceName;
