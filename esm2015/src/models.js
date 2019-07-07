@@ -3,13 +3,21 @@
  * @suppress {checkTypes,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
  */
 /**
+ * Configures an effect created by `createEffect`.
  * @record
  */
 export function EffectConfig() { }
 if (false) {
-    /** @type {?|undefined} */
+    /**
+     * Determines if the action emitted by the effect is dispatched to the store.
+     * If false, effect does not need to return type `Observable<Action>`.
+     * @type {?|undefined}
+     */
     EffectConfig.prototype.dispatch;
-    /** @type {?|undefined} */
+    /**
+     * Determines if the effect will be resubscribed to if an error occurs in the main actions stream.
+     * @type {?|undefined}
+     */
     EffectConfig.prototype.resubscribeOnError;
 }
 /**
@@ -21,4 +29,4 @@ if (false) {
     /** @type {?} */
     EffectMetadata.prototype.propertyName;
 }
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoibW9kZWxzLmpzIiwic291cmNlUm9vdCI6IiIsInNvdXJjZXMiOlsiLi4vLi4vLi4vLi4vLi4vLi4vbW9kdWxlcy9lZmZlY3RzL3NyYy9tb2RlbHMudHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6Ijs7Ozs7OztBQUFBLGtDQUdDOzs7SUFGQyxnQ0FBbUI7O0lBQ25CLDBDQUE2Qjs7Ozs7O0FBRy9CLG9DQUVDOzs7SUFEQyxzQ0FBdUMiLCJzb3VyY2VzQ29udGVudCI6WyJleHBvcnQgaW50ZXJmYWNlIEVmZmVjdENvbmZpZyB7XG4gIGRpc3BhdGNoPzogYm9vbGVhbjtcbiAgcmVzdWJzY3JpYmVPbkVycm9yPzogYm9vbGVhbjtcbn1cblxuZXhwb3J0IGludGVyZmFjZSBFZmZlY3RNZXRhZGF0YTxUPiBleHRlbmRzIFJlcXVpcmVkPEVmZmVjdENvbmZpZz4ge1xuICBwcm9wZXJ0eU5hbWU6IEV4dHJhY3Q8a2V5b2YgVCwgc3RyaW5nPjtcbn1cblxuZXhwb3J0IHR5cGUgRWZmZWN0c01ldGFkYXRhPFQ+ID0ge1xuICBba2V5IGluIEV4dHJhY3Q8a2V5b2YgVCwgc3RyaW5nPl0/OiBFZmZlY3RDb25maWdcbn07XG4iXX0=
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoibW9kZWxzLmpzIiwic291cmNlUm9vdCI6IiIsInNvdXJjZXMiOlsiLi4vLi4vLi4vLi4vLi4vLi4vbW9kdWxlcy9lZmZlY3RzL3NyYy9tb2RlbHMudHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6Ijs7Ozs7Ozs7QUFHQSxrQ0FVQzs7Ozs7OztJQUxDLGdDQUFtQjs7Ozs7SUFJbkIsMENBQTZCOzs7Ozs7QUFHL0Isb0NBRUM7OztJQURDLHNDQUF1QyIsInNvdXJjZXNDb250ZW50IjpbIi8qKlxuICogQ29uZmlndXJlcyBhbiBlZmZlY3QgY3JlYXRlZCBieSBgY3JlYXRlRWZmZWN0YC5cbiAqL1xuZXhwb3J0IGludGVyZmFjZSBFZmZlY3RDb25maWcge1xuICAvKipcbiAgICogRGV0ZXJtaW5lcyBpZiB0aGUgYWN0aW9uIGVtaXR0ZWQgYnkgdGhlIGVmZmVjdCBpcyBkaXNwYXRjaGVkIHRvIHRoZSBzdG9yZS5cbiAgICogSWYgZmFsc2UsIGVmZmVjdCBkb2VzIG5vdCBuZWVkIHRvIHJldHVybiB0eXBlIGBPYnNlcnZhYmxlPEFjdGlvbj5gLlxuICAgKi9cbiAgZGlzcGF0Y2g/OiBib29sZWFuO1xuICAvKipcbiAgICogRGV0ZXJtaW5lcyBpZiB0aGUgZWZmZWN0IHdpbGwgYmUgcmVzdWJzY3JpYmVkIHRvIGlmIGFuIGVycm9yIG9jY3VycyBpbiB0aGUgbWFpbiBhY3Rpb25zIHN0cmVhbS5cbiAgICovXG4gIHJlc3Vic2NyaWJlT25FcnJvcj86IGJvb2xlYW47XG59XG5cbmV4cG9ydCBpbnRlcmZhY2UgRWZmZWN0TWV0YWRhdGE8VD4gZXh0ZW5kcyBSZXF1aXJlZDxFZmZlY3RDb25maWc+IHtcbiAgcHJvcGVydHlOYW1lOiBFeHRyYWN0PGtleW9mIFQsIHN0cmluZz47XG59XG5cbmV4cG9ydCB0eXBlIEVmZmVjdHNNZXRhZGF0YTxUPiA9IHtcbiAgW2tleSBpbiBFeHRyYWN0PGtleW9mIFQsIHN0cmluZz5dPzogRWZmZWN0Q29uZmlnXG59O1xuIl19

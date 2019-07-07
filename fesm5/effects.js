@@ -1,5 +1,5 @@
 /**
- * @license NgRx 8.0.1+17.sha-3b0b863
+ * @license NgRx 8.0.1+29.sha-3c18263
  * (c) 2015-2018 Brandon Roberts, Mike Ryan, Rob Wormald, Victor Savkin
  * License: MIT
  */
@@ -10,6 +10,38 @@ import { catchError, ignoreElements, materialize, map, filter, groupBy, mergeMap
 import { Injectable, Inject, ErrorHandler, InjectionToken, NgModule, Optional } from '@angular/core';
 
 var CREATE_EFFECT_METADATA_KEY = '__@ngrx/effects_create__';
+/**
+ * @description
+ * Creates an effect from an `Observable` and an `EffectConfig`.
+ *
+ * @param source A function which returns an `Observable`.
+ * @param config A `Partial<EffectConfig>` to configure the effect.  By default, `dispatch` is true and `resubscribeOnError` is true.
+ * @returns If `EffectConfig`#`dispatch` is true, returns `Observable<Action>`.  Else, returns `Observable<unknown>`.
+ *
+ * @usageNotes
+ *
+ * ** Mapping to a different action **
+ * ```ts
+ * effectName$ = createEffect(
+ *   () => this.actions$.pipe(
+ *     ofType(FeatureActions.actionOne),
+ *     map(() => FeatureActions.actionTwo())
+ *   )
+ * );
+ * ```
+ *
+ *  ** Non-dispatching effects **
+ * ```ts
+ * effectName$ = createEffect(
+ *   () => this.actions$.pipe(
+ *     ofType(FeatureActions.actionOne),
+ *     tap(() => console.log('Action One Dispatched'))
+ *   ),
+ *   { dispatch: false }
+ *   // FeatureActions.actionOne is not dispatched
+ * );
+ * ```
+ */
 function createEffect(source, config) {
     var effect = source();
     // Right now both createEffect and @Effect decorator set default values.
