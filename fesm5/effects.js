@@ -1,5 +1,5 @@
 /**
- * @license NgRx 8.1.0+7.sha-3cc4f3d
+ * @license NgRx 8.1.0+9.sha-5b48912
  * (c) 2015-2018 Brandon Roberts, Mike Ryan, Rob Wormald, Victor Savkin
  * License: MIT
  */
@@ -136,13 +136,16 @@ function mergeEffects(sourceInstance, errorHandler) {
         var observable$ = typeof sourceInstance[propertyName] === 'function'
             ? sourceInstance[propertyName]()
             : sourceInstance[propertyName];
-        var resubscribable$ = resubscribeOnError
-            ? observable$.pipe(catchError(function (error) {
+        var resubscribeInCaseOfError = function (observable$) {
+            return observable$.pipe(catchError(function (error) {
                 if (errorHandler)
                     errorHandler.handleError(error);
                 // Return observable that produces this particular effect
-                return observable$;
-            }))
+                return resubscribeInCaseOfError(observable$);
+            }));
+        };
+        var resubscribable$ = resubscribeOnError
+            ? resubscribeInCaseOfError(observable$)
             : observable$;
         if (dispatch === false) {
             return resubscribable$.pipe(ignoreElements());
