@@ -1,5 +1,5 @@
 /**
- * @license NgRx 8.1.0+11.sha-ade4d8a
+ * @license NgRx 8.1.0+13.sha-14410c6
  * (c) 2015-2018 Brandon Roberts, Mike Ryan, Rob Wormald, Victor Savkin
  * License: MIT
  */
@@ -227,23 +227,17 @@ function mergeEffects(sourceInstance, errorHandler) {
             ? sourceInstance[propertyName]()
             : sourceInstance[propertyName];
         /** @type {?} */
-        const resubscribeInCaseOfError = (/**
-         * @param {?} observable$
-         * @return {?}
-         */
-        (observable$) => observable$.pipe(catchError((/**
-         * @param {?} error
-         * @return {?}
-         */
-        error => {
-            if (errorHandler)
-                errorHandler.handleError(error);
-            // Return observable that produces this particular effect
-            return resubscribeInCaseOfError(observable$);
-        }))));
-        /** @type {?} */
         const resubscribable$ = resubscribeOnError
-            ? resubscribeInCaseOfError(observable$)
+            ? observable$.pipe(catchError((/**
+             * @param {?} error
+             * @return {?}
+             */
+            error => {
+                if (errorHandler)
+                    errorHandler.handleError(error);
+                // Return observable that produces this particular effect
+                return observable$;
+            })))
             : observable$;
         if (dispatch === false) {
             return resubscribable$.pipe(ignoreElements());
