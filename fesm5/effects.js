@@ -1,5 +1,5 @@
 /**
- * @license NgRx 8.3.0+1.sha-cb74051
+ * @license NgRx 8.3.0+4.sha-70a8f2d
  * (c) 2015-2018 Brandon Roberts, Mike Ryan, Rob Wormald, Victor Savkin
  * License: MIT
  */
@@ -7,7 +7,7 @@ import { __assign, __values, __spread, __extends, __decorate, __param, __metadat
 import { compose, ScannedActionsSubject, Store, StoreRootModule, StoreFeatureModule } from '@ngrx/store';
 import { merge, Observable, Subject, defer, Notification } from 'rxjs';
 import { catchError, ignoreElements, materialize, map, filter, groupBy, mergeMap, exhaustMap, dematerialize, concatMap, finalize } from 'rxjs/operators';
-import { Injectable, Inject, ErrorHandler, InjectionToken, NgModule, Optional } from '@angular/core';
+import { Injectable, Inject, ErrorHandler, InjectionToken, NgModule, Optional, SkipSelf } from '@angular/core';
 
 var CREATE_EFFECT_METADATA_KEY = '__@ngrx/effects_create__';
 /**
@@ -289,6 +289,7 @@ function isOnRunEffects(sourceInstance) {
     return (onRunEffectsKey in source && typeof source[onRunEffectsKey] === 'function');
 }
 
+var _ROOT_EFFECTS_GUARD = new InjectionToken('@ngrx/effects Internal Root Guard');
 var IMMEDIATE_EFFECTS = new InjectionToken('ngrx/effects: Immediate Effects');
 var ROOT_EFFECTS = new InjectionToken('ngrx/effects: Root Effects');
 var FEATURE_EFFECTS = new InjectionToken('ngrx/effects: Feature Effects');
@@ -322,7 +323,7 @@ var EffectsRunner = /** @class */ (function () {
 
 var ROOT_EFFECTS_INIT = '@ngrx/effects/init';
 var EffectsRootModule = /** @class */ (function () {
-    function EffectsRootModule(sources, runner, store, rootEffects, storeRootModule, storeFeatureModule) {
+    function EffectsRootModule(sources, runner, store, rootEffects, storeRootModule, storeFeatureModule, guard) {
         this.sources = sources;
         runner.start();
         rootEffects.forEach(function (effectSourceInstance) {
@@ -338,10 +339,12 @@ var EffectsRootModule = /** @class */ (function () {
         __param(3, Inject(ROOT_EFFECTS)),
         __param(4, Optional()),
         __param(5, Optional()),
+        __param(6, Optional()),
+        __param(6, Inject(_ROOT_EFFECTS_GUARD)),
         __metadata("design:paramtypes", [EffectSources,
             EffectsRunner,
             Store, Array, StoreRootModule,
-            StoreFeatureModule])
+            StoreFeatureModule, Object])
     ], EffectsRootModule);
     return EffectsRootModule;
 }());
@@ -386,6 +389,11 @@ var EffectsModule = /** @class */ (function () {
         return {
             ngModule: EffectsRootModule,
             providers: [
+                {
+                    provide: _ROOT_EFFECTS_GUARD,
+                    useFactory: _provideForRootGuard,
+                    deps: [[EffectsRunner, new Optional(), new SkipSelf()]],
+                },
                 EffectsRunner,
                 EffectSources,
                 Actions,
@@ -409,6 +417,12 @@ function createSourceInstances() {
         instances[_i] = arguments[_i];
     }
     return instances;
+}
+function _provideForRootGuard(runner) {
+    if (runner) {
+        throw new TypeError("EffectsModule.forRoot() called twice. Feature modules should use EffectsModule.forFeature() instead.");
+    }
+    return 'guarded';
 }
 
 function act(
@@ -470,5 +484,5 @@ configOrProject, errorFn) {
  * Generated bundle index. Do not edit.
  */
 
-export { EffectsFeatureModule as ɵngrx_modules_effects_effects_c, createSourceInstances as ɵngrx_modules_effects_effects_a, EffectsRootModule as ɵngrx_modules_effects_effects_b, EffectsRunner as ɵngrx_modules_effects_effects_f, FEATURE_EFFECTS as ɵngrx_modules_effects_effects_e, ROOT_EFFECTS as ɵngrx_modules_effects_effects_d, createEffect, Effect, getEffectsMetadata, mergeEffects, Actions, ofType, EffectsModule, EffectSources, ROOT_EFFECTS_INIT, act };
+export { EffectsFeatureModule as ɵngrx_modules_effects_effects_d, _provideForRootGuard as ɵngrx_modules_effects_effects_b, createSourceInstances as ɵngrx_modules_effects_effects_a, EffectsRootModule as ɵngrx_modules_effects_effects_c, EffectsRunner as ɵngrx_modules_effects_effects_h, FEATURE_EFFECTS as ɵngrx_modules_effects_effects_g, ROOT_EFFECTS as ɵngrx_modules_effects_effects_f, _ROOT_EFFECTS_GUARD as ɵngrx_modules_effects_effects_e, createEffect, Effect, getEffectsMetadata, mergeEffects, Actions, ofType, EffectsModule, EffectSources, ROOT_EFFECTS_INIT, act };
 //# sourceMappingURL=effects.js.map

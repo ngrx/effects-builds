@@ -1,5 +1,5 @@
 /**
- * @license NgRx 8.3.0+1.sha-cb74051
+ * @license NgRx 8.3.0+4.sha-70a8f2d
  * (c) 2015-2018 Brandon Roberts, Mike Ryan, Rob Wormald, Victor Savkin
  * License: MIT
  */
@@ -289,6 +289,7 @@
         return (onRunEffectsKey in source && typeof source[onRunEffectsKey] === 'function');
     }
 
+    var _ROOT_EFFECTS_GUARD = new core.InjectionToken('@ngrx/effects Internal Root Guard');
     var IMMEDIATE_EFFECTS = new core.InjectionToken('ngrx/effects: Immediate Effects');
     var ROOT_EFFECTS = new core.InjectionToken('ngrx/effects: Root Effects');
     var FEATURE_EFFECTS = new core.InjectionToken('ngrx/effects: Feature Effects');
@@ -322,7 +323,7 @@
 
     var ROOT_EFFECTS_INIT = '@ngrx/effects/init';
     var EffectsRootModule = /** @class */ (function () {
-        function EffectsRootModule(sources, runner, store, rootEffects, storeRootModule, storeFeatureModule) {
+        function EffectsRootModule(sources, runner, store, rootEffects, storeRootModule, storeFeatureModule, guard) {
             this.sources = sources;
             runner.start();
             rootEffects.forEach(function (effectSourceInstance) {
@@ -338,10 +339,12 @@
             tslib_1.__param(3, core.Inject(ROOT_EFFECTS)),
             tslib_1.__param(4, core.Optional()),
             tslib_1.__param(5, core.Optional()),
+            tslib_1.__param(6, core.Optional()),
+            tslib_1.__param(6, core.Inject(_ROOT_EFFECTS_GUARD)),
             tslib_1.__metadata("design:paramtypes", [EffectSources,
                 EffectsRunner,
                 store.Store, Array, store.StoreRootModule,
-                store.StoreFeatureModule])
+                store.StoreFeatureModule, Object])
         ], EffectsRootModule);
         return EffectsRootModule;
     }());
@@ -386,6 +389,11 @@
             return {
                 ngModule: EffectsRootModule,
                 providers: [
+                    {
+                        provide: _ROOT_EFFECTS_GUARD,
+                        useFactory: _provideForRootGuard,
+                        deps: [[EffectsRunner, new core.Optional(), new core.SkipSelf()]],
+                    },
                     EffectsRunner,
                     EffectSources,
                     Actions,
@@ -409,6 +417,12 @@
             instances[_i] = arguments[_i];
         }
         return instances;
+    }
+    function _provideForRootGuard(runner) {
+        if (runner) {
+            throw new TypeError("EffectsModule.forRoot() called twice. Feature modules should use EffectsModule.forFeature() instead.");
+        }
+        return 'guarded';
     }
 
     function act(
@@ -470,12 +484,14 @@
      * Generated bundle index. Do not edit.
      */
 
-    exports.ɵngrx_modules_effects_effects_c = EffectsFeatureModule;
+    exports.ɵngrx_modules_effects_effects_d = EffectsFeatureModule;
+    exports.ɵngrx_modules_effects_effects_b = _provideForRootGuard;
     exports.ɵngrx_modules_effects_effects_a = createSourceInstances;
-    exports.ɵngrx_modules_effects_effects_b = EffectsRootModule;
-    exports.ɵngrx_modules_effects_effects_f = EffectsRunner;
-    exports.ɵngrx_modules_effects_effects_e = FEATURE_EFFECTS;
-    exports.ɵngrx_modules_effects_effects_d = ROOT_EFFECTS;
+    exports.ɵngrx_modules_effects_effects_c = EffectsRootModule;
+    exports.ɵngrx_modules_effects_effects_h = EffectsRunner;
+    exports.ɵngrx_modules_effects_effects_g = FEATURE_EFFECTS;
+    exports.ɵngrx_modules_effects_effects_f = ROOT_EFFECTS;
+    exports.ɵngrx_modules_effects_effects_e = _ROOT_EFFECTS_GUARD;
     exports.createEffect = createEffect;
     exports.Effect = Effect;
     exports.getEffectsMetadata = getEffectsMetadata;
