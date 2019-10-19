@@ -1,5 +1,5 @@
 /**
- * @license NgRx 8.4.0+9.sha-78817c7
+ * @license NgRx 8.4.0+10.sha-0d59783
  * (c) 2015-2018 Brandon Roberts, Mike Ryan, Rob Wormald, Victor Savkin
  * License: MIT
  */
@@ -137,12 +137,7 @@
                 ? sourceInstance[propertyName]()
                 : sourceInstance[propertyName];
             var resubscribable$ = resubscribeOnError
-                ? observable$.pipe(operators.catchError(function (error) {
-                    if (errorHandler)
-                        errorHandler.handleError(error);
-                    // Return observable that produces this particular effect
-                    return observable$;
-                }))
+                ? resubscribeInCaseOfError(observable$, errorHandler)
                 : observable$;
             if (dispatch === false) {
                 return resubscribable$.pipe(operators.ignoreElements());
@@ -157,6 +152,14 @@
             }); }));
         });
         return rxjs.merge.apply(void 0, tslib_1.__spread(observables$));
+    }
+    function resubscribeInCaseOfError(observable$, errorHandler) {
+        return observable$.pipe(operators.catchError(function (error) {
+            if (errorHandler)
+                errorHandler.handleError(error);
+            // Return observable that produces this particular effect
+            return resubscribeInCaseOfError(observable$, errorHandler);
+        }));
     }
 
     var Actions = /** @class */ (function (_super) {

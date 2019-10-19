@@ -1,5 +1,5 @@
 /**
- * @license NgRx 8.4.0+9.sha-78817c7
+ * @license NgRx 8.4.0+10.sha-0d59783
  * (c) 2015-2018 Brandon Roberts, Mike Ryan, Rob Wormald, Victor Savkin
  * License: MIT
  */
@@ -228,16 +228,7 @@ function mergeEffects(sourceInstance, errorHandler) {
             : sourceInstance[propertyName];
         /** @type {?} */
         const resubscribable$ = resubscribeOnError
-            ? observable$.pipe(catchError((/**
-             * @param {?} error
-             * @return {?}
-             */
-            error => {
-                if (errorHandler)
-                    errorHandler.handleError(error);
-                // Return observable that produces this particular effect
-                return observable$;
-            })))
+            ? resubscribeInCaseOfError(observable$, errorHandler)
             : observable$;
         if (dispatch === false) {
             return resubscribable$.pipe(ignoreElements());
@@ -257,6 +248,24 @@ function mergeEffects(sourceInstance, errorHandler) {
         }))));
     }));
     return merge(...observables$);
+}
+/**
+ * @template T
+ * @param {?} observable$
+ * @param {?=} errorHandler
+ * @return {?}
+ */
+function resubscribeInCaseOfError(observable$, errorHandler) {
+    return observable$.pipe(catchError((/**
+     * @param {?} error
+     * @return {?}
+     */
+    error => {
+        if (errorHandler)
+            errorHandler.handleError(error);
+        // Return observable that produces this particular effect
+        return resubscribeInCaseOfError(observable$, errorHandler);
+    })));
 }
 
 /**
