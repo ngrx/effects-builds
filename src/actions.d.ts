@@ -27,6 +27,7 @@ declare type ActionExtractor<T extends string | AC, AC extends ActionCreator<str
  * 'Observable<never>'. In such cases one has to manually set the generic type
  * like `actions.ofType<AdditionAction>('add')`.
  */
+export declare function ofType<AC extends ActionCreator<string, Creator>[], U extends Action = Action, V = ReturnType<AC[number]>>(...allowedTypes: AC): OperatorFunction<U, V>;
 export declare function ofType<E extends Extract<U, {
     type: T1;
 }>, AC extends ActionCreator<string, Creator>, T1 extends string | AC, U extends Action = Action, V = T1 extends string ? E : ReturnType<Extract<T1, AC>>>(t1: T1): OperatorFunction<U, V>;
