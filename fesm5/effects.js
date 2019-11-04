@@ -1,9 +1,9 @@
 /**
- * @license NgRx 8.4.0+20.sha-ccd3dd7
+ * @license NgRx 8.4.0+21.sha-c539b78
  * (c) 2015-2018 Brandon Roberts, Mike Ryan, Rob Wormald, Victor Savkin
  * License: MIT
  */
-import { __assign, __values, __spread, __extends, __decorate, __param, __metadata } from 'tslib';
+import { __assign, __spread, __extends, __decorate, __param, __metadata } from 'tslib';
 import { compose, ScannedActionsSubject, Store, StoreRootModule, StoreFeatureModule } from '@ngrx/store';
 import { merge, Observable, Subject, defer, Notification } from 'rxjs';
 import { catchError, ignoreElements, materialize, map, filter, groupBy, mergeMap, exhaustMap, dematerialize, concatMap, finalize } from 'rxjs/operators';
@@ -104,22 +104,11 @@ function getEffectMetadataEntries(sourceProto) {
 }
 
 function getEffectsMetadata(instance) {
-    var e_1, _a;
-    var metadata = {};
-    try {
-        for (var _b = __values(getSourceMetadata(instance)), _c = _b.next(); !_c.done; _c = _b.next()) {
-            var _d = _c.value, propertyName = _d.propertyName, dispatch = _d.dispatch, resubscribeOnError = _d.resubscribeOnError;
-            metadata[propertyName] = { dispatch: dispatch, resubscribeOnError: resubscribeOnError };
-        }
-    }
-    catch (e_1_1) { e_1 = { error: e_1_1 }; }
-    finally {
-        try {
-            if (_c && !_c.done && (_a = _b.return)) _a.call(_b);
-        }
-        finally { if (e_1) throw e_1.error; }
-    }
-    return metadata;
+    return getSourceMetadata(instance).reduce(function (acc, _a) {
+        var propertyName = _a.propertyName, dispatch = _a.dispatch, resubscribeOnError = _a.resubscribeOnError;
+        acc[propertyName] = { dispatch: dispatch, resubscribeOnError: resubscribeOnError };
+        return acc;
+    }, {});
 }
 function getSourceMetadata(instance) {
     var effects = [
@@ -221,7 +210,7 @@ function isAction(action) {
 function getEffectName(_a) {
     var propertyName = _a.propertyName, sourceInstance = _a.sourceInstance, sourceName = _a.sourceName;
     var isMethod = typeof sourceInstance[propertyName] === 'function';
-    return "\"" + sourceName + "." + propertyName + (isMethod ? '()' : '') + "\"";
+    return "\"" + sourceName + "." + String(propertyName) + (isMethod ? '()' : '') + "\"";
 }
 function stringify(action) {
     try {
@@ -487,5 +476,5 @@ configOrProject, errorFn) {
  * Generated bundle index. Do not edit.
  */
 
-export { EffectsFeatureModule as ɵngrx_modules_effects_effects_d, _provideForRootGuard as ɵngrx_modules_effects_effects_b, createSourceInstances as ɵngrx_modules_effects_effects_a, EffectsRootModule as ɵngrx_modules_effects_effects_c, EffectsRunner as ɵngrx_modules_effects_effects_h, FEATURE_EFFECTS as ɵngrx_modules_effects_effects_g, ROOT_EFFECTS as ɵngrx_modules_effects_effects_f, _ROOT_EFFECTS_GUARD as ɵngrx_modules_effects_effects_e, createEffect, Effect, getEffectsMetadata, mergeEffects, Actions, ofType, EffectsModule, EffectSources, ROOT_EFFECTS_INIT, act };
+export { EffectsFeatureModule as ɵngrx_modules_effects_effects_e, getSourceMetadata as ɵngrx_modules_effects_effects_a, _provideForRootGuard as ɵngrx_modules_effects_effects_c, createSourceInstances as ɵngrx_modules_effects_effects_b, EffectsRootModule as ɵngrx_modules_effects_effects_d, EffectsRunner as ɵngrx_modules_effects_effects_i, FEATURE_EFFECTS as ɵngrx_modules_effects_effects_h, ROOT_EFFECTS as ɵngrx_modules_effects_effects_g, _ROOT_EFFECTS_GUARD as ɵngrx_modules_effects_effects_f, createEffect, Effect, getEffectsMetadata, mergeEffects, Actions, ofType, EffectsModule, EffectSources, ROOT_EFFECTS_INIT, act };
 //# sourceMappingURL=effects.js.map

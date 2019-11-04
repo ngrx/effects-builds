@@ -38,5 +38,7 @@ declare type ObservableReturnType<T> = T extends false ? Observable<unknown> : O
  * ```
  */
 export declare function createEffect<C extends EffectConfig, T extends DispatchType<C>, O extends ObservableReturnType<T>, R extends O | ((...args: any[]) => O)>(source: () => R, config?: Partial<C>): R;
-export declare function getCreateEffectMetadata<T>(instance: T): EffectMetadata<T>[];
+export declare function getCreateEffectMetadata<T extends {
+    [props in keyof T]: Object;
+}>(instance: T): EffectMetadata<T>[];
 export {};

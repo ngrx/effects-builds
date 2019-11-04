@@ -3,7 +3,7 @@ import { Action } from '@ngrx/store';
 import { Notification, Observable } from 'rxjs';
 export interface EffectNotification {
     effect: Observable<any> | (() => Observable<any>);
-    propertyName: string;
+    propertyName: PropertyKey;
     sourceName: string;
     sourceInstance: any;
     notification: Notification<Action | null | undefined>;

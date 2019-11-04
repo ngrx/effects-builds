@@ -1,5 +1,5 @@
 /**
- * @license NgRx 8.4.0+20.sha-ccd3dd7
+ * @license NgRx 8.4.0+21.sha-c539b78
  * (c) 2015-2018 Brandon Roberts, Mike Ryan, Rob Wormald, Victor Savkin
  * License: MIT
  */
@@ -104,22 +104,11 @@
     }
 
     function getEffectsMetadata(instance) {
-        var e_1, _a;
-        var metadata = {};
-        try {
-            for (var _b = tslib_1.__values(getSourceMetadata(instance)), _c = _b.next(); !_c.done; _c = _b.next()) {
-                var _d = _c.value, propertyName = _d.propertyName, dispatch = _d.dispatch, resubscribeOnError = _d.resubscribeOnError;
-                metadata[propertyName] = { dispatch: dispatch, resubscribeOnError: resubscribeOnError };
-            }
-        }
-        catch (e_1_1) { e_1 = { error: e_1_1 }; }
-        finally {
-            try {
-                if (_c && !_c.done && (_a = _b.return)) _a.call(_b);
-            }
-            finally { if (e_1) throw e_1.error; }
-        }
-        return metadata;
+        return getSourceMetadata(instance).reduce(function (acc, _a) {
+            var propertyName = _a.propertyName, dispatch = _a.dispatch, resubscribeOnError = _a.resubscribeOnError;
+            acc[propertyName] = { dispatch: dispatch, resubscribeOnError: resubscribeOnError };
+            return acc;
+        }, {});
     }
     function getSourceMetadata(instance) {
         var effects = [
@@ -221,7 +210,7 @@
     function getEffectName(_a) {
         var propertyName = _a.propertyName, sourceInstance = _a.sourceInstance, sourceName = _a.sourceName;
         var isMethod = typeof sourceInstance[propertyName] === 'function';
-        return "\"" + sourceName + "." + propertyName + (isMethod ? '()' : '') + "\"";
+        return "\"" + sourceName + "." + String(propertyName) + (isMethod ? '()' : '') + "\"";
     }
     function stringify(action) {
         try {
@@ -487,14 +476,15 @@
      * Generated bundle index. Do not edit.
      */
 
-    exports.ɵngrx_modules_effects_effects_d = EffectsFeatureModule;
-    exports.ɵngrx_modules_effects_effects_b = _provideForRootGuard;
-    exports.ɵngrx_modules_effects_effects_a = createSourceInstances;
-    exports.ɵngrx_modules_effects_effects_c = EffectsRootModule;
-    exports.ɵngrx_modules_effects_effects_h = EffectsRunner;
-    exports.ɵngrx_modules_effects_effects_g = FEATURE_EFFECTS;
-    exports.ɵngrx_modules_effects_effects_f = ROOT_EFFECTS;
-    exports.ɵngrx_modules_effects_effects_e = _ROOT_EFFECTS_GUARD;
+    exports.ɵngrx_modules_effects_effects_e = EffectsFeatureModule;
+    exports.ɵngrx_modules_effects_effects_a = getSourceMetadata;
+    exports.ɵngrx_modules_effects_effects_c = _provideForRootGuard;
+    exports.ɵngrx_modules_effects_effects_b = createSourceInstances;
+    exports.ɵngrx_modules_effects_effects_d = EffectsRootModule;
+    exports.ɵngrx_modules_effects_effects_i = EffectsRunner;
+    exports.ɵngrx_modules_effects_effects_h = FEATURE_EFFECTS;
+    exports.ɵngrx_modules_effects_effects_g = ROOT_EFFECTS;
+    exports.ɵngrx_modules_effects_effects_f = _ROOT_EFFECTS_GUARD;
     exports.createEffect = createEffect;
     exports.Effect = Effect;
     exports.getEffectsMetadata = getEffectsMetadata;

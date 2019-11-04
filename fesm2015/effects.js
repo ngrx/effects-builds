@@ -1,5 +1,5 @@
 /**
- * @license NgRx 8.4.0+20.sha-ccd3dd7
+ * @license NgRx 8.4.0+21.sha-c539b78
  * (c) 2015-2018 Brandon Roberts, Mike Ryan, Rob Wormald, Victor Savkin
  * License: MIT
  */
@@ -108,13 +108,12 @@ function getSourceForInstance(instance) {
 /** @type {?} */
 const METADATA_KEY = '__@ngrx/effects__';
 /**
- * @template T
  * @param {?=} __0
  * @return {?}
  */
 function Effect({ dispatch = true, resubscribeOnError = true, } = {}) {
-    return (/** @type {?} */ ((/**
-     * @template K
+    return (/**
+     * @template T, K
      * @param {?} target
      * @param {?} propertyName
      * @return {?}
@@ -130,7 +129,7 @@ function Effect({ dispatch = true, resubscribeOnError = true, } = {}) {
             resubscribeOnError,
         };
         setEffectMetadataEntries(target, [metadata]);
-    })));
+    });
 }
 /**
  * @template T
@@ -178,12 +177,15 @@ function getEffectMetadataEntries(sourceProto) {
  * @return {?}
  */
 function getEffectsMetadata(instance) {
-    /** @type {?} */
-    const metadata = {};
-    for (const { propertyName, dispatch, resubscribeOnError, } of getSourceMetadata(instance)) {
-        metadata[propertyName] = { dispatch, resubscribeOnError };
-    }
-    return metadata;
+    return getSourceMetadata(instance).reduce((/**
+     * @param {?} acc
+     * @param {?} __1
+     * @return {?}
+     */
+    (acc, { propertyName, dispatch, resubscribeOnError }) => {
+        acc[propertyName] = { dispatch, resubscribeOnError };
+        return acc;
+    }), {});
 }
 /**
  * @template T
@@ -365,7 +367,7 @@ function isAction(action) {
 function getEffectName({ propertyName, sourceInstance, sourceName, }) {
     /** @type {?} */
     const isMethod = typeof sourceInstance[propertyName] === 'function';
-    return `"${sourceName}.${propertyName}${isMethod ? '()' : ''}"`;
+    return `"${sourceName}.${String(propertyName)}${isMethod ? '()' : ''}"`;
 }
 /**
  * @param {?} action
@@ -802,5 +804,5 @@ configOrProject, errorFn) {
  * Generated bundle index. Do not edit.
  */
 
-export { EffectsFeatureModule as ɵngrx_modules_effects_effects_d, _provideForRootGuard as ɵngrx_modules_effects_effects_b, createSourceInstances as ɵngrx_modules_effects_effects_a, EffectsRootModule as ɵngrx_modules_effects_effects_c, EffectsRunner as ɵngrx_modules_effects_effects_h, FEATURE_EFFECTS as ɵngrx_modules_effects_effects_g, ROOT_EFFECTS as ɵngrx_modules_effects_effects_f, _ROOT_EFFECTS_GUARD as ɵngrx_modules_effects_effects_e, createEffect, Effect, getEffectsMetadata, mergeEffects, Actions, ofType, EffectsModule, EffectSources, ROOT_EFFECTS_INIT, act };
+export { EffectsFeatureModule as ɵngrx_modules_effects_effects_e, getSourceMetadata as ɵngrx_modules_effects_effects_a, _provideForRootGuard as ɵngrx_modules_effects_effects_c, createSourceInstances as ɵngrx_modules_effects_effects_b, EffectsRootModule as ɵngrx_modules_effects_effects_d, EffectsRunner as ɵngrx_modules_effects_effects_i, FEATURE_EFFECTS as ɵngrx_modules_effects_effects_h, ROOT_EFFECTS as ɵngrx_modules_effects_effects_g, _ROOT_EFFECTS_GUARD as ɵngrx_modules_effects_effects_f, createEffect, Effect, getEffectsMetadata, mergeEffects, Actions, ofType, EffectsModule, EffectSources, ROOT_EFFECTS_INIT, act };
 //# sourceMappingURL=effects.js.map
