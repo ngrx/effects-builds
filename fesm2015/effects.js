@@ -1,5 +1,5 @@
 /**
- * @license NgRx 8.4.0+22.sha-e641d9d
+ * @license NgRx 8.4.0+24.sha-8a8dc83
  * (c) 2015-2018 Brandon Roberts, Mike Ryan, Rob Wormald, Victor Savkin
  * License: MIT
  */
@@ -7,6 +7,16 @@ import { compose, ScannedActionsSubject, Store, StoreRootModule, StoreFeatureMod
 import { merge, Observable, Subject, defer, Notification } from 'rxjs';
 import { catchError, ignoreElements, materialize, map, filter, groupBy, mergeMap, exhaustMap, dematerialize, concatMap, finalize } from 'rxjs/operators';
 import { Injectable, Inject, ErrorHandler, InjectionToken, NgModule, Optional, SkipSelf } from '@angular/core';
+
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
+ */
+/** @type {?} */
+const DEFAULT_EFFECT_CONFIG = {
+    dispatch: true,
+    resubscribeOnError: true,
+};
 
 /**
  * @fileoverview added by tsickle
@@ -50,15 +60,12 @@ const CREATE_EFFECT_METADATA_KEY = '__@ngrx/effects_create__';
 function createEffect(source, config) {
     /** @type {?} */
     const effect = source();
-    // Right now both createEffect and @Effect decorator set default values.
-    // Ideally that should only be done in one place that aggregates that info,
-    // for example in mergeEffects().
     /** @type {?} */
-    const value = Object.assign({ dispatch: true, resubscribeOnError: true }, config);
+    const value = Object.assign({}, DEFAULT_EFFECT_CONFIG, config);
     Object.defineProperty(effect, CREATE_EFFECT_METADATA_KEY, {
         value,
     });
-    return effect;
+    return (/** @type {?} */ (effect));
 }
 /**
  * @template T
@@ -108,10 +115,10 @@ function getSourceForInstance(instance) {
 /** @type {?} */
 const METADATA_KEY = '__@ngrx/effects__';
 /**
- * @param {?=} __0
+ * @param {?=} config
  * @return {?}
  */
-function Effect({ dispatch = true, resubscribeOnError = true, } = {}) {
+function Effect(config = {}) {
     return (/**
      * @template T, K
      * @param {?} target
@@ -119,16 +126,10 @@ function Effect({ dispatch = true, resubscribeOnError = true, } = {}) {
      * @return {?}
      */
     function (target, propertyName) {
-        // Right now both createEffect and @Effect decorator set default values.
-        // Ideally that should only be done in one place that aggregates that info,
-        // for example in mergeEffects().
         /** @type {?} */
-        const metadata = {
-            propertyName,
-            dispatch,
-            resubscribeOnError,
-        };
-        setEffectMetadataEntries(target, [metadata]);
+        const metadata = Object.assign({}, DEFAULT_EFFECT_CONFIG, config, { // Overrides any defaults if values are provided
+            propertyName });
+        addEffectMetadataEntry(target, metadata);
     });
 }
 /**
@@ -142,19 +143,31 @@ function getEffectDecoratorMetadata(instance) {
     return effectsDecorators;
 }
 /**
+ * Type guard to detemine whether METADATA_KEY is already present on the Class
+ * constructor
  * @template T
  * @param {?} sourceProto
- * @param {?} entries
  * @return {?}
  */
-function setEffectMetadataEntries(sourceProto, entries) {
-    /** @type {?} */
-    const constructor = sourceProto.constructor;
-    /** @type {?} */
-    const meta = constructor.hasOwnProperty(METADATA_KEY)
-        ? ((/** @type {?} */ (constructor)))[METADATA_KEY]
-        : Object.defineProperty(constructor, METADATA_KEY, { value: [] })[METADATA_KEY];
-    Array.prototype.push.apply(meta, entries);
+function hasMetadataEntries(sourceProto) {
+    return sourceProto.constructor.hasOwnProperty(METADATA_KEY);
+}
+/**
+ * Add Effect Metadata to the Effect Class constructor under specific key
+ * @template T
+ * @param {?} sourceProto
+ * @param {?} metadata
+ * @return {?}
+ */
+function addEffectMetadataEntry(sourceProto, metadata) {
+    if (hasMetadataEntries(sourceProto)) {
+        sourceProto.constructor[METADATA_KEY].push(metadata);
+    }
+    else {
+        Object.defineProperty(sourceProto.constructor, METADATA_KEY, {
+            value: [metadata],
+        });
+    }
 }
 /**
  * @template T
@@ -162,8 +175,8 @@ function setEffectMetadataEntries(sourceProto, entries) {
  * @return {?}
  */
 function getEffectMetadataEntries(sourceProto) {
-    return sourceProto.constructor.hasOwnProperty(METADATA_KEY)
-        ? ((/** @type {?} */ (sourceProto.constructor)))[METADATA_KEY]
+    return hasMetadataEntries(sourceProto)
+        ? sourceProto.constructor[METADATA_KEY]
         : [];
 }
 

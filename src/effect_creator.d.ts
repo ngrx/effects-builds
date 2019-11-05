@@ -1,6 +1,10 @@
 import { Observable } from 'rxjs';
 import { Action } from '@ngrx/store';
 import { EffectMetadata, EffectConfig } from './models';
+declare const CREATE_EFFECT_METADATA_KEY = "__@ngrx/effects_create__";
+interface CreateEffectMetadata {
+    [CREATE_EFFECT_METADATA_KEY]: EffectConfig;
+}
 declare type DispatchType<T> = T extends {
     dispatch: infer U;
 } ? U : unknown;
@@ -37,7 +41,7 @@ declare type ObservableReturnType<T> = T extends false ? Observable<unknown> : O
  * );
  * ```
  */
-export declare function createEffect<C extends EffectConfig, T extends DispatchType<C>, O extends ObservableReturnType<T>, R extends O | ((...args: any[]) => O)>(source: () => R, config?: Partial<C>): R;
+export declare function createEffect<C extends EffectConfig, T extends DispatchType<C>, O extends ObservableReturnType<T>, R extends O | ((...args: any[]) => O)>(source: () => R, config?: Partial<C>): R & CreateEffectMetadata;
 export declare function getCreateEffectMetadata<T extends {
     [props in keyof T]: Object;
 }>(instance: T): EffectMetadata<T>[];
