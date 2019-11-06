@@ -7,8 +7,8 @@ interface CreateEffectMetadata {
 }
 declare type DispatchType<T> = T extends {
     dispatch: infer U;
-} ? U : unknown;
-declare type ObservableReturnType<T> = T extends false ? Observable<unknown> : Observable<Action>;
+} ? U : true;
+declare type ObservableType<T, OriginalType> = T extends false ? OriginalType : Action;
 /**
  * @description
  * Creates an effect from an `Observable` and an `EffectConfig`.
@@ -41,7 +41,7 @@ declare type ObservableReturnType<T> = T extends false ? Observable<unknown> : O
  * );
  * ```
  */
-export declare function createEffect<C extends EffectConfig, T extends DispatchType<C>, O extends ObservableReturnType<T>, R extends O | ((...args: any[]) => O)>(source: () => R, config?: Partial<C>): R & CreateEffectMetadata;
+export declare function createEffect<C extends EffectConfig, DT extends DispatchType<C>, OT extends ObservableType<DT, OT>, R extends Observable<OT> | ((...args: any[]) => Observable<OT>)>(source: () => R, config?: Partial<C>): R & CreateEffectMetadata;
 export declare function getCreateEffectMetadata<T extends {
     [props in keyof T]: Object;
 }>(instance: T): EffectMetadata<T>[];

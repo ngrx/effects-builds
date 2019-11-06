@@ -1,5 +1,5 @@
 /**
- * @license NgRx 8.4.0+27.sha-2bac73c
+ * @license NgRx 8.4.0+28.sha-f70600f
  * (c) 2015-2018 Brandon Roberts, Mike Ryan, Rob Wormald, Victor Savkin
  * License: MIT
  */
@@ -51,7 +51,7 @@ const CREATE_EFFECT_METADATA_KEY = '__@ngrx/effects_create__';
  *   // FeatureActions.actionOne is not dispatched
  * );
  * ```
- * @template C, T, O, R
+ * @template C, DT, OT, R
  * @param {?} source A function which returns an `Observable`.
  * @param {?=} config A `Partial<EffectConfig>` to configure the effect.  By default, `dispatch` is true and `resubscribeOnError` is true.
  * @return {?} If `EffectConfig`#`dispatch` is true, returns `Observable<Action>`.  Else, returns `Observable<unknown>`.

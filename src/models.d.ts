@@ -12,7 +12,7 @@ export interface EffectConfig {
      */
     resubscribeOnError?: boolean;
 }
-export declare const DEFAULT_EFFECT_CONFIG: Required<EffectConfig>;
+export declare const DEFAULT_EFFECT_CONFIG: Readonly<Required<EffectConfig>>;
 export declare type EffectPropertyKey<T extends Object> = Exclude<keyof T, keyof Object>;
 export interface EffectMetadata<T extends Object> extends Required<EffectConfig> {
     propertyName: EffectPropertyKey<T>;
