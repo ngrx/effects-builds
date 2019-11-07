@@ -33,7 +33,6 @@ export interface OnIdentifyEffects {
     ngrxOnIdentifyEffects(): string;
 }
 export declare const onIdentifyEffectsKey: keyof OnIdentifyEffects;
-export declare type onRunEffectsFn = (resolvedEffects$: Observable<EffectNotification>) => Observable<EffectNotification>;
 /**
  * @description
  * Interface to control the lifecycle of effects.
@@ -66,7 +65,7 @@ export interface OnRunEffects {
      * @description
      * Method to control the lifecycle of effects.
      */
-    ngrxOnRunEffects: onRunEffectsFn;
+    ngrxOnRunEffects(resolvedEffects$: Observable<EffectNotification>): Observable<EffectNotification>;
 }
 export declare const onRunEffectsKey: keyof OnRunEffects;
 /**
