@@ -1,5 +1,5 @@
 /**
- * @license NgRx 8.5.0+1.sha-fe1dfc1
+ * @license NgRx 8.5.0+2.sha-de9a590
  * (c) 2015-2018 Brandon Roberts, Mike Ryan, Rob Wormald, Victor Savkin
  * License: MIT
  */
@@ -321,6 +321,7 @@
     }());
 
     var ROOT_EFFECTS_INIT = '@ngrx/effects/init';
+    var rootEffectsInit = store.createAction(ROOT_EFFECTS_INIT);
     var EffectsRootModule = /** @class */ (function () {
         function EffectsRootModule(sources, runner, store, rootEffects, storeRootModule, storeFeatureModule, guard) {
             this.sources = sources;
@@ -501,6 +502,7 @@
     exports.EffectsModule = EffectsModule;
     exports.EffectSources = EffectSources;
     exports.ROOT_EFFECTS_INIT = ROOT_EFFECTS_INIT;
+    exports.rootEffectsInit = rootEffectsInit;
     exports.act = act;
 
     Object.defineProperty(exports, '__esModule', { value: true });

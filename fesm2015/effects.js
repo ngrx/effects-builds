@@ -1,9 +1,9 @@
 /**
- * @license NgRx 8.5.0+1.sha-fe1dfc1
+ * @license NgRx 8.5.0+2.sha-de9a590
  * (c) 2015-2018 Brandon Roberts, Mike Ryan, Rob Wormald, Victor Savkin
  * License: MIT
  */
-import { compose, ScannedActionsSubject, Store, StoreRootModule, StoreFeatureModule } from '@ngrx/store';
+import { compose, ScannedActionsSubject, Store, createAction, StoreRootModule, StoreFeatureModule } from '@ngrx/store';
 import { merge, Observable, Subject, defer, Notification } from 'rxjs';
 import { catchError, ignoreElements, materialize, map, filter, groupBy, mergeMap, exhaustMap, dematerialize, concatMap, finalize } from 'rxjs/operators';
 import { Injectable, Inject, ErrorHandler, InjectionToken, NgModule, Optional, SkipSelf } from '@angular/core';
@@ -567,6 +567,8 @@ EffectsRunner.ctorParameters = () => [
  */
 /** @type {?} */
 const ROOT_EFFECTS_INIT = '@ngrx/effects/init';
+/** @type {?} */
+const rootEffectsInit = createAction(ROOT_EFFECTS_INIT);
 class EffectsRootModule {
     /**
      * @param {?} sources
@@ -817,5 +819,5 @@ configOrProject, errorFn) {
  * Generated bundle index. Do not edit.
  */
 
-export { EffectsFeatureModule as ɵngrx_modules_effects_effects_e, getSourceMetadata as ɵngrx_modules_effects_effects_a, _provideForRootGuard as ɵngrx_modules_effects_effects_c, createSourceInstances as ɵngrx_modules_effects_effects_b, EffectsRootModule as ɵngrx_modules_effects_effects_d, EffectsRunner as ɵngrx_modules_effects_effects_i, FEATURE_EFFECTS as ɵngrx_modules_effects_effects_h, ROOT_EFFECTS as ɵngrx_modules_effects_effects_g, _ROOT_EFFECTS_GUARD as ɵngrx_modules_effects_effects_f, createEffect, Effect, getEffectsMetadata, mergeEffects, Actions, ofType, EffectsModule, EffectSources, ROOT_EFFECTS_INIT, act };
+export { EffectsFeatureModule as ɵngrx_modules_effects_effects_e, getSourceMetadata as ɵngrx_modules_effects_effects_a, _provideForRootGuard as ɵngrx_modules_effects_effects_c, createSourceInstances as ɵngrx_modules_effects_effects_b, EffectsRootModule as ɵngrx_modules_effects_effects_d, EffectsRunner as ɵngrx_modules_effects_effects_i, FEATURE_EFFECTS as ɵngrx_modules_effects_effects_h, ROOT_EFFECTS as ɵngrx_modules_effects_effects_g, _ROOT_EFFECTS_GUARD as ɵngrx_modules_effects_effects_f, createEffect, Effect, getEffectsMetadata, mergeEffects, Actions, ofType, EffectsModule, EffectSources, ROOT_EFFECTS_INIT, rootEffectsInit, act };
 //# sourceMappingURL=effects.js.map
