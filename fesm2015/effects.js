@@ -1,5 +1,5 @@
 /**
- * @license NgRx 8.5.0+3.sha-90d0602
+ * @license NgRx 8.5.0+4.sha-bfe4c81
  * (c) 2015-2018 Brandon Roberts, Mike Ryan, Rob Wormald, Victor Savkin
  * License: MIT
  */
@@ -17,13 +17,13 @@ const DEFAULT_EFFECT_CONFIG = {
     dispatch: true,
     resubscribeOnError: true,
 };
+/** @type {?} */
+const CREATE_EFFECT_METADATA_KEY = '__@ngrx/effects_create__';
 
 /**
  * @fileoverview added by tsickle
  * @suppress {checkTypes,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
  */
-/** @type {?} */
-const CREATE_EFFECT_METADATA_KEY = '__@ngrx/effects_create__';
 /**
  * \@description
  * Creates an effect from an `Observable` and an `EffectConfig`.
