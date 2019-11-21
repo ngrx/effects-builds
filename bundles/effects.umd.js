@@ -1,5 +1,5 @@
 /**
- * @license NgRx 8.5.1+4.sha-c42e444
+ * @license NgRx 8.5.1+5.sha-abe1f6b
  * (c) 2015-2018 Brandon Roberts, Mike Ryan, Rob Wormald, Victor Savkin
  * License: MIT
  */
@@ -484,15 +484,13 @@
      * Generated bundle index. Do not edit.
      */
 
-    exports.ɵngrx_modules_effects_effects_e = EffectsFeatureModule;
     exports.ɵngrx_modules_effects_effects_a = getSourceMetadata;
     exports.ɵngrx_modules_effects_effects_c = _provideForRootGuard;
     exports.ɵngrx_modules_effects_effects_b = createSourceInstances;
-    exports.ɵngrx_modules_effects_effects_d = EffectsRootModule;
-    exports.ɵngrx_modules_effects_effects_i = EffectsRunner;
-    exports.ɵngrx_modules_effects_effects_h = FEATURE_EFFECTS;
-    exports.ɵngrx_modules_effects_effects_g = ROOT_EFFECTS;
-    exports.ɵngrx_modules_effects_effects_f = _ROOT_EFFECTS_GUARD;
+    exports.ɵngrx_modules_effects_effects_g = EffectsRunner;
+    exports.ɵngrx_modules_effects_effects_f = FEATURE_EFFECTS;
+    exports.ɵngrx_modules_effects_effects_e = ROOT_EFFECTS;
+    exports.ɵngrx_modules_effects_effects_d = _ROOT_EFFECTS_GUARD;
     exports.createEffect = createEffect;
     exports.Effect = Effect;
     exports.getEffectsMetadata = getEffectsMetadata;
@@ -501,8 +499,10 @@
     exports.ofType = ofType;
     exports.EffectsModule = EffectsModule;
     exports.EffectSources = EffectSources;
+    exports.EffectsFeatureModule = EffectsFeatureModule;
     exports.ROOT_EFFECTS_INIT = ROOT_EFFECTS_INIT;
     exports.rootEffectsInit = rootEffectsInit;
+    exports.EffectsRootModule = EffectsRootModule;
     exports.act = act;
 
     Object.defineProperty(exports, '__esModule', { value: true });
