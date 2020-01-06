@@ -1,6 +1,6 @@
 {
   "name": "@ngrx/effects",
-  "version": "8.6.0+2.sha-98b74ad",
+  "version": "8.6.0+3.sha-fe6bfa7",
   "description": "Side effect model for @ngrx/store",
   "repository": {
     "type": "git",
@@ -22,7 +22,7 @@
   "homepage": "https://github.com/ngrx/platform#readme",
   "peerDependencies": {
     "@angular/core": "^8.0.0",
-    "@ngrx/store": "8.6.0+2.sha-98b74ad",
+    "@ngrx/store": "8.6.0+3.sha-fe6bfa7",
     "rxjs": "^6.4.0"
   },
   "schematics": "./schematics/collection.json",
