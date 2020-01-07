@@ -1,5 +1,5 @@
 /**
- * @license NgRx 8.6.0+3.sha-fe6bfa7
+ * @license NgRx 8.6.0+4.sha-b146af5
  * (c) 2015-2018 Brandon Roberts, Mike Ryan, Rob Wormald, Victor Savkin
  * License: MIT
  */
@@ -49,7 +49,7 @@ var CREATE_EFFECT_METADATA_KEY = '__@ngrx/effects_create__';
  */
 function createEffect(source, config) {
     var effect = source();
-    var value = __assign({}, DEFAULT_EFFECT_CONFIG, config);
+    var value = __assign(__assign({}, DEFAULT_EFFECT_CONFIG), config);
     Object.defineProperty(effect, CREATE_EFFECT_METADATA_KEY, {
         value: value,
     });
@@ -77,7 +77,7 @@ var METADATA_KEY = '__@ngrx/effects__';
 function Effect(config) {
     if (config === void 0) { config = {}; }
     return function (target, propertyName) {
-        var metadata = __assign({}, DEFAULT_EFFECT_CONFIG, config, { // Overrides any defaults if values are provided
+        var metadata = __assign(__assign(__assign({}, DEFAULT_EFFECT_CONFIG), config), { // Overrides any defaults if values are provided
             propertyName: propertyName });
         addEffectMetadataEntry(target, metadata);
     };
@@ -436,7 +436,7 @@ configOrProject, errorFn) {
             complete: undefined,
             unsubscribe: undefined,
         }
-        : __assign({}, configOrProject, { operator: configOrProject.operator || concatMap }), project = _a.project, error = _a.error, complete = _a.complete, operator = _a.operator, unsubscribe = _a.unsubscribe;
+        : __assign(__assign({}, configOrProject), { operator: configOrProject.operator || concatMap }), project = _a.project, error = _a.error, complete = _a.complete, operator = _a.operator, unsubscribe = _a.unsubscribe;
     return function (source) {
         return defer(function () {
             var subject = new Subject();
@@ -484,5 +484,5 @@ configOrProject, errorFn) {
  * Generated bundle index. Do not edit.
  */
 
-export { getSourceMetadata as ɵngrx_modules_effects_effects_a, _provideForRootGuard as ɵngrx_modules_effects_effects_c, createSourceInstances as ɵngrx_modules_effects_effects_b, EffectsRunner as ɵngrx_modules_effects_effects_g, FEATURE_EFFECTS as ɵngrx_modules_effects_effects_f, ROOT_EFFECTS as ɵngrx_modules_effects_effects_e, _ROOT_EFFECTS_GUARD as ɵngrx_modules_effects_effects_d, createEffect, Effect, getEffectsMetadata, mergeEffects, Actions, ofType, EffectsModule, EffectSources, EffectsFeatureModule, ROOT_EFFECTS_INIT, rootEffectsInit, EffectsRootModule, act };
+export { Actions, Effect, EffectSources, EffectsFeatureModule, EffectsModule, EffectsRootModule, ROOT_EFFECTS_INIT, act, createEffect, getEffectsMetadata, mergeEffects, ofType, rootEffectsInit, getSourceMetadata as ɵngrx_modules_effects_effects_a, createSourceInstances as ɵngrx_modules_effects_effects_b, _provideForRootGuard as ɵngrx_modules_effects_effects_c, _ROOT_EFFECTS_GUARD as ɵngrx_modules_effects_effects_d, ROOT_EFFECTS as ɵngrx_modules_effects_effects_e, FEATURE_EFFECTS as ɵngrx_modules_effects_effects_f, EffectsRunner as ɵngrx_modules_effects_effects_g };
 //# sourceMappingURL=effects.js.map

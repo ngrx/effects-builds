@@ -1,5 +1,5 @@
 /**
- * @license NgRx 8.6.0+3.sha-fe6bfa7
+ * @license NgRx 8.6.0+4.sha-b146af5
  * (c) 2015-2018 Brandon Roberts, Mike Ryan, Rob Wormald, Victor Savkin
  * License: MIT
  */
@@ -10,8 +10,27 @@ import { Injectable, Inject, ErrorHandler, InjectionToken, NgModule, Optional, S
 
 /**
  * @fileoverview added by tsickle
- * @suppress {checkTypes,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
+ * Generated from: modules/effects/src/models.ts
+ * @suppress {checkTypes,constantProperty,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
  */
+/**
+ * Configures an effect created by `createEffect`.
+ * @record
+ */
+function EffectConfig() { }
+if (false) {
+    /**
+     * Determines if the action emitted by the effect is dispatched to the store.
+     * If false, effect does not need to return type `Observable<Action>`.
+     * @type {?|undefined}
+     */
+    EffectConfig.prototype.dispatch;
+    /**
+     * Determines if the effect will be resubscribed to if an error occurs in the main actions stream.
+     * @type {?|undefined}
+     */
+    EffectConfig.prototype.resubscribeOnError;
+}
 /** @type {?} */
 const DEFAULT_EFFECT_CONFIG = {
     dispatch: true,
@@ -19,10 +38,28 @@ const DEFAULT_EFFECT_CONFIG = {
 };
 /** @type {?} */
 const CREATE_EFFECT_METADATA_KEY = '__@ngrx/effects_create__';
+/**
+ * @record
+ */
+function CreateEffectMetadata() { }
+if (false) {
+    /* Skipping unnamed member:
+    [CREATE_EFFECT_METADATA_KEY]: EffectConfig;*/
+}
+/**
+ * @record
+ * @template T
+ */
+function EffectMetadata() { }
+if (false) {
+    /** @type {?} */
+    EffectMetadata.prototype.propertyName;
+}
 
 /**
  * @fileoverview added by tsickle
- * @suppress {checkTypes,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
+ * Generated from: modules/effects/src/effect_creator.ts
+ * @suppress {checkTypes,constantProperty,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
  */
 /**
  * \@description
@@ -61,7 +98,7 @@ function createEffect(source, config) {
     /** @type {?} */
     const effect = source();
     /** @type {?} */
-    const value = Object.assign({}, DEFAULT_EFFECT_CONFIG, config);
+    const value = Object.assign(Object.assign({}, DEFAULT_EFFECT_CONFIG), config);
     Object.defineProperty(effect, CREATE_EFFECT_METADATA_KEY, {
         value,
     });
@@ -97,7 +134,8 @@ function getCreateEffectMetadata(instance) {
 
 /**
  * @fileoverview added by tsickle
- * @suppress {checkTypes,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
+ * Generated from: modules/effects/src/utils.ts
+ * @suppress {checkTypes,constantProperty,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
  */
 /**
  * @template T
@@ -110,7 +148,8 @@ function getSourceForInstance(instance) {
 
 /**
  * @fileoverview added by tsickle
- * @suppress {checkTypes,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
+ * Generated from: modules/effects/src/effect_decorator.ts
+ * @suppress {checkTypes,constantProperty,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
  */
 /** @type {?} */
 const METADATA_KEY = '__@ngrx/effects__';
@@ -127,7 +166,7 @@ function Effect(config = {}) {
      */
     function (target, propertyName) {
         /** @type {?} */
-        const metadata = Object.assign({}, DEFAULT_EFFECT_CONFIG, config, { // Overrides any defaults if values are provided
+        const metadata = Object.assign(Object.assign(Object.assign({}, DEFAULT_EFFECT_CONFIG), config), { // Overrides any defaults if values are provided
             propertyName });
         addEffectMetadataEntry(target, metadata);
     });
@@ -182,7 +221,8 @@ function getEffectMetadataEntries(sourceProto) {
 
 /**
  * @fileoverview added by tsickle
- * @suppress {checkTypes,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
+ * Generated from: modules/effects/src/effects_metadata.ts
+ * @suppress {checkTypes,constantProperty,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
  */
 /**
  * @template T
@@ -221,7 +261,8 @@ function getSourceMetadata(instance) {
 
 /**
  * @fileoverview added by tsickle
- * @suppress {checkTypes,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
+ * Generated from: modules/effects/src/effects_resolver.ts
+ * @suppress {checkTypes,constantProperty,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
  */
 /**
  * @param {?} sourceInstance
@@ -285,7 +326,8 @@ function resubscribeInCaseOfError(observable$, errorHandler) {
 
 /**
  * @fileoverview added by tsickle
- * @suppress {checkTypes,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
+ * Generated from: modules/effects/src/actions.ts
+ * @suppress {checkTypes,constantProperty,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
  */
 /**
  * @template V
@@ -345,8 +387,25 @@ function ofType(...allowedTypes) {
 
 /**
  * @fileoverview added by tsickle
- * @suppress {checkTypes,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
+ * Generated from: modules/effects/src/effect_notification.ts
+ * @suppress {checkTypes,constantProperty,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
  */
+/**
+ * @record
+ */
+function EffectNotification() { }
+if (false) {
+    /** @type {?} */
+    EffectNotification.prototype.effect;
+    /** @type {?} */
+    EffectNotification.prototype.propertyName;
+    /** @type {?} */
+    EffectNotification.prototype.sourceName;
+    /** @type {?} */
+    EffectNotification.prototype.sourceInstance;
+    /** @type {?} */
+    EffectNotification.prototype.notification;
+}
 /**
  * @param {?} output
  * @param {?} reporter
@@ -397,18 +456,122 @@ function stringify(action) {
 
 /**
  * @fileoverview added by tsickle
- * @suppress {checkTypes,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
+ * Generated from: modules/effects/src/lifecycle_hooks.ts
+ * @suppress {checkTypes,constantProperty,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
  */
+/**
+ * \@description
+ * Interface to set an identifier for effect instances.
+ *
+ * By default, each Effects class is registered
+ * once regardless of how many times the Effect class
+ * is loaded. By implementing this interface, you define
+ * a unique identifier to register an Effects class instance
+ * multiple times.
+ *
+ * \@usageNotes
+ *
+ * ### Set an identifier for an Effects class
+ *
+ * ```ts
+ * class EffectWithIdentifier implements OnIdentifyEffects {
+ *  constructor(private effectIdentifier: string) {}
+ *
+ *  ngrxOnIdentifyEffects() {
+ *    return this.effectIdentifier;
+ *  }
+ *
+ * ```
+ * @record
+ */
+function OnIdentifyEffects() { }
+if (false) {
+    /**
+     * \@description
+     * String identifier to differentiate effect instances.
+     * @return {?}
+     */
+    OnIdentifyEffects.prototype.ngrxOnIdentifyEffects = function () { };
+}
 /** @type {?} */
 const onIdentifyEffectsKey = 'ngrxOnIdentifyEffects';
+/**
+ * \@description
+ * Interface to control the lifecycle of effects.
+ *
+ * By default, effects are merged and subscribed to the store. Implement the OnRunEffects interface to control the lifecycle of the resolved effects.
+ *
+ * \@usageNotes
+ *
+ * ### Implement the OnRunEffects interface on an Effects class
+ *
+ * ```ts
+ * export class UserEffects implements OnRunEffects {
+ *   constructor(private actions$: Actions) {}
+ *
+ *   ngrxOnRunEffects(resolvedEffects$: Observable<EffectNotification>) {
+ *     return this.actions$.pipe(
+ *       ofType('LOGGED_IN'),
+ *       exhaustMap(() =>
+ *         resolvedEffects$.pipe(
+ *           takeUntil(this.actions$.pipe(ofType('LOGGED_OUT')))
+ *         )
+ *       )
+ *     );
+ *   }
+ * }
+ * ```
+ * @record
+ */
+function OnRunEffects() { }
+if (false) {
+    /**
+     * \@description
+     * Method to control the lifecycle of effects.
+     * @param {?} resolvedEffects$
+     * @return {?}
+     */
+    OnRunEffects.prototype.ngrxOnRunEffects = function (resolvedEffects$) { };
+}
 /** @type {?} */
 const onRunEffectsKey = 'ngrxOnRunEffects';
+/**
+ * \@description
+ * Interface to dispatch an action after effect registration.
+ *
+ * Implement this interface to dispatch a custom action after
+ * the effect has been added. You can listen to this action
+ * in the rest of the application to execute something after
+ * the effect is registered.
+ *
+ * \@usageNotes
+ *
+ * ### Set an identifier for an Effects class
+ *
+ * ```ts
+ * class EffectWithInitAction implements OnInitEffects {
+ *  ngrxOnInitEffects() {
+ *    return { type: '[EffectWithInitAction] Init' };
+ *  }
+ * ```
+ * @record
+ */
+function OnInitEffects() { }
+if (false) {
+    /**
+     * \@description
+     * Action to be dispatched after the effect is registered.
+     * @return {?}
+     */
+    OnInitEffects.prototype.ngrxOnInitEffects = function () { };
+}
 /** @type {?} */
 const onInitEffects = 'ngrxOnInitEffects';
 
 /**
  * @fileoverview added by tsickle
- * @suppress {checkTypes,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
+ * Generated from: modules/effects/src/effect_sources.ts
+ * @suppress {checkTypes,constantProperty,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
  */
 class EffectSources extends Subject {
     /**
@@ -466,6 +629,18 @@ EffectSources.ctorParameters = () => [
     { type: ErrorHandler },
     { type: Store }
 ];
+if (false) {
+    /**
+     * @type {?}
+     * @private
+     */
+    EffectSources.prototype.errorHandler;
+    /**
+     * @type {?}
+     * @private
+     */
+    EffectSources.prototype.store;
+}
 /**
  * @param {?} sourceInstance
  * @return {?}
@@ -507,7 +682,8 @@ function isOnRunEffects(sourceInstance) {
 
 /**
  * @fileoverview added by tsickle
- * @suppress {checkTypes,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
+ * Generated from: modules/effects/src/tokens.ts
+ * @suppress {checkTypes,constantProperty,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
  */
 /** @type {?} */
 const _ROOT_EFFECTS_GUARD = new InjectionToken('@ngrx/effects Internal Root Guard');
@@ -520,7 +696,8 @@ const FEATURE_EFFECTS = new InjectionToken('ngrx/effects: Feature Effects');
 
 /**
  * @fileoverview added by tsickle
- * @suppress {checkTypes,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
+ * Generated from: modules/effects/src/effects_runner.ts
+ * @suppress {checkTypes,constantProperty,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
  */
 class EffectsRunner {
     /**
@@ -560,10 +737,28 @@ EffectsRunner.ctorParameters = () => [
     { type: EffectSources },
     { type: Store }
 ];
+if (false) {
+    /**
+     * @type {?}
+     * @private
+     */
+    EffectsRunner.prototype.effectsSubscription;
+    /**
+     * @type {?}
+     * @private
+     */
+    EffectsRunner.prototype.effectSources;
+    /**
+     * @type {?}
+     * @private
+     */
+    EffectsRunner.prototype.store;
+}
 
 /**
  * @fileoverview added by tsickle
- * @suppress {checkTypes,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
+ * Generated from: modules/effects/src/effects_root_module.ts
+ * @suppress {checkTypes,constantProperty,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
  */
 /** @type {?} */
 const ROOT_EFFECTS_INIT = '@ngrx/effects/init';
@@ -610,10 +805,18 @@ EffectsRootModule.ctorParameters = () => [
     { type: StoreFeatureModule, decorators: [{ type: Optional }] },
     { type: undefined, decorators: [{ type: Optional }, { type: Inject, args: [_ROOT_EFFECTS_GUARD,] }] }
 ];
+if (false) {
+    /**
+     * @type {?}
+     * @private
+     */
+    EffectsRootModule.prototype.sources;
+}
 
 /**
  * @fileoverview added by tsickle
- * @suppress {checkTypes,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
+ * Generated from: modules/effects/src/effects_feature_module.ts
+ * @suppress {checkTypes,constantProperty,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
  */
 class EffectsFeatureModule {
     /**
@@ -647,7 +850,8 @@ EffectsFeatureModule.ctorParameters = () => [
 
 /**
  * @fileoverview added by tsickle
- * @suppress {checkTypes,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
+ * Generated from: modules/effects/src/effects_module.ts
+ * @suppress {checkTypes,constantProperty,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
  */
 class EffectsModule {
     /**
@@ -717,8 +921,27 @@ function _provideForRootGuard(runner) {
 
 /**
  * @fileoverview added by tsickle
- * @suppress {checkTypes,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
+ * Generated from: modules/effects/src/act.ts
+ * @suppress {checkTypes,constantProperty,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
  */
+/**
+ * Represents config with named paratemeters for act
+ * @record
+ * @template Input, OutputAction, ErrorAction, CompleteAction, UnsubscribeAction
+ */
+function ActConfig() { }
+if (false) {
+    /** @type {?} */
+    ActConfig.prototype.project;
+    /** @type {?} */
+    ActConfig.prototype.error;
+    /** @type {?|undefined} */
+    ActConfig.prototype.complete;
+    /** @type {?|undefined} */
+    ActConfig.prototype.operator;
+    /** @type {?|undefined} */
+    ActConfig.prototype.unsubscribe;
+}
 /**
  * @template Input, OutputAction, ErrorAction, CompleteAction, UnsubscribeAction
  * @param {?} configOrProject
@@ -736,7 +959,7 @@ configOrProject, errorFn) {
             complete: undefined,
             unsubscribe: undefined,
         }
-        : Object.assign({}, configOrProject, { operator: configOrProject.operator || concatMap });
+        : Object.assign(Object.assign({}, configOrProject), { operator: configOrProject.operator || concatMap });
     return (/**
      * @param {?} source
      * @return {?}
@@ -802,22 +1025,25 @@ configOrProject, errorFn) {
 
 /**
  * @fileoverview added by tsickle
- * @suppress {checkTypes,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
+ * Generated from: modules/effects/src/index.ts
+ * @suppress {checkTypes,constantProperty,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
  */
 
 /**
  * @fileoverview added by tsickle
- * @suppress {checkTypes,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
+ * Generated from: modules/effects/public_api.ts
+ * @suppress {checkTypes,constantProperty,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
  */
 
 /**
  * @fileoverview added by tsickle
- * @suppress {checkTypes,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
+ * Generated from: modules/effects/index.ts
+ * @suppress {checkTypes,constantProperty,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
  */
 
 /**
  * Generated bundle index. Do not edit.
  */
 
-export { getSourceMetadata as ɵngrx_modules_effects_effects_a, _provideForRootGuard as ɵngrx_modules_effects_effects_c, createSourceInstances as ɵngrx_modules_effects_effects_b, EffectsRunner as ɵngrx_modules_effects_effects_g, FEATURE_EFFECTS as ɵngrx_modules_effects_effects_f, ROOT_EFFECTS as ɵngrx_modules_effects_effects_e, _ROOT_EFFECTS_GUARD as ɵngrx_modules_effects_effects_d, createEffect, Effect, getEffectsMetadata, mergeEffects, Actions, ofType, EffectsModule, EffectSources, EffectsFeatureModule, ROOT_EFFECTS_INIT, rootEffectsInit, EffectsRootModule, act };
+export { Actions, Effect, EffectSources, EffectsFeatureModule, EffectsModule, EffectsRootModule, ROOT_EFFECTS_INIT, act, createEffect, getEffectsMetadata, mergeEffects, ofType, rootEffectsInit, getSourceMetadata as ɵngrx_modules_effects_effects_a, createSourceInstances as ɵngrx_modules_effects_effects_b, _provideForRootGuard as ɵngrx_modules_effects_effects_c, _ROOT_EFFECTS_GUARD as ɵngrx_modules_effects_effects_d, ROOT_EFFECTS as ɵngrx_modules_effects_effects_e, FEATURE_EFFECTS as ɵngrx_modules_effects_effects_f, EffectsRunner as ɵngrx_modules_effects_effects_g };
 //# sourceMappingURL=effects.js.map

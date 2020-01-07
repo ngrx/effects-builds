@@ -1,4 +1,4 @@
-import * as tslib_1 from "tslib";
+import { __decorate } from "tslib";
 import { NgModule, Optional, SkipSelf, } from '@angular/core';
 import { EffectSources } from './effect_sources';
 import { Actions } from './actions';
@@ -44,7 +44,7 @@ var EffectsModule = /** @class */ (function () {
             ],
         };
     };
-    EffectsModule = tslib_1.__decorate([
+    EffectsModule = __decorate([
         NgModule({})
     ], EffectsModule);
     return EffectsModule;

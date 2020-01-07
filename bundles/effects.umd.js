@@ -1,5 +1,5 @@
 /**
- * @license NgRx 8.6.0+3.sha-fe6bfa7
+ * @license NgRx 8.6.0+4.sha-b146af5
  * (c) 2015-2018 Brandon Roberts, Mike Ryan, Rob Wormald, Victor Savkin
  * License: MIT
  */
@@ -7,7 +7,7 @@
     typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('tslib'), require('@ngrx/store'), require('rxjs'), require('rxjs/operators'), require('@angular/core')) :
     typeof define === 'function' && define.amd ? define('@ngrx/effects', ['exports', 'tslib', '@ngrx/store', 'rxjs', 'rxjs/operators', '@angular/core'], factory) :
     (global = global || self, factory((global.ngrx = global.ngrx || {}, global.ngrx.effects = {}), global.tslib, global.ngrx.store, global.rxjs, global.rxjs.operators, global.ng.core));
-}(this, function (exports, tslib_1, store, rxjs, operators, core) { 'use strict';
+}(this, (function (exports, tslib, store, rxjs, operators, core) { 'use strict';
 
     var DEFAULT_EFFECT_CONFIG = {
         dispatch: true,
@@ -49,7 +49,7 @@
      */
     function createEffect(source, config) {
         var effect = source();
-        var value = tslib_1.__assign({}, DEFAULT_EFFECT_CONFIG, config);
+        var value = tslib.__assign(tslib.__assign({}, DEFAULT_EFFECT_CONFIG), config);
         Object.defineProperty(effect, CREATE_EFFECT_METADATA_KEY, {
             value: value,
         });
@@ -64,7 +64,7 @@
         })
             .map(function (propertyName) {
             var metaData = instance[propertyName][CREATE_EFFECT_METADATA_KEY];
-            return tslib_1.__assign({ propertyName: propertyName }, metaData);
+            return tslib.__assign({ propertyName: propertyName }, metaData);
         });
         return metadata;
     }
@@ -77,7 +77,7 @@
     function Effect(config) {
         if (config === void 0) { config = {}; }
         return function (target, propertyName) {
-            var metadata = tslib_1.__assign({}, DEFAULT_EFFECT_CONFIG, config, { // Overrides any defaults if values are provided
+            var metadata = tslib.__assign(tslib.__assign(tslib.__assign({}, DEFAULT_EFFECT_CONFIG), config), { // Overrides any defaults if values are provided
                 propertyName: propertyName });
             addEffectMetadataEntry(target, metadata);
         };
@@ -147,7 +147,7 @@
                 sourceInstance: sourceInstance,
             }); }));
         });
-        return rxjs.merge.apply(void 0, tslib_1.__spread(observables$));
+        return rxjs.merge.apply(void 0, tslib.__spread(observables$));
     }
     function resubscribeInCaseOfError(observable$, errorHandler) {
         return observable$.pipe(operators.catchError(function (error) {
@@ -159,7 +159,7 @@
     }
 
     var Actions = /** @class */ (function (_super) {
-        tslib_1.__extends(Actions, _super);
+        tslib.__extends(Actions, _super);
         function Actions(source) {
             var _this = _super.call(this) || this;
             if (source) {
@@ -175,10 +175,10 @@
             return observable;
         };
         var Actions_1;
-        Actions = Actions_1 = tslib_1.__decorate([
+        Actions = Actions_1 = tslib.__decorate([
             core.Injectable(),
-            tslib_1.__param(0, core.Inject(store.ScannedActionsSubject)),
-            tslib_1.__metadata("design:paramtypes", [rxjs.Observable])
+            tslib.__param(0, core.Inject(store.ScannedActionsSubject)),
+            tslib.__metadata("design:paramtypes", [rxjs.Observable])
         ], Actions);
         return Actions;
     }(rxjs.Observable));
@@ -233,7 +233,7 @@
     var onInitEffects = 'ngrxOnInitEffects';
 
     var EffectSources = /** @class */ (function (_super) {
-        tslib_1.__extends(EffectSources, _super);
+        tslib.__extends(EffectSources, _super);
         function EffectSources(errorHandler, store) {
             var _this = _super.call(this) || this;
             _this.errorHandler = errorHandler;
@@ -261,9 +261,9 @@
                 }), operators.dematerialize());
             }));
         };
-        EffectSources = tslib_1.__decorate([
+        EffectSources = tslib.__decorate([
             core.Injectable(),
-            tslib_1.__metadata("design:paramtypes", [core.ErrorHandler, store.Store])
+            tslib.__metadata("design:paramtypes", [core.ErrorHandler, store.Store])
         ], EffectSources);
         return EffectSources;
     }(rxjs.Subject));
@@ -312,9 +312,9 @@
                 this.effectsSubscription = null;
             }
         };
-        EffectsRunner = tslib_1.__decorate([
+        EffectsRunner = tslib.__decorate([
             core.Injectable(),
-            tslib_1.__metadata("design:paramtypes", [EffectSources,
+            tslib.__metadata("design:paramtypes", [EffectSources,
                 store.Store])
         ], EffectsRunner);
         return EffectsRunner;
@@ -334,14 +334,14 @@
         EffectsRootModule.prototype.addEffects = function (effectSourceInstance) {
             this.sources.addEffects(effectSourceInstance);
         };
-        EffectsRootModule = tslib_1.__decorate([
+        EffectsRootModule = tslib.__decorate([
             core.NgModule({}),
-            tslib_1.__param(3, core.Inject(ROOT_EFFECTS)),
-            tslib_1.__param(4, core.Optional()),
-            tslib_1.__param(5, core.Optional()),
-            tslib_1.__param(6, core.Optional()),
-            tslib_1.__param(6, core.Inject(_ROOT_EFFECTS_GUARD)),
-            tslib_1.__metadata("design:paramtypes", [EffectSources,
+            tslib.__param(3, core.Inject(ROOT_EFFECTS)),
+            tslib.__param(4, core.Optional()),
+            tslib.__param(5, core.Optional()),
+            tslib.__param(6, core.Optional()),
+            tslib.__param(6, core.Inject(_ROOT_EFFECTS_GUARD)),
+            tslib.__metadata("design:paramtypes", [EffectSources,
                 EffectsRunner,
                 store.Store, Array, store.StoreRootModule,
                 store.StoreFeatureModule, Object])
@@ -357,12 +357,12 @@
                 });
             });
         }
-        EffectsFeatureModule = tslib_1.__decorate([
+        EffectsFeatureModule = tslib.__decorate([
             core.NgModule({}),
-            tslib_1.__param(1, core.Inject(FEATURE_EFFECTS)),
-            tslib_1.__param(2, core.Optional()),
-            tslib_1.__param(3, core.Optional()),
-            tslib_1.__metadata("design:paramtypes", [EffectsRootModule, Array, store.StoreRootModule,
+            tslib.__param(1, core.Inject(FEATURE_EFFECTS)),
+            tslib.__param(2, core.Optional()),
+            tslib.__param(3, core.Optional()),
+            tslib.__metadata("design:paramtypes", [EffectsRootModule, Array, store.StoreRootModule,
                 store.StoreFeatureModule])
         ], EffectsFeatureModule);
         return EffectsFeatureModule;
@@ -406,7 +406,7 @@
                 ],
             };
         };
-        EffectsModule = tslib_1.__decorate([
+        EffectsModule = tslib.__decorate([
             core.NgModule({})
         ], EffectsModule);
         return EffectsModule;
@@ -436,7 +436,7 @@
                 complete: undefined,
                 unsubscribe: undefined,
             }
-            : tslib_1.__assign({}, configOrProject, { operator: configOrProject.operator || operators.concatMap }), project = _a.project, error = _a.error, complete = _a.complete, operator = _a.operator, unsubscribe = _a.unsubscribe;
+            : tslib.__assign(tslib.__assign({}, configOrProject), { operator: configOrProject.operator || operators.concatMap }), project = _a.project, error = _a.error, complete = _a.complete, operator = _a.operator, unsubscribe = _a.unsubscribe;
         return function (source) {
             return rxjs.defer(function () {
                 var subject = new rxjs.Subject();
@@ -484,28 +484,28 @@
      * Generated bundle index. Do not edit.
      */
 
-    exports.ɵngrx_modules_effects_effects_a = getSourceMetadata;
-    exports.ɵngrx_modules_effects_effects_c = _provideForRootGuard;
-    exports.ɵngrx_modules_effects_effects_b = createSourceInstances;
-    exports.ɵngrx_modules_effects_effects_g = EffectsRunner;
-    exports.ɵngrx_modules_effects_effects_f = FEATURE_EFFECTS;
-    exports.ɵngrx_modules_effects_effects_e = ROOT_EFFECTS;
-    exports.ɵngrx_modules_effects_effects_d = _ROOT_EFFECTS_GUARD;
-    exports.createEffect = createEffect;
-    exports.Effect = Effect;
-    exports.getEffectsMetadata = getEffectsMetadata;
-    exports.mergeEffects = mergeEffects;
     exports.Actions = Actions;
-    exports.ofType = ofType;
-    exports.EffectsModule = EffectsModule;
+    exports.Effect = Effect;
     exports.EffectSources = EffectSources;
     exports.EffectsFeatureModule = EffectsFeatureModule;
-    exports.ROOT_EFFECTS_INIT = ROOT_EFFECTS_INIT;
-    exports.rootEffectsInit = rootEffectsInit;
+    exports.EffectsModule = EffectsModule;
     exports.EffectsRootModule = EffectsRootModule;
+    exports.ROOT_EFFECTS_INIT = ROOT_EFFECTS_INIT;
     exports.act = act;
+    exports.createEffect = createEffect;
+    exports.getEffectsMetadata = getEffectsMetadata;
+    exports.mergeEffects = mergeEffects;
+    exports.ofType = ofType;
+    exports.rootEffectsInit = rootEffectsInit;
+    exports.ɵngrx_modules_effects_effects_a = getSourceMetadata;
+    exports.ɵngrx_modules_effects_effects_b = createSourceInstances;
+    exports.ɵngrx_modules_effects_effects_c = _provideForRootGuard;
+    exports.ɵngrx_modules_effects_effects_d = _ROOT_EFFECTS_GUARD;
+    exports.ɵngrx_modules_effects_effects_e = ROOT_EFFECTS;
+    exports.ɵngrx_modules_effects_effects_f = FEATURE_EFFECTS;
+    exports.ɵngrx_modules_effects_effects_g = EffectsRunner;
 
     Object.defineProperty(exports, '__esModule', { value: true });
 
-}));
+})));
 //# sourceMappingURL=effects.umd.js.map
