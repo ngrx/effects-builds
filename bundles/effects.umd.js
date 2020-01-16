@@ -1,5 +1,5 @@
 /**
- * @license NgRx 8.6.0+21.sha-2cc8885
+ * @license NgRx 8.6.0+23.sha-a528320
  * (c) 2015-2018 Brandon Roberts, Mike Ryan, Rob Wormald, Victor Savkin
  * License: MIT
  */
@@ -242,17 +242,20 @@
         }
         EffectSources.prototype.addEffects = function (effectSourceInstance) {
             this.next(effectSourceInstance);
-            if (onInitEffects in effectSourceInstance &&
-                typeof effectSourceInstance[onInitEffects] === 'function') {
-                this.store.dispatch(effectSourceInstance[onInitEffects]());
-            }
         };
         /**
          * @internal
          */
         EffectSources.prototype.toActions = function () {
             var _this = this;
-            return this.pipe(operators.groupBy(getSourceForInstance), operators.mergeMap(function (source$) { return source$.pipe(operators.groupBy(effectsInstance)); }), operators.mergeMap(function (source$) {
+            return this.pipe(operators.groupBy(getSourceForInstance), operators.mergeMap(function (source$) {
+                return source$.pipe(operators.groupBy(effectsInstance), operators.tap(function () {
+                    if (onInitEffects in source$.key &&
+                        typeof source$.key[onInitEffects] === 'function') {
+                        _this.store.dispatch(source$.key.ngrxOnInitEffects());
+                    }
+                }));
+            }), operators.mergeMap(function (source$) {
                 return source$.pipe(operators.exhaustMap(resolveEffectSource(_this.errorHandler)), operators.map(function (output) {
                     reportInvalidActions(output, _this.errorHandler);
                     return output.notification;

@@ -1,12 +1,12 @@
 /**
- * @license NgRx 8.6.0+21.sha-2cc8885
+ * @license NgRx 8.6.0+23.sha-a528320
  * (c) 2015-2018 Brandon Roberts, Mike Ryan, Rob Wormald, Victor Savkin
  * License: MIT
  */
 import { __assign, __spread, __extends, __decorate, __param, __metadata } from 'tslib';
 import { compose, ScannedActionsSubject, Store, createAction, StoreRootModule, StoreFeatureModule } from '@ngrx/store';
 import { merge, Observable, Subject, defer, Notification } from 'rxjs';
-import { catchError, ignoreElements, materialize, map, filter, groupBy, mergeMap, exhaustMap, dematerialize, concatMap, finalize } from 'rxjs/operators';
+import { catchError, ignoreElements, materialize, map, filter, groupBy, mergeMap, tap, exhaustMap, dematerialize, concatMap, finalize } from 'rxjs/operators';
 import { Injectable, Inject, ErrorHandler, InjectionToken, NgModule, Optional, SkipSelf } from '@angular/core';
 
 var DEFAULT_EFFECT_CONFIG = {
@@ -242,17 +242,20 @@ var EffectSources = /** @class */ (function (_super) {
     }
     EffectSources.prototype.addEffects = function (effectSourceInstance) {
         this.next(effectSourceInstance);
-        if (onInitEffects in effectSourceInstance &&
-            typeof effectSourceInstance[onInitEffects] === 'function') {
-            this.store.dispatch(effectSourceInstance[onInitEffects]());
-        }
     };
     /**
      * @internal
      */
     EffectSources.prototype.toActions = function () {
         var _this = this;
-        return this.pipe(groupBy(getSourceForInstance), mergeMap(function (source$) { return source$.pipe(groupBy(effectsInstance)); }), mergeMap(function (source$) {
+        return this.pipe(groupBy(getSourceForInstance), mergeMap(function (source$) {
+            return source$.pipe(groupBy(effectsInstance), tap(function () {
+                if (onInitEffects in source$.key &&
+                    typeof source$.key[onInitEffects] === 'function') {
+                    _this.store.dispatch(source$.key.ngrxOnInitEffects());
+                }
+            }));
+        }), mergeMap(function (source$) {
             return source$.pipe(exhaustMap(resolveEffectSource(_this.errorHandler)), map(function (output) {
                 reportInvalidActions(output, _this.errorHandler);
                 return output.notification;

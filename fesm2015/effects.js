@@ -1,11 +1,11 @@
 /**
- * @license NgRx 8.6.0+21.sha-2cc8885
+ * @license NgRx 8.6.0+23.sha-a528320
  * (c) 2015-2018 Brandon Roberts, Mike Ryan, Rob Wormald, Victor Savkin
  * License: MIT
  */
 import { compose, ScannedActionsSubject, Store, createAction, StoreRootModule, StoreFeatureModule } from '@ngrx/store';
 import { merge, Observable, Subject, defer, Notification } from 'rxjs';
-import { catchError, ignoreElements, materialize, map, filter, groupBy, mergeMap, exhaustMap, dematerialize, concatMap, finalize } from 'rxjs/operators';
+import { catchError, ignoreElements, materialize, map, filter, groupBy, mergeMap, tap, exhaustMap, dematerialize, concatMap, finalize } from 'rxjs/operators';
 import { Injectable, Inject, ErrorHandler, InjectionToken, NgModule, Optional, SkipSelf } from '@angular/core';
 
 /**
@@ -589,10 +589,6 @@ class EffectSources extends Subject {
      */
     addEffects(effectSourceInstance) {
         this.next(effectSourceInstance);
-        if (onInitEffects in effectSourceInstance &&
-            typeof effectSourceInstance[onInitEffects] === 'function') {
-            this.store.dispatch(effectSourceInstance[onInitEffects]());
-        }
     }
     /**
      * \@internal
@@ -603,7 +599,17 @@ class EffectSources extends Subject {
          * @param {?} source$
          * @return {?}
          */
-        source$ => source$.pipe(groupBy(effectsInstance)))), mergeMap((/**
+        source$ => {
+            return source$.pipe(groupBy(effectsInstance), tap((/**
+             * @return {?}
+             */
+            () => {
+                if (onInitEffects in source$.key &&
+                    typeof source$.key[onInitEffects] === 'function') {
+                    this.store.dispatch(source$.key.ngrxOnInitEffects());
+                }
+            })));
+        })), mergeMap((/**
          * @param {?} source$
          * @return {?}
          */
