@@ -1,5 +1,5 @@
 /**
- * @license NgRx 8.6.0+24.sha-4b302ec
+ * @license NgRx 8.6.0+25.sha-e8fe9fd
  * (c) 2015-2018 Brandon Roberts, Mike Ryan, Rob Wormald, Victor Savkin
  * License: MIT
  */
@@ -229,8 +229,22 @@ function stringify(action) {
 }
 
 var onIdentifyEffectsKey = 'ngrxOnIdentifyEffects';
+function isOnIdentifyEffects(instance) {
+    return isFunction(instance, onIdentifyEffectsKey);
+}
 var onRunEffectsKey = 'ngrxOnRunEffects';
+function isOnRunEffects(instance) {
+    return isFunction(instance, onRunEffectsKey);
+}
 var onInitEffects = 'ngrxOnInitEffects';
+function isOnInitEffects(instance) {
+    return isFunction(instance, onInitEffects);
+}
+function isFunction(instance, functionName) {
+    return (instance &&
+        functionName in instance &&
+        typeof instance[functionName] === 'function');
+}
 
 var EffectSources = /** @class */ (function (_super) {
     __extends(EffectSources, _super);
@@ -250,8 +264,7 @@ var EffectSources = /** @class */ (function (_super) {
         var _this = this;
         return this.pipe(groupBy(getSourceForInstance), mergeMap(function (source$) {
             return source$.pipe(groupBy(effectsInstance), tap(function () {
-                if (onInitEffects in source$.key &&
-                    typeof source$.key[onInitEffects] === 'function') {
+                if (isOnInitEffects(source$.key)) {
                     _this.store.dispatch(source$.key.ngrxOnInitEffects());
                 }
             }));
@@ -271,24 +284,20 @@ var EffectSources = /** @class */ (function (_super) {
     return EffectSources;
 }(Subject));
 function effectsInstance(sourceInstance) {
-    if (onIdentifyEffectsKey in sourceInstance &&
-        typeof sourceInstance[onIdentifyEffectsKey] === 'function') {
-        return sourceInstance[onIdentifyEffectsKey]();
+    if (isOnIdentifyEffects(sourceInstance)) {
+        return sourceInstance.ngrxOnIdentifyEffects();
     }
     return '';
 }
 function resolveEffectSource(errorHandler) {
     return function (sourceInstance) {
         var mergedEffects$ = mergeEffects(sourceInstance, errorHandler);
-        if (isOnRunEffects(sourceInstance)) {
-            return sourceInstance.ngrxOnRunEffects(mergedEffects$);
+        var source = getSourceForInstance(sourceInstance);
+        if (isOnRunEffects(source)) {
+            return source.ngrxOnRunEffects(mergedEffects$);
         }
         return mergedEffects$;
     };
-}
-function isOnRunEffects(sourceInstance) {
-    var source = getSourceForInstance(sourceInstance);
-    return (onRunEffectsKey in source && typeof source[onRunEffectsKey] === 'function');
 }
 
 var _ROOT_EFFECTS_GUARD = new InjectionToken('@ngrx/effects Internal Root Guard');

@@ -25,7 +25,7 @@ import { Action } from '@ngrx/store';
  *
  * ```
  */
-export interface OnIdentifyEffects {
+export declare interface OnIdentifyEffects {
     /**
      * @description
      * String identifier to differentiate effect instances.
@@ -33,6 +33,7 @@ export interface OnIdentifyEffects {
     ngrxOnIdentifyEffects(): string;
 }
 export declare const onIdentifyEffectsKey: keyof OnIdentifyEffects;
+export declare function isOnIdentifyEffects(instance: any): instance is OnIdentifyEffects;
 /**
  * @description
  * Interface to control the lifecycle of effects.
@@ -60,7 +61,7 @@ export declare const onIdentifyEffectsKey: keyof OnIdentifyEffects;
  * }
  * ```
  */
-export interface OnRunEffects {
+export declare interface OnRunEffects {
     /**
      * @description
      * Method to control the lifecycle of effects.
@@ -68,6 +69,7 @@ export interface OnRunEffects {
     ngrxOnRunEffects(resolvedEffects$: Observable<EffectNotification>): Observable<EffectNotification>;
 }
 export declare const onRunEffectsKey: keyof OnRunEffects;
+export declare function isOnRunEffects(instance: any): instance is OnRunEffects;
 /**
  * @description
  * Interface to dispatch an action after effect registration.
@@ -88,7 +90,7 @@ export declare const onRunEffectsKey: keyof OnRunEffects;
  *  }
  * ```
  */
-export interface OnInitEffects {
+export declare interface OnInitEffects {
     /**
      * @description
      * Action to be dispatched after the effect is registered.
@@ -96,3 +98,4 @@ export interface OnInitEffects {
     ngrxOnInitEffects(): Action;
 }
 export declare const onInitEffects: keyof OnInitEffects;
+export declare function isOnInitEffects(instance: any): instance is OnInitEffects;

@@ -1,5 +1,5 @@
 /**
- * @license NgRx 8.6.0+24.sha-4b302ec
+ * @license NgRx 8.6.0+25.sha-e8fe9fd
  * (c) 2015-2018 Brandon Roberts, Mike Ryan, Rob Wormald, Victor Savkin
  * License: MIT
  */
@@ -459,114 +459,43 @@ function stringify(action) {
  * Generated from: modules/effects/src/lifecycle_hooks.ts
  * @suppress {checkTypes,constantProperty,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
  */
-/**
- * \@description
- * Interface to set an identifier for effect instances.
- *
- * By default, each Effects class is registered
- * once regardless of how many times the Effect class
- * is loaded. By implementing this interface, you define
- * a unique identifier to register an Effects class instance
- * multiple times.
- *
- * \@usageNotes
- *
- * ### Set an identifier for an Effects class
- *
- * ```ts
- * class EffectWithIdentifier implements OnIdentifyEffects {
- *  constructor(private effectIdentifier: string) {}
- *
- *  ngrxOnIdentifyEffects() {
- *    return this.effectIdentifier;
- *  }
- *
- * ```
- * @record
- */
-function OnIdentifyEffects() { }
-if (false) {
-    /**
-     * \@description
-     * String identifier to differentiate effect instances.
-     * @return {?}
-     */
-    OnIdentifyEffects.prototype.ngrxOnIdentifyEffects = function () { };
-}
 /** @type {?} */
 const onIdentifyEffectsKey = 'ngrxOnIdentifyEffects';
 /**
- * \@description
- * Interface to control the lifecycle of effects.
- *
- * By default, effects are merged and subscribed to the store. Implement the OnRunEffects interface to control the lifecycle of the resolved effects.
- *
- * \@usageNotes
- *
- * ### Implement the OnRunEffects interface on an Effects class
- *
- * ```ts
- * export class UserEffects implements OnRunEffects {
- *   constructor(private actions$: Actions) {}
- *
- *   ngrxOnRunEffects(resolvedEffects$: Observable<EffectNotification>) {
- *     return this.actions$.pipe(
- *       ofType('LOGGED_IN'),
- *       exhaustMap(() =>
- *         resolvedEffects$.pipe(
- *           takeUntil(this.actions$.pipe(ofType('LOGGED_OUT')))
- *         )
- *       )
- *     );
- *   }
- * }
- * ```
- * @record
+ * @param {?} instance
+ * @return {?}
  */
-function OnRunEffects() { }
-if (false) {
-    /**
-     * \@description
-     * Method to control the lifecycle of effects.
-     * @param {?} resolvedEffects$
-     * @return {?}
-     */
-    OnRunEffects.prototype.ngrxOnRunEffects = function (resolvedEffects$) { };
+function isOnIdentifyEffects(instance) {
+    return isFunction(instance, onIdentifyEffectsKey);
 }
 /** @type {?} */
 const onRunEffectsKey = 'ngrxOnRunEffects';
 /**
- * \@description
- * Interface to dispatch an action after effect registration.
- *
- * Implement this interface to dispatch a custom action after
- * the effect has been added. You can listen to this action
- * in the rest of the application to execute something after
- * the effect is registered.
- *
- * \@usageNotes
- *
- * ### Set an identifier for an Effects class
- *
- * ```ts
- * class EffectWithInitAction implements OnInitEffects {
- *  ngrxOnInitEffects() {
- *    return { type: '[EffectWithInitAction] Init' };
- *  }
- * ```
- * @record
+ * @param {?} instance
+ * @return {?}
  */
-function OnInitEffects() { }
-if (false) {
-    /**
-     * \@description
-     * Action to be dispatched after the effect is registered.
-     * @return {?}
-     */
-    OnInitEffects.prototype.ngrxOnInitEffects = function () { };
+function isOnRunEffects(instance) {
+    return isFunction(instance, onRunEffectsKey);
 }
 /** @type {?} */
 const onInitEffects = 'ngrxOnInitEffects';
+/**
+ * @param {?} instance
+ * @return {?}
+ */
+function isOnInitEffects(instance) {
+    return isFunction(instance, onInitEffects);
+}
+/**
+ * @param {?} instance
+ * @param {?} functionName
+ * @return {?}
+ */
+function isFunction(instance, functionName) {
+    return (instance &&
+        functionName in instance &&
+        typeof instance[functionName] === 'function');
+}
 
 /**
  * @fileoverview added by tsickle
@@ -604,8 +533,7 @@ class EffectSources extends Subject {
              * @return {?}
              */
             () => {
-                if (onInitEffects in source$.key &&
-                    typeof source$.key[onInitEffects] === 'function') {
+                if (isOnInitEffects(source$.key)) {
                     this.store.dispatch(source$.key.ngrxOnInitEffects());
                 }
             })));
@@ -652,9 +580,8 @@ if (false) {
  * @return {?}
  */
 function effectsInstance(sourceInstance) {
-    if (onIdentifyEffectsKey in sourceInstance &&
-        typeof sourceInstance[onIdentifyEffectsKey] === 'function') {
-        return sourceInstance[onIdentifyEffectsKey]();
+    if (isOnIdentifyEffects(sourceInstance)) {
+        return sourceInstance.ngrxOnIdentifyEffects();
     }
     return '';
 }
@@ -670,20 +597,13 @@ function resolveEffectSource(errorHandler) {
     sourceInstance => {
         /** @type {?} */
         const mergedEffects$ = mergeEffects(sourceInstance, errorHandler);
-        if (isOnRunEffects(sourceInstance)) {
-            return sourceInstance.ngrxOnRunEffects(mergedEffects$);
+        /** @type {?} */
+        const source = getSourceForInstance(sourceInstance);
+        if (isOnRunEffects(source)) {
+            return source.ngrxOnRunEffects(mergedEffects$);
         }
         return mergedEffects$;
     });
-}
-/**
- * @param {?} sourceInstance
- * @return {?}
- */
-function isOnRunEffects(sourceInstance) {
-    /** @type {?} */
-    const source = getSourceForInstance(sourceInstance);
-    return (onRunEffectsKey in source && typeof source[onRunEffectsKey] === 'function');
 }
 
 /**
