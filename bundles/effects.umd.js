@@ -1,5 +1,5 @@
 /**
- * @license NgRx 8.6.0+29.sha-900bf75
+ * @license NgRx 8.6.0+30.sha-3a9ad63
  * (c) 2015-2018 Brandon Roberts, Mike Ryan, Rob Wormald, Victor Savkin
  * License: MIT
  */
@@ -11,7 +11,7 @@
 
     var DEFAULT_EFFECT_CONFIG = {
         dispatch: true,
-        resubscribeOnError: true,
+        useEffectsErrorHandler: true,
     };
     var CREATE_EFFECT_METADATA_KEY = '__@ngrx/effects_create__';
 
@@ -20,7 +20,7 @@
      * Creates an effect from an `Observable` and an `EffectConfig`.
      *
      * @param source A function which returns an `Observable`.
-     * @param config A `Partial<EffectConfig>` to configure the effect.  By default, `dispatch` is true and `resubscribeOnError` is true.
+     * @param config A `Partial<EffectConfig>` to configure the effect.  By default, `dispatch` is true and `useEffectsErrorHandler` is true.
      * @returns If `EffectConfig`#`dispatch` is true, returns `Observable<Action>`.  Else, returns `Observable<unknown>`.
      *
      * @usageNotes
@@ -112,8 +112,8 @@
 
     function getEffectsMetadata(instance) {
         return getSourceMetadata(instance).reduce(function (acc, _a) {
-            var propertyName = _a.propertyName, dispatch = _a.dispatch, resubscribeOnError = _a.resubscribeOnError;
-            acc[propertyName] = { dispatch: dispatch, resubscribeOnError: resubscribeOnError };
+            var propertyName = _a.propertyName, dispatch = _a.dispatch, useEffectsErrorHandler = _a.useEffectsErrorHandler;
+            acc[propertyName] = { dispatch: dispatch, useEffectsErrorHandler: useEffectsErrorHandler };
             return acc;
         }, {});
     }
@@ -125,20 +125,20 @@
         return effects.reduce(function (sources, source) { return sources.concat(source(instance)); }, []);
     }
 
-    function mergeEffects(sourceInstance, errorHandler) {
+    function mergeEffects(sourceInstance, globalErrorHandler, effectsErrorHandler) {
         var sourceName = getSourceForInstance(sourceInstance).constructor.name;
         var observables$ = getSourceMetadata(sourceInstance).map(function (_a) {
-            var propertyName = _a.propertyName, dispatch = _a.dispatch, resubscribeOnError = _a.resubscribeOnError;
+            var propertyName = _a.propertyName, dispatch = _a.dispatch, useEffectsErrorHandler = _a.useEffectsErrorHandler;
             var observable$ = typeof sourceInstance[propertyName] === 'function'
                 ? sourceInstance[propertyName]()
                 : sourceInstance[propertyName];
-            var resubscribable$ = resubscribeOnError
-                ? resubscribeInCaseOfError(observable$, errorHandler)
+            var effectAction$ = useEffectsErrorHandler
+                ? effectsErrorHandler(observable$, globalErrorHandler)
                 : observable$;
             if (dispatch === false) {
-                return resubscribable$.pipe(operators.ignoreElements());
+                return effectAction$.pipe(operators.ignoreElements());
             }
-            var materialized$ = resubscribable$.pipe(operators.materialize());
+            var materialized$ = effectAction$.pipe(operators.materialize());
             return materialized$.pipe(operators.map(function (notification) { return ({
                 effect: sourceInstance[propertyName],
                 notification: notification,
@@ -148,14 +148,6 @@
             }); }));
         });
         return rxjs.merge.apply(void 0, tslib.__spread(observables$));
-    }
-    function resubscribeInCaseOfError(observable$, errorHandler) {
-        return observable$.pipe(operators.catchError(function (error) {
-            if (errorHandler)
-                errorHandler.handleError(error);
-            // Return observable that produces this particular effect
-            return resubscribeInCaseOfError(observable$, errorHandler);
-        }));
     }
 
     var Actions = /** @class */ (function (_super) {
@@ -246,12 +238,19 @@
             typeof instance[functionName] === 'function');
     }
 
+    var _ROOT_EFFECTS_GUARD = new core.InjectionToken('@ngrx/effects Internal Root Guard');
+    var IMMEDIATE_EFFECTS = new core.InjectionToken('ngrx/effects: Immediate Effects');
+    var ROOT_EFFECTS = new core.InjectionToken('ngrx/effects: Root Effects');
+    var FEATURE_EFFECTS = new core.InjectionToken('ngrx/effects: Feature Effects');
+    var EFFECTS_ERROR_HANDLER = new core.InjectionToken('ngrx/effects: Effects Error Handler');
+
     var EffectSources = /** @class */ (function (_super) {
         tslib.__extends(EffectSources, _super);
-        function EffectSources(errorHandler, store) {
+        function EffectSources(errorHandler, store, effectsErrorHandler) {
             var _this = _super.call(this) || this;
             _this.errorHandler = errorHandler;
             _this.store = store;
+            _this.effectsErrorHandler = effectsErrorHandler;
             return _this;
         }
         EffectSources.prototype.addEffects = function (effectSourceInstance) {
@@ -269,7 +268,7 @@
                     }
                 }));
             }), operators.mergeMap(function (source$) {
-                return source$.pipe(operators.exhaustMap(resolveEffectSource(_this.errorHandler)), operators.map(function (output) {
+                return source$.pipe(operators.exhaustMap(resolveEffectSource(_this.errorHandler, _this.effectsErrorHandler)), operators.map(function (output) {
                     reportInvalidActions(output, _this.errorHandler);
                     return output.notification;
                 }), operators.filter(function (notification) {
@@ -279,7 +278,9 @@
         };
         EffectSources = tslib.__decorate([
             core.Injectable(),
-            tslib.__metadata("design:paramtypes", [core.ErrorHandler, store.Store])
+            tslib.__param(2, core.Inject(EFFECTS_ERROR_HANDLER)),
+            tslib.__metadata("design:paramtypes", [core.ErrorHandler,
+                store.Store, Function])
         ], EffectSources);
         return EffectSources;
     }(rxjs.Subject));
@@ -289,9 +290,9 @@
         }
         return '';
     }
-    function resolveEffectSource(errorHandler) {
+    function resolveEffectSource(errorHandler, effectsErrorHandler) {
         return function (sourceInstance) {
-            var mergedEffects$ = mergeEffects(sourceInstance, errorHandler);
+            var mergedEffects$ = mergeEffects(sourceInstance, errorHandler, effectsErrorHandler);
             var source = getSourceForInstance(sourceInstance);
             if (isOnRunEffects(source)) {
                 return source.ngrxOnRunEffects(mergedEffects$);
@@ -299,11 +300,6 @@
             return mergedEffects$;
         };
     }
-
-    var _ROOT_EFFECTS_GUARD = new core.InjectionToken('@ngrx/effects Internal Root Guard');
-    var IMMEDIATE_EFFECTS = new core.InjectionToken('ngrx/effects: Immediate Effects');
-    var ROOT_EFFECTS = new core.InjectionToken('ngrx/effects: Root Effects');
-    var FEATURE_EFFECTS = new core.InjectionToken('ngrx/effects: Feature Effects');
 
     var EffectsRunner = /** @class */ (function () {
         function EffectsRunner(effectSources, store) {
@@ -380,6 +376,15 @@
         return EffectsFeatureModule;
     }());
 
+    var defaultEffectsErrorHandler = function (observable$, errorHandler) {
+        return observable$.pipe(operators.catchError(function (error) {
+            if (errorHandler)
+                errorHandler.handleError(error);
+            // Return observable that produces this particular effect
+            return defaultEffectsErrorHandler(observable$, errorHandler);
+        }));
+    };
+
     var EffectsModule = /** @class */ (function () {
         function EffectsModule() {
         }
@@ -405,6 +410,10 @@
                         provide: _ROOT_EFFECTS_GUARD,
                         useFactory: _provideForRootGuard,
                         deps: [[EffectsRunner, new core.Optional(), new core.SkipSelf()]],
+                    },
+                    {
+                        provide: EFFECTS_ERROR_HANDLER,
+                        useValue: defaultEffectsErrorHandler,
                     },
                     EffectsRunner,
                     EffectSources,
@@ -497,6 +506,7 @@
      */
 
     exports.Actions = Actions;
+    exports.EFFECTS_ERROR_HANDLER = EFFECTS_ERROR_HANDLER;
     exports.Effect = Effect;
     exports.EffectSources = EffectSources;
     exports.EffectsFeatureModule = EffectsFeatureModule;
@@ -510,12 +520,13 @@
     exports.ofType = ofType;
     exports.rootEffectsInit = rootEffectsInit;
     exports.ɵngrx_modules_effects_effects_a = getSourceMetadata;
-    exports.ɵngrx_modules_effects_effects_b = createSourceInstances;
-    exports.ɵngrx_modules_effects_effects_c = _provideForRootGuard;
-    exports.ɵngrx_modules_effects_effects_d = _ROOT_EFFECTS_GUARD;
-    exports.ɵngrx_modules_effects_effects_e = ROOT_EFFECTS;
-    exports.ɵngrx_modules_effects_effects_f = FEATURE_EFFECTS;
-    exports.ɵngrx_modules_effects_effects_g = EffectsRunner;
+    exports.ɵngrx_modules_effects_effects_b = defaultEffectsErrorHandler;
+    exports.ɵngrx_modules_effects_effects_c = createSourceInstances;
+    exports.ɵngrx_modules_effects_effects_d = _provideForRootGuard;
+    exports.ɵngrx_modules_effects_effects_e = _ROOT_EFFECTS_GUARD;
+    exports.ɵngrx_modules_effects_effects_f = ROOT_EFFECTS;
+    exports.ɵngrx_modules_effects_effects_g = FEATURE_EFFECTS;
+    exports.ɵngrx_modules_effects_effects_h = EffectsRunner;
 
     Object.defineProperty(exports, '__esModule', { value: true });
 

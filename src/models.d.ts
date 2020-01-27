@@ -10,7 +10,7 @@ export interface EffectConfig {
     /**
      * Determines if the effect will be resubscribed to if an error occurs in the main actions stream.
      */
-    resubscribeOnError?: boolean;
+    useEffectsErrorHandler?: boolean;
 }
 export declare const DEFAULT_EFFECT_CONFIG: Readonly<Required<EffectConfig>>;
 export declare const CREATE_EFFECT_METADATA_KEY = "__@ngrx/effects_create__";

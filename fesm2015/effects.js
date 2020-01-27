@@ -1,12 +1,12 @@
 /**
- * @license NgRx 8.6.0+29.sha-900bf75
+ * @license NgRx 8.6.0+30.sha-3a9ad63
  * (c) 2015-2018 Brandon Roberts, Mike Ryan, Rob Wormald, Victor Savkin
  * License: MIT
  */
 import { compose, ScannedActionsSubject, Store, createAction, StoreRootModule, StoreFeatureModule } from '@ngrx/store';
 import { merge, Observable, Subject, defer, Notification } from 'rxjs';
-import { catchError, ignoreElements, materialize, map, filter, groupBy, mergeMap, tap, exhaustMap, dematerialize, concatMap, finalize } from 'rxjs/operators';
-import { Injectable, Inject, ErrorHandler, InjectionToken, NgModule, Optional, SkipSelf } from '@angular/core';
+import { ignoreElements, materialize, map, filter, groupBy, mergeMap, tap, exhaustMap, dematerialize, catchError, concatMap, finalize } from 'rxjs/operators';
+import { Injectable, Inject, InjectionToken, ErrorHandler, NgModule, Optional, SkipSelf } from '@angular/core';
 
 /**
  * @fileoverview added by tsickle
@@ -29,12 +29,12 @@ if (false) {
      * Determines if the effect will be resubscribed to if an error occurs in the main actions stream.
      * @type {?|undefined}
      */
-    EffectConfig.prototype.resubscribeOnError;
+    EffectConfig.prototype.useEffectsErrorHandler;
 }
 /** @type {?} */
 const DEFAULT_EFFECT_CONFIG = {
     dispatch: true,
-    resubscribeOnError: true,
+    useEffectsErrorHandler: true,
 };
 /** @type {?} */
 const CREATE_EFFECT_METADATA_KEY = '__@ngrx/effects_create__';
@@ -90,7 +90,7 @@ if (false) {
  * ```
  * @template C, DT, OT, R
  * @param {?} source A function which returns an `Observable`.
- * @param {?=} config A `Partial<EffectConfig>` to configure the effect.  By default, `dispatch` is true and `resubscribeOnError` is true.
+ * @param {?=} config A `Partial<EffectConfig>` to configure the effect.  By default, `dispatch` is true and `useEffectsErrorHandler` is true.
  * @return {?} If `EffectConfig`#`dispatch` is true, returns `Observable<Action>`.  Else, returns `Observable<unknown>`.
  *
  */
@@ -235,8 +235,8 @@ function getEffectsMetadata(instance) {
      * @param {?} __1
      * @return {?}
      */
-    (acc, { propertyName, dispatch, resubscribeOnError }) => {
-        acc[propertyName] = { dispatch, resubscribeOnError };
+    (acc, { propertyName, dispatch, useEffectsErrorHandler }) => {
+        acc[propertyName] = { dispatch, useEffectsErrorHandler };
         return acc;
     }), {});
 }
@@ -266,10 +266,11 @@ function getSourceMetadata(instance) {
  */
 /**
  * @param {?} sourceInstance
- * @param {?=} errorHandler
+ * @param {?} globalErrorHandler
+ * @param {?} effectsErrorHandler
  * @return {?}
  */
-function mergeEffects(sourceInstance, errorHandler) {
+function mergeEffects(sourceInstance, globalErrorHandler, effectsErrorHandler) {
     /** @type {?} */
     const sourceName = getSourceForInstance(sourceInstance).constructor.name;
     /** @type {?} */
@@ -277,20 +278,20 @@ function mergeEffects(sourceInstance, errorHandler) {
      * @param {?} __0
      * @return {?}
      */
-    ({ propertyName, dispatch, resubscribeOnError, }) => {
+    ({ propertyName, dispatch, useEffectsErrorHandler, }) => {
         /** @type {?} */
         const observable$ = typeof sourceInstance[propertyName] === 'function'
             ? sourceInstance[propertyName]()
             : sourceInstance[propertyName];
         /** @type {?} */
-        const resubscribable$ = resubscribeOnError
-            ? resubscribeInCaseOfError(observable$, errorHandler)
+        const effectAction$ = useEffectsErrorHandler
+            ? effectsErrorHandler(observable$, globalErrorHandler)
             : observable$;
         if (dispatch === false) {
-            return resubscribable$.pipe(ignoreElements());
+            return effectAction$.pipe(ignoreElements());
         }
         /** @type {?} */
-        const materialized$ = resubscribable$.pipe(materialize());
+        const materialized$ = effectAction$.pipe(materialize());
         return materialized$.pipe(map((/**
          * @param {?} notification
          * @return {?}
@@ -304,24 +305,6 @@ function mergeEffects(sourceInstance, errorHandler) {
         }))));
     }));
     return merge(...observables$);
-}
-/**
- * @template T
- * @param {?} observable$
- * @param {?=} errorHandler
- * @return {?}
- */
-function resubscribeInCaseOfError(observable$, errorHandler) {
-    return observable$.pipe(catchError((/**
-     * @param {?} error
-     * @return {?}
-     */
-    error => {
-        if (errorHandler)
-            errorHandler.handleError(error);
-        // Return observable that produces this particular effect
-        return resubscribeInCaseOfError(observable$, errorHandler);
-    })));
 }
 
 /**
@@ -499,6 +482,22 @@ function isFunction(instance, functionName) {
 
 /**
  * @fileoverview added by tsickle
+ * Generated from: modules/effects/src/tokens.ts
+ * @suppress {checkTypes,constantProperty,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
+ */
+/** @type {?} */
+const _ROOT_EFFECTS_GUARD = new InjectionToken('@ngrx/effects Internal Root Guard');
+/** @type {?} */
+const IMMEDIATE_EFFECTS = new InjectionToken('ngrx/effects: Immediate Effects');
+/** @type {?} */
+const ROOT_EFFECTS = new InjectionToken('ngrx/effects: Root Effects');
+/** @type {?} */
+const FEATURE_EFFECTS = new InjectionToken('ngrx/effects: Feature Effects');
+/** @type {?} */
+const EFFECTS_ERROR_HANDLER = new InjectionToken('ngrx/effects: Effects Error Handler');
+
+/**
+ * @fileoverview added by tsickle
  * Generated from: modules/effects/src/effect_sources.ts
  * @suppress {checkTypes,constantProperty,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
  */
@@ -506,11 +505,13 @@ class EffectSources extends Subject {
     /**
      * @param {?} errorHandler
      * @param {?} store
+     * @param {?} effectsErrorHandler
      */
-    constructor(errorHandler, store) {
+    constructor(errorHandler, store, effectsErrorHandler) {
         super();
         this.errorHandler = errorHandler;
         this.store = store;
+        this.effectsErrorHandler = effectsErrorHandler;
     }
     /**
      * @param {?} effectSourceInstance
@@ -541,7 +542,7 @@ class EffectSources extends Subject {
          * @param {?} source$
          * @return {?}
          */
-        source$ => source$.pipe(exhaustMap(resolveEffectSource(this.errorHandler)), map((/**
+        source$ => source$.pipe(exhaustMap(resolveEffectSource(this.errorHandler, this.effectsErrorHandler)), map((/**
          * @param {?} output
          * @return {?}
          */
@@ -561,7 +562,8 @@ EffectSources.decorators = [
 /** @nocollapse */
 EffectSources.ctorParameters = () => [
     { type: ErrorHandler },
-    { type: Store }
+    { type: Store },
+    { type: undefined, decorators: [{ type: Inject, args: [EFFECTS_ERROR_HANDLER,] }] }
 ];
 if (false) {
     /**
@@ -574,6 +576,11 @@ if (false) {
      * @private
      */
     EffectSources.prototype.store;
+    /**
+     * @type {?}
+     * @private
+     */
+    EffectSources.prototype.effectsErrorHandler;
 }
 /**
  * @param {?} sourceInstance
@@ -587,16 +594,17 @@ function effectsInstance(sourceInstance) {
 }
 /**
  * @param {?} errorHandler
+ * @param {?} effectsErrorHandler
  * @return {?}
  */
-function resolveEffectSource(errorHandler) {
+function resolveEffectSource(errorHandler, effectsErrorHandler) {
     return (/**
      * @param {?} sourceInstance
      * @return {?}
      */
     sourceInstance => {
         /** @type {?} */
-        const mergedEffects$ = mergeEffects(sourceInstance, errorHandler);
+        const mergedEffects$ = mergeEffects(sourceInstance, errorHandler, effectsErrorHandler);
         /** @type {?} */
         const source = getSourceForInstance(sourceInstance);
         if (isOnRunEffects(source)) {
@@ -605,20 +613,6 @@ function resolveEffectSource(errorHandler) {
         return mergedEffects$;
     });
 }
-
-/**
- * @fileoverview added by tsickle
- * Generated from: modules/effects/src/tokens.ts
- * @suppress {checkTypes,constantProperty,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
- */
-/** @type {?} */
-const _ROOT_EFFECTS_GUARD = new InjectionToken('@ngrx/effects Internal Root Guard');
-/** @type {?} */
-const IMMEDIATE_EFFECTS = new InjectionToken('ngrx/effects: Immediate Effects');
-/** @type {?} */
-const ROOT_EFFECTS = new InjectionToken('ngrx/effects: Root Effects');
-/** @type {?} */
-const FEATURE_EFFECTS = new InjectionToken('ngrx/effects: Feature Effects');
 
 /**
  * @fileoverview added by tsickle
@@ -776,6 +770,31 @@ EffectsFeatureModule.ctorParameters = () => [
 
 /**
  * @fileoverview added by tsickle
+ * Generated from: modules/effects/src/effects_error_handler.ts
+ * @suppress {checkTypes,constantProperty,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
+ */
+/** @type {?} */
+const defaultEffectsErrorHandler = (/**
+ * @template T
+ * @param {?} observable$
+ * @param {?} errorHandler
+ * @return {?}
+ */
+(observable$, errorHandler) => {
+    return observable$.pipe(catchError((/**
+     * @param {?} error
+     * @return {?}
+     */
+    error => {
+        if (errorHandler)
+            errorHandler.handleError(error);
+        // Return observable that produces this particular effect
+        return defaultEffectsErrorHandler(observable$, errorHandler);
+    })));
+});
+
+/**
+ * @fileoverview added by tsickle
  * Generated from: modules/effects/src/effects_module.ts
  * @suppress {checkTypes,constantProperty,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
  */
@@ -810,6 +829,10 @@ class EffectsModule {
                     provide: _ROOT_EFFECTS_GUARD,
                     useFactory: _provideForRootGuard,
                     deps: [[EffectsRunner, new Optional(), new SkipSelf()]],
+                },
+                {
+                    provide: EFFECTS_ERROR_HANDLER,
+                    useValue: defaultEffectsErrorHandler,
                 },
                 EffectsRunner,
                 EffectSources,
@@ -971,5 +994,5 @@ configOrProject, errorFn) {
  * Generated bundle index. Do not edit.
  */
 
-export { Actions, Effect, EffectSources, EffectsFeatureModule, EffectsModule, EffectsRootModule, ROOT_EFFECTS_INIT, act, createEffect, getEffectsMetadata, mergeEffects, ofType, rootEffectsInit, getSourceMetadata as ɵngrx_modules_effects_effects_a, createSourceInstances as ɵngrx_modules_effects_effects_b, _provideForRootGuard as ɵngrx_modules_effects_effects_c, _ROOT_EFFECTS_GUARD as ɵngrx_modules_effects_effects_d, ROOT_EFFECTS as ɵngrx_modules_effects_effects_e, FEATURE_EFFECTS as ɵngrx_modules_effects_effects_f, EffectsRunner as ɵngrx_modules_effects_effects_g };
+export { Actions, EFFECTS_ERROR_HANDLER, Effect, EffectSources, EffectsFeatureModule, EffectsModule, EffectsRootModule, ROOT_EFFECTS_INIT, act, createEffect, getEffectsMetadata, mergeEffects, ofType, rootEffectsInit, getSourceMetadata as ɵngrx_modules_effects_effects_a, defaultEffectsErrorHandler as ɵngrx_modules_effects_effects_b, createSourceInstances as ɵngrx_modules_effects_effects_c, _provideForRootGuard as ɵngrx_modules_effects_effects_d, _ROOT_EFFECTS_GUARD as ɵngrx_modules_effects_effects_e, ROOT_EFFECTS as ɵngrx_modules_effects_effects_f, FEATURE_EFFECTS as ɵngrx_modules_effects_effects_g, EffectsRunner as ɵngrx_modules_effects_effects_h };
 //# sourceMappingURL=effects.js.map
