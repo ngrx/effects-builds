@@ -1,5 +1,5 @@
 /**
- * @license NgRx 9.0.0-beta.0+9.sha-c305086
+ * @license NgRx 9.0.0-beta.0+10.sha-88124a7
  * (c) 2015-2018 Brandon Roberts, Mike Ryan, Rob Wormald, Victor Savkin
  * License: MIT
  */
@@ -148,6 +148,20 @@
             }); }));
         });
         return rxjs.merge.apply(void 0, tslib.__spread(observables$));
+    }
+
+    var MAX_NUMBER_OF_RETRY_ATTEMPTS = 10;
+    function defaultEffectsErrorHandler(observable$, errorHandler, retryAttemptLeft) {
+        if (retryAttemptLeft === void 0) { retryAttemptLeft = MAX_NUMBER_OF_RETRY_ATTEMPTS; }
+        return observable$.pipe(operators.catchError(function (error) {
+            if (errorHandler)
+                errorHandler.handleError(error);
+            if (retryAttemptLeft <= 1) {
+                return observable$; // last attempt
+            }
+            // Return observable that produces this particular effect
+            return defaultEffectsErrorHandler(observable$, errorHandler, retryAttemptLeft - 1);
+        }));
     }
 
     var Actions = /** @class */ (function (_super) {
@@ -376,15 +390,6 @@
         return EffectsFeatureModule;
     }());
 
-    var defaultEffectsErrorHandler = function (observable$, errorHandler) {
-        return observable$.pipe(operators.catchError(function (error) {
-            if (errorHandler)
-                errorHandler.handleError(error);
-            // Return observable that produces this particular effect
-            return defaultEffectsErrorHandler(observable$, errorHandler);
-        }));
-    };
-
     var EffectsModule = /** @class */ (function () {
         function EffectsModule() {
         }
@@ -515,18 +520,18 @@
     exports.ROOT_EFFECTS_INIT = ROOT_EFFECTS_INIT;
     exports.act = act;
     exports.createEffect = createEffect;
+    exports.defaultEffectsErrorHandler = defaultEffectsErrorHandler;
     exports.getEffectsMetadata = getEffectsMetadata;
     exports.mergeEffects = mergeEffects;
     exports.ofType = ofType;
     exports.rootEffectsInit = rootEffectsInit;
     exports.ɵngrx_modules_effects_effects_a = getSourceMetadata;
-    exports.ɵngrx_modules_effects_effects_b = defaultEffectsErrorHandler;
-    exports.ɵngrx_modules_effects_effects_c = createSourceInstances;
-    exports.ɵngrx_modules_effects_effects_d = _provideForRootGuard;
-    exports.ɵngrx_modules_effects_effects_e = _ROOT_EFFECTS_GUARD;
-    exports.ɵngrx_modules_effects_effects_f = ROOT_EFFECTS;
-    exports.ɵngrx_modules_effects_effects_g = FEATURE_EFFECTS;
-    exports.ɵngrx_modules_effects_effects_h = EffectsRunner;
+    exports.ɵngrx_modules_effects_effects_b = createSourceInstances;
+    exports.ɵngrx_modules_effects_effects_c = _provideForRootGuard;
+    exports.ɵngrx_modules_effects_effects_d = _ROOT_EFFECTS_GUARD;
+    exports.ɵngrx_modules_effects_effects_e = ROOT_EFFECTS;
+    exports.ɵngrx_modules_effects_effects_f = FEATURE_EFFECTS;
+    exports.ɵngrx_modules_effects_effects_g = EffectsRunner;
 
     Object.defineProperty(exports, '__esModule', { value: true });
 

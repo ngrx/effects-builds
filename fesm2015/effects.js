@@ -1,11 +1,11 @@
 /**
- * @license NgRx 9.0.0-beta.0+9.sha-c305086
+ * @license NgRx 9.0.0-beta.0+10.sha-88124a7
  * (c) 2015-2018 Brandon Roberts, Mike Ryan, Rob Wormald, Victor Savkin
  * License: MIT
  */
 import { compose, ScannedActionsSubject, Store, createAction, StoreRootModule, StoreFeatureModule } from '@ngrx/store';
 import { merge, Observable, Subject, defer, Notification } from 'rxjs';
-import { ignoreElements, materialize, map, filter, groupBy, mergeMap, tap, exhaustMap, dematerialize, catchError, concatMap, finalize } from 'rxjs/operators';
+import { ignoreElements, materialize, map, catchError, filter, groupBy, mergeMap, tap, exhaustMap, dematerialize, concatMap, finalize } from 'rxjs/operators';
 import { Injectable, Inject, InjectionToken, ErrorHandler, NgModule, Optional, SkipSelf } from '@angular/core';
 
 /**
@@ -305,6 +305,36 @@ function mergeEffects(sourceInstance, globalErrorHandler, effectsErrorHandler) {
         }))));
     }));
     return merge(...observables$);
+}
+
+/**
+ * @fileoverview added by tsickle
+ * Generated from: modules/effects/src/effects_error_handler.ts
+ * @suppress {checkTypes,constantProperty,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
+ */
+/** @type {?} */
+const MAX_NUMBER_OF_RETRY_ATTEMPTS = 10;
+/**
+ * @template T
+ * @param {?} observable$
+ * @param {?} errorHandler
+ * @param {?=} retryAttemptLeft
+ * @return {?}
+ */
+function defaultEffectsErrorHandler(observable$, errorHandler, retryAttemptLeft = MAX_NUMBER_OF_RETRY_ATTEMPTS) {
+    return observable$.pipe(catchError((/**
+     * @param {?} error
+     * @return {?}
+     */
+    error => {
+        if (errorHandler)
+            errorHandler.handleError(error);
+        if (retryAttemptLeft <= 1) {
+            return observable$; // last attempt
+        }
+        // Return observable that produces this particular effect
+        return defaultEffectsErrorHandler(observable$, errorHandler, retryAttemptLeft - 1);
+    })));
 }
 
 /**
@@ -770,31 +800,6 @@ EffectsFeatureModule.ctorParameters = () => [
 
 /**
  * @fileoverview added by tsickle
- * Generated from: modules/effects/src/effects_error_handler.ts
- * @suppress {checkTypes,constantProperty,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
- */
-/** @type {?} */
-const defaultEffectsErrorHandler = (/**
- * @template T
- * @param {?} observable$
- * @param {?} errorHandler
- * @return {?}
- */
-(observable$, errorHandler) => {
-    return observable$.pipe(catchError((/**
-     * @param {?} error
-     * @return {?}
-     */
-    error => {
-        if (errorHandler)
-            errorHandler.handleError(error);
-        // Return observable that produces this particular effect
-        return defaultEffectsErrorHandler(observable$, errorHandler);
-    })));
-});
-
-/**
- * @fileoverview added by tsickle
  * Generated from: modules/effects/src/effects_module.ts
  * @suppress {checkTypes,constantProperty,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
  */
@@ -994,5 +999,5 @@ configOrProject, errorFn) {
  * Generated bundle index. Do not edit.
  */
 
-export { Actions, EFFECTS_ERROR_HANDLER, Effect, EffectSources, EffectsFeatureModule, EffectsModule, EffectsRootModule, ROOT_EFFECTS_INIT, act, createEffect, getEffectsMetadata, mergeEffects, ofType, rootEffectsInit, getSourceMetadata as ɵngrx_modules_effects_effects_a, defaultEffectsErrorHandler as ɵngrx_modules_effects_effects_b, createSourceInstances as ɵngrx_modules_effects_effects_c, _provideForRootGuard as ɵngrx_modules_effects_effects_d, _ROOT_EFFECTS_GUARD as ɵngrx_modules_effects_effects_e, ROOT_EFFECTS as ɵngrx_modules_effects_effects_f, FEATURE_EFFECTS as ɵngrx_modules_effects_effects_g, EffectsRunner as ɵngrx_modules_effects_effects_h };
+export { Actions, EFFECTS_ERROR_HANDLER, Effect, EffectSources, EffectsFeatureModule, EffectsModule, EffectsRootModule, ROOT_EFFECTS_INIT, act, createEffect, defaultEffectsErrorHandler, getEffectsMetadata, mergeEffects, ofType, rootEffectsInit, getSourceMetadata as ɵngrx_modules_effects_effects_a, createSourceInstances as ɵngrx_modules_effects_effects_b, _provideForRootGuard as ɵngrx_modules_effects_effects_c, _ROOT_EFFECTS_GUARD as ɵngrx_modules_effects_effects_d, ROOT_EFFECTS as ɵngrx_modules_effects_effects_e, FEATURE_EFFECTS as ɵngrx_modules_effects_effects_f, EffectsRunner as ɵngrx_modules_effects_effects_g };
 //# sourceMappingURL=effects.js.map
