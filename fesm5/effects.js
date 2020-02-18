@@ -1,12 +1,12 @@
 /**
- * @license NgRx 9.0.0-beta.0+19.sha-188a765
+ * @license NgRx 9.0.0-beta.0+20.sha-daf1e64
  * (c) 2015-2018 Brandon Roberts, Mike Ryan, Rob Wormald, Victor Savkin
  * License: MIT
  */
 import { __assign, __spread, __extends, __decorate, __param, __metadata } from 'tslib';
 import { compose, ScannedActionsSubject, Store, createAction, StoreRootModule, StoreFeatureModule } from '@ngrx/store';
 import { merge, Observable, Subject, defer, Notification } from 'rxjs';
-import { ignoreElements, materialize, map, catchError, filter, groupBy, mergeMap, tap, exhaustMap, dematerialize, concatMap, finalize } from 'rxjs/operators';
+import { ignoreElements, materialize, map, catchError, filter, groupBy, mergeMap, exhaustMap, dematerialize, take, concatMap, finalize } from 'rxjs/operators';
 import { Injectable, Inject, InjectionToken, ErrorHandler, NgModule, Optional, SkipSelf } from '@angular/core';
 
 var DEFAULT_EFFECT_CONFIG = {
@@ -260,10 +260,9 @@ var EFFECTS_ERROR_HANDLER = new InjectionToken('ngrx/effects: Effects Error Hand
 
 var EffectSources = /** @class */ (function (_super) {
     __extends(EffectSources, _super);
-    function EffectSources(errorHandler, store, effectsErrorHandler) {
+    function EffectSources(errorHandler, effectsErrorHandler) {
         var _this = _super.call(this) || this;
         _this.errorHandler = errorHandler;
-        _this.store = store;
         _this.effectsErrorHandler = effectsErrorHandler;
         return _this;
     }
@@ -276,25 +275,26 @@ var EffectSources = /** @class */ (function (_super) {
     EffectSources.prototype.toActions = function () {
         var _this = this;
         return this.pipe(groupBy(getSourceForInstance), mergeMap(function (source$) {
-            return source$.pipe(groupBy(effectsInstance), tap(function () {
-                if (isOnInitEffects(source$.key)) {
-                    _this.store.dispatch(source$.key.ngrxOnInitEffects());
-                }
-            }));
+            return source$.pipe(groupBy(effectsInstance));
         }), mergeMap(function (source$) {
-            return source$.pipe(exhaustMap(resolveEffectSource(_this.errorHandler, _this.effectsErrorHandler)), map(function (output) {
+            var effect$ = source$.pipe(exhaustMap(function (sourceInstance) {
+                return resolveEffectSource(_this.errorHandler, _this.effectsErrorHandler)(sourceInstance);
+            }), map(function (output) {
                 reportInvalidActions(output, _this.errorHandler);
                 return output.notification;
             }), filter(function (notification) {
                 return notification.kind === 'N';
             }), dematerialize());
+            // start the stream with an INIT action
+            // do this only for the first Effect instance
+            var init$ = source$.pipe(take(1), filter(isOnInitEffects), map(function (instance) { return instance.ngrxOnInitEffects(); }));
+            return merge(effect$, init$);
         }));
     };
     EffectSources = __decorate([
         Injectable(),
-        __param(2, Inject(EFFECTS_ERROR_HANDLER)),
-        __metadata("design:paramtypes", [ErrorHandler,
-            Store, Function])
+        __param(1, Inject(EFFECTS_ERROR_HANDLER)),
+        __metadata("design:paramtypes", [ErrorHandler, Function])
     ], EffectSources);
     return EffectSources;
 }(Subject));

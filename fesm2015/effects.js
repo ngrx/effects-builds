@@ -1,11 +1,11 @@
 /**
- * @license NgRx 9.0.0-beta.0+19.sha-188a765
+ * @license NgRx 9.0.0-beta.0+20.sha-daf1e64
  * (c) 2015-2018 Brandon Roberts, Mike Ryan, Rob Wormald, Victor Savkin
  * License: MIT
  */
 import { compose, ScannedActionsSubject, Store, createAction, StoreRootModule, StoreFeatureModule } from '@ngrx/store';
 import { merge, Observable, Subject, defer, Notification } from 'rxjs';
-import { ignoreElements, materialize, map, catchError, filter, groupBy, mergeMap, tap, exhaustMap, dematerialize, concatMap, finalize } from 'rxjs/operators';
+import { ignoreElements, materialize, map, catchError, filter, groupBy, mergeMap, exhaustMap, dematerialize, take, concatMap, finalize } from 'rxjs/operators';
 import { Injectable, Inject, InjectionToken, ErrorHandler, NgModule, Optional, SkipSelf } from '@angular/core';
 
 /**
@@ -534,13 +534,11 @@ const EFFECTS_ERROR_HANDLER = new InjectionToken('ngrx/effects: Effects Error Ha
 class EffectSources extends Subject {
     /**
      * @param {?} errorHandler
-     * @param {?} store
      * @param {?} effectsErrorHandler
      */
-    constructor(errorHandler, store, effectsErrorHandler) {
+    constructor(errorHandler, effectsErrorHandler) {
         super();
         this.errorHandler = errorHandler;
-        this.store = store;
         this.effectsErrorHandler = effectsErrorHandler;
     }
     /**
@@ -560,30 +558,41 @@ class EffectSources extends Subject {
          * @return {?}
          */
         source$ => {
-            return source$.pipe(groupBy(effectsInstance), tap((/**
-             * @return {?}
-             */
-            () => {
-                if (isOnInitEffects(source$.key)) {
-                    this.store.dispatch(source$.key.ngrxOnInitEffects());
-                }
-            })));
+            return source$.pipe(groupBy(effectsInstance));
         })), mergeMap((/**
          * @param {?} source$
          * @return {?}
          */
-        source$ => source$.pipe(exhaustMap(resolveEffectSource(this.errorHandler, this.effectsErrorHandler)), map((/**
-         * @param {?} output
-         * @return {?}
-         */
-        output => {
-            reportInvalidActions(output, this.errorHandler);
-            return output.notification;
-        })), filter((/**
-         * @param {?} notification
-         * @return {?}
-         */
-        (notification) => notification.kind === 'N')), dematerialize()))));
+        source$ => {
+            /** @type {?} */
+            const effect$ = source$.pipe(exhaustMap((/**
+             * @param {?} sourceInstance
+             * @return {?}
+             */
+            sourceInstance => {
+                return resolveEffectSource(this.errorHandler, this.effectsErrorHandler)(sourceInstance);
+            })), map((/**
+             * @param {?} output
+             * @return {?}
+             */
+            output => {
+                reportInvalidActions(output, this.errorHandler);
+                return output.notification;
+            })), filter((/**
+             * @param {?} notification
+             * @return {?}
+             */
+            (notification) => notification.kind === 'N')), dematerialize());
+            // start the stream with an INIT action
+            // do this only for the first Effect instance
+            /** @type {?} */
+            const init$ = source$.pipe(take(1), filter(isOnInitEffects), map((/**
+             * @param {?} instance
+             * @return {?}
+             */
+            instance => instance.ngrxOnInitEffects())));
+            return merge(effect$, init$);
+        })));
     }
 }
 EffectSources.decorators = [
@@ -592,7 +601,6 @@ EffectSources.decorators = [
 /** @nocollapse */
 EffectSources.ctorParameters = () => [
     { type: ErrorHandler },
-    { type: Store },
     { type: undefined, decorators: [{ type: Inject, args: [EFFECTS_ERROR_HANDLER,] }] }
 ];
 if (false) {
@@ -601,11 +609,6 @@ if (false) {
      * @private
      */
     EffectSources.prototype.errorHandler;
-    /**
-     * @type {?}
-     * @private
-     */
-    EffectSources.prototype.store;
     /**
      * @type {?}
      * @private

@@ -1,5 +1,5 @@
 /**
- * @license NgRx 9.0.0-beta.0+19.sha-188a765
+ * @license NgRx 9.0.0-beta.0+20.sha-daf1e64
  * (c) 2015-2018 Brandon Roberts, Mike Ryan, Rob Wormald, Victor Savkin
  * License: MIT
  */
@@ -260,10 +260,9 @@
 
     var EffectSources = /** @class */ (function (_super) {
         tslib.__extends(EffectSources, _super);
-        function EffectSources(errorHandler, store, effectsErrorHandler) {
+        function EffectSources(errorHandler, effectsErrorHandler) {
             var _this = _super.call(this) || this;
             _this.errorHandler = errorHandler;
-            _this.store = store;
             _this.effectsErrorHandler = effectsErrorHandler;
             return _this;
         }
@@ -276,25 +275,26 @@
         EffectSources.prototype.toActions = function () {
             var _this = this;
             return this.pipe(operators.groupBy(getSourceForInstance), operators.mergeMap(function (source$) {
-                return source$.pipe(operators.groupBy(effectsInstance), operators.tap(function () {
-                    if (isOnInitEffects(source$.key)) {
-                        _this.store.dispatch(source$.key.ngrxOnInitEffects());
-                    }
-                }));
+                return source$.pipe(operators.groupBy(effectsInstance));
             }), operators.mergeMap(function (source$) {
-                return source$.pipe(operators.exhaustMap(resolveEffectSource(_this.errorHandler, _this.effectsErrorHandler)), operators.map(function (output) {
+                var effect$ = source$.pipe(operators.exhaustMap(function (sourceInstance) {
+                    return resolveEffectSource(_this.errorHandler, _this.effectsErrorHandler)(sourceInstance);
+                }), operators.map(function (output) {
                     reportInvalidActions(output, _this.errorHandler);
                     return output.notification;
                 }), operators.filter(function (notification) {
                     return notification.kind === 'N';
                 }), operators.dematerialize());
+                // start the stream with an INIT action
+                // do this only for the first Effect instance
+                var init$ = source$.pipe(operators.take(1), operators.filter(isOnInitEffects), operators.map(function (instance) { return instance.ngrxOnInitEffects(); }));
+                return rxjs.merge(effect$, init$);
             }));
         };
         EffectSources = tslib.__decorate([
             core.Injectable(),
-            tslib.__param(2, core.Inject(EFFECTS_ERROR_HANDLER)),
-            tslib.__metadata("design:paramtypes", [core.ErrorHandler,
-                store.Store, Function])
+            tslib.__param(1, core.Inject(EFFECTS_ERROR_HANDLER)),
+            tslib.__metadata("design:paramtypes", [core.ErrorHandler, Function])
         ], EffectSources);
         return EffectSources;
     }(rxjs.Subject));
