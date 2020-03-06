@@ -1,5 +1,5 @@
 /**
- * @license NgRx 9.0.0-rc.0+3.sha-fba0dda
+ * @license NgRx 9.0.0-rc.0+4.sha-f66fd64
  * (c) 2015-2018 Brandon Roberts, Mike Ryan, Rob Wormald, Victor Savkin
  * License: MIT
  */
@@ -516,6 +516,7 @@
     exports.EffectsFeatureModule = EffectsFeatureModule;
     exports.EffectsModule = EffectsModule;
     exports.EffectsRootModule = EffectsRootModule;
+    exports.EffectsRunner = EffectsRunner;
     exports.ROOT_EFFECTS_INIT = ROOT_EFFECTS_INIT;
     exports.act = act;
     exports.createEffect = createEffect;
@@ -530,7 +531,6 @@
     exports.ɵngrx_modules_effects_effects_d = _ROOT_EFFECTS_GUARD;
     exports.ɵngrx_modules_effects_effects_e = ROOT_EFFECTS;
     exports.ɵngrx_modules_effects_effects_f = FEATURE_EFFECTS;
-    exports.ɵngrx_modules_effects_effects_g = EffectsRunner;
 
     Object.defineProperty(exports, '__esModule', { value: true });
 
