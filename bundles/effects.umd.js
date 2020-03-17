@@ -1,5 +1,5 @@
 /**
- * @license NgRx 9.0.0+6.sha-7598dc3
+ * @license NgRx 9.0.0+7.sha-59ce3e2
  * (c) 2015-2018 Brandon Roberts, Mike Ryan, Rob Wormald, Victor Savkin
  * License: MIT
  */
@@ -254,7 +254,10 @@
 
     var _ROOT_EFFECTS_GUARD = new core.InjectionToken('@ngrx/effects Internal Root Guard');
     var IMMEDIATE_EFFECTS = new core.InjectionToken('ngrx/effects: Immediate Effects');
+    var USER_PROVIDED_EFFECTS = new core.InjectionToken('ngrx/effects: User Provided Effects');
+    var _ROOT_EFFECTS = new core.InjectionToken('ngrx/effects: Internal Root Effects');
     var ROOT_EFFECTS = new core.InjectionToken('ngrx/effects: Root Effects');
+    var _FEATURE_EFFECTS = new core.InjectionToken('ngrx/effects: Internal Feature Effects');
     var FEATURE_EFFECTS = new core.InjectionToken('ngrx/effects: Feature Effects');
     var EFFECTS_ERROR_HANDLER = new core.InjectionToken('ngrx/effects: Effects Error Handler');
 
@@ -393,20 +396,32 @@
         function EffectsModule() {
         }
         EffectsModule.forFeature = function (featureEffects) {
+            if (featureEffects === void 0) { featureEffects = []; }
             return {
                 ngModule: EffectsFeatureModule,
                 providers: [
                     featureEffects,
                     {
+                        provide: _FEATURE_EFFECTS,
+                        multi: true,
+                        useValue: featureEffects,
+                    },
+                    {
+                        provide: USER_PROVIDED_EFFECTS,
+                        multi: true,
+                        useValue: [],
+                    },
+                    {
                         provide: FEATURE_EFFECTS,
                         multi: true,
-                        deps: featureEffects,
-                        useFactory: createSourceInstances,
+                        useFactory: createEffects,
+                        deps: [core.Injector, _FEATURE_EFFECTS, USER_PROVIDED_EFFECTS],
                     },
                 ],
             };
         };
         EffectsModule.forRoot = function (rootEffects) {
+            if (rootEffects === void 0) { rootEffects = []; }
             return {
                 ngModule: EffectsRootModule,
                 providers: [
@@ -424,9 +439,18 @@
                     Actions,
                     rootEffects,
                     {
+                        provide: _ROOT_EFFECTS,
+                        useValue: [rootEffects],
+                    },
+                    {
+                        provide: USER_PROVIDED_EFFECTS,
+                        multi: true,
+                        useValue: [],
+                    },
+                    {
                         provide: ROOT_EFFECTS,
-                        deps: rootEffects,
-                        useFactory: createSourceInstances,
+                        useFactory: createEffects,
+                        deps: [core.Injector, _ROOT_EFFECTS, USER_PROVIDED_EFFECTS],
                     },
                 ],
             };
@@ -436,12 +460,39 @@
         ], EffectsModule);
         return EffectsModule;
     }());
-    function createSourceInstances() {
-        var instances = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-            instances[_i] = arguments[_i];
+    function createEffects(injector, effectGroups, userProvidedEffectGroups) {
+        var e_1, _a, e_2, _b;
+        var mergedEffects = [];
+        try {
+            for (var effectGroups_1 = tslib.__values(effectGroups), effectGroups_1_1 = effectGroups_1.next(); !effectGroups_1_1.done; effectGroups_1_1 = effectGroups_1.next()) {
+                var effectGroup = effectGroups_1_1.value;
+                mergedEffects.push.apply(mergedEffects, tslib.__spread(effectGroup));
+            }
         }
-        return instances;
+        catch (e_1_1) { e_1 = { error: e_1_1 }; }
+        finally {
+            try {
+                if (effectGroups_1_1 && !effectGroups_1_1.done && (_a = effectGroups_1.return)) _a.call(effectGroups_1);
+            }
+            finally { if (e_1) throw e_1.error; }
+        }
+        try {
+            for (var userProvidedEffectGroups_1 = tslib.__values(userProvidedEffectGroups), userProvidedEffectGroups_1_1 = userProvidedEffectGroups_1.next(); !userProvidedEffectGroups_1_1.done; userProvidedEffectGroups_1_1 = userProvidedEffectGroups_1.next()) {
+                var userProvidedEffectGroup = userProvidedEffectGroups_1_1.value;
+                mergedEffects.push.apply(mergedEffects, tslib.__spread(userProvidedEffectGroup));
+            }
+        }
+        catch (e_2_1) { e_2 = { error: e_2_1 }; }
+        finally {
+            try {
+                if (userProvidedEffectGroups_1_1 && !userProvidedEffectGroups_1_1.done && (_b = userProvidedEffectGroups_1.return)) _b.call(userProvidedEffectGroups_1);
+            }
+            finally { if (e_2) throw e_2.error; }
+        }
+        return createEffectInstances(injector, mergedEffects);
+    }
+    function createEffectInstances(injector, effects) {
+        return effects.map(function (effect) { return injector.get(effect); });
     }
     function _provideForRootGuard(runner) {
         if (runner) {
@@ -518,6 +569,7 @@
     exports.EffectsRootModule = EffectsRootModule;
     exports.EffectsRunner = EffectsRunner;
     exports.ROOT_EFFECTS_INIT = ROOT_EFFECTS_INIT;
+    exports.USER_PROVIDED_EFFECTS = USER_PROVIDED_EFFECTS;
     exports.act = act;
     exports.createEffect = createEffect;
     exports.defaultEffectsErrorHandler = defaultEffectsErrorHandler;
@@ -526,11 +578,13 @@
     exports.ofType = ofType;
     exports.rootEffectsInit = rootEffectsInit;
     exports.ɵngrx_modules_effects_effects_a = getSourceMetadata;
-    exports.ɵngrx_modules_effects_effects_b = createSourceInstances;
+    exports.ɵngrx_modules_effects_effects_b = createEffects;
     exports.ɵngrx_modules_effects_effects_c = _provideForRootGuard;
     exports.ɵngrx_modules_effects_effects_d = _ROOT_EFFECTS_GUARD;
-    exports.ɵngrx_modules_effects_effects_e = ROOT_EFFECTS;
-    exports.ɵngrx_modules_effects_effects_f = FEATURE_EFFECTS;
+    exports.ɵngrx_modules_effects_effects_e = _ROOT_EFFECTS;
+    exports.ɵngrx_modules_effects_effects_f = ROOT_EFFECTS;
+    exports.ɵngrx_modules_effects_effects_g = _FEATURE_EFFECTS;
+    exports.ɵngrx_modules_effects_effects_h = FEATURE_EFFECTS;
 
     Object.defineProperty(exports, '__esModule', { value: true });
 

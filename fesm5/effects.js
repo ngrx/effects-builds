@@ -1,13 +1,13 @@
 /**
- * @license NgRx 9.0.0+6.sha-7598dc3
+ * @license NgRx 9.0.0+7.sha-59ce3e2
  * (c) 2015-2018 Brandon Roberts, Mike Ryan, Rob Wormald, Victor Savkin
  * License: MIT
  */
-import { __assign, __spread, __extends, __decorate, __param, __metadata } from 'tslib';
+import { __assign, __spread, __extends, __decorate, __param, __metadata, __values } from 'tslib';
 import { compose, ScannedActionsSubject, Store, createAction, StoreRootModule, StoreFeatureModule } from '@ngrx/store';
 import { merge, Observable, Subject, defer, Notification } from 'rxjs';
 import { ignoreElements, materialize, map, catchError, filter, groupBy, mergeMap, exhaustMap, dematerialize, take, concatMap, finalize } from 'rxjs/operators';
-import { Injectable, Inject, InjectionToken, ErrorHandler, NgModule, Optional, SkipSelf } from '@angular/core';
+import { Injectable, Inject, InjectionToken, ErrorHandler, NgModule, Optional, Injector, SkipSelf } from '@angular/core';
 
 var DEFAULT_EFFECT_CONFIG = {
     dispatch: true,
@@ -254,7 +254,10 @@ function isFunction(instance, functionName) {
 
 var _ROOT_EFFECTS_GUARD = new InjectionToken('@ngrx/effects Internal Root Guard');
 var IMMEDIATE_EFFECTS = new InjectionToken('ngrx/effects: Immediate Effects');
+var USER_PROVIDED_EFFECTS = new InjectionToken('ngrx/effects: User Provided Effects');
+var _ROOT_EFFECTS = new InjectionToken('ngrx/effects: Internal Root Effects');
 var ROOT_EFFECTS = new InjectionToken('ngrx/effects: Root Effects');
+var _FEATURE_EFFECTS = new InjectionToken('ngrx/effects: Internal Feature Effects');
 var FEATURE_EFFECTS = new InjectionToken('ngrx/effects: Feature Effects');
 var EFFECTS_ERROR_HANDLER = new InjectionToken('ngrx/effects: Effects Error Handler');
 
@@ -393,20 +396,32 @@ var EffectsModule = /** @class */ (function () {
     function EffectsModule() {
     }
     EffectsModule.forFeature = function (featureEffects) {
+        if (featureEffects === void 0) { featureEffects = []; }
         return {
             ngModule: EffectsFeatureModule,
             providers: [
                 featureEffects,
                 {
+                    provide: _FEATURE_EFFECTS,
+                    multi: true,
+                    useValue: featureEffects,
+                },
+                {
+                    provide: USER_PROVIDED_EFFECTS,
+                    multi: true,
+                    useValue: [],
+                },
+                {
                     provide: FEATURE_EFFECTS,
                     multi: true,
-                    deps: featureEffects,
-                    useFactory: createSourceInstances,
+                    useFactory: createEffects,
+                    deps: [Injector, _FEATURE_EFFECTS, USER_PROVIDED_EFFECTS],
                 },
             ],
         };
     };
     EffectsModule.forRoot = function (rootEffects) {
+        if (rootEffects === void 0) { rootEffects = []; }
         return {
             ngModule: EffectsRootModule,
             providers: [
@@ -424,9 +439,18 @@ var EffectsModule = /** @class */ (function () {
                 Actions,
                 rootEffects,
                 {
+                    provide: _ROOT_EFFECTS,
+                    useValue: [rootEffects],
+                },
+                {
+                    provide: USER_PROVIDED_EFFECTS,
+                    multi: true,
+                    useValue: [],
+                },
+                {
                     provide: ROOT_EFFECTS,
-                    deps: rootEffects,
-                    useFactory: createSourceInstances,
+                    useFactory: createEffects,
+                    deps: [Injector, _ROOT_EFFECTS, USER_PROVIDED_EFFECTS],
                 },
             ],
         };
@@ -436,12 +460,39 @@ var EffectsModule = /** @class */ (function () {
     ], EffectsModule);
     return EffectsModule;
 }());
-function createSourceInstances() {
-    var instances = [];
-    for (var _i = 0; _i < arguments.length; _i++) {
-        instances[_i] = arguments[_i];
+function createEffects(injector, effectGroups, userProvidedEffectGroups) {
+    var e_1, _a, e_2, _b;
+    var mergedEffects = [];
+    try {
+        for (var effectGroups_1 = __values(effectGroups), effectGroups_1_1 = effectGroups_1.next(); !effectGroups_1_1.done; effectGroups_1_1 = effectGroups_1.next()) {
+            var effectGroup = effectGroups_1_1.value;
+            mergedEffects.push.apply(mergedEffects, __spread(effectGroup));
+        }
     }
-    return instances;
+    catch (e_1_1) { e_1 = { error: e_1_1 }; }
+    finally {
+        try {
+            if (effectGroups_1_1 && !effectGroups_1_1.done && (_a = effectGroups_1.return)) _a.call(effectGroups_1);
+        }
+        finally { if (e_1) throw e_1.error; }
+    }
+    try {
+        for (var userProvidedEffectGroups_1 = __values(userProvidedEffectGroups), userProvidedEffectGroups_1_1 = userProvidedEffectGroups_1.next(); !userProvidedEffectGroups_1_1.done; userProvidedEffectGroups_1_1 = userProvidedEffectGroups_1.next()) {
+            var userProvidedEffectGroup = userProvidedEffectGroups_1_1.value;
+            mergedEffects.push.apply(mergedEffects, __spread(userProvidedEffectGroup));
+        }
+    }
+    catch (e_2_1) { e_2 = { error: e_2_1 }; }
+    finally {
+        try {
+            if (userProvidedEffectGroups_1_1 && !userProvidedEffectGroups_1_1.done && (_b = userProvidedEffectGroups_1.return)) _b.call(userProvidedEffectGroups_1);
+        }
+        finally { if (e_2) throw e_2.error; }
+    }
+    return createEffectInstances(injector, mergedEffects);
+}
+function createEffectInstances(injector, effects) {
+    return effects.map(function (effect) { return injector.get(effect); });
 }
 function _provideForRootGuard(runner) {
     if (runner) {
@@ -509,5 +560,5 @@ configOrProject, errorFn) {
  * Generated bundle index. Do not edit.
  */
 
-export { Actions, EFFECTS_ERROR_HANDLER, Effect, EffectSources, EffectsFeatureModule, EffectsModule, EffectsRootModule, EffectsRunner, ROOT_EFFECTS_INIT, act, createEffect, defaultEffectsErrorHandler, getEffectsMetadata, mergeEffects, ofType, rootEffectsInit, getSourceMetadata as ɵngrx_modules_effects_effects_a, createSourceInstances as ɵngrx_modules_effects_effects_b, _provideForRootGuard as ɵngrx_modules_effects_effects_c, _ROOT_EFFECTS_GUARD as ɵngrx_modules_effects_effects_d, ROOT_EFFECTS as ɵngrx_modules_effects_effects_e, FEATURE_EFFECTS as ɵngrx_modules_effects_effects_f };
+export { Actions, EFFECTS_ERROR_HANDLER, Effect, EffectSources, EffectsFeatureModule, EffectsModule, EffectsRootModule, EffectsRunner, ROOT_EFFECTS_INIT, USER_PROVIDED_EFFECTS, act, createEffect, defaultEffectsErrorHandler, getEffectsMetadata, mergeEffects, ofType, rootEffectsInit, getSourceMetadata as ɵngrx_modules_effects_effects_a, createEffects as ɵngrx_modules_effects_effects_b, _provideForRootGuard as ɵngrx_modules_effects_effects_c, _ROOT_EFFECTS_GUARD as ɵngrx_modules_effects_effects_d, _ROOT_EFFECTS as ɵngrx_modules_effects_effects_e, ROOT_EFFECTS as ɵngrx_modules_effects_effects_f, _FEATURE_EFFECTS as ɵngrx_modules_effects_effects_g, FEATURE_EFFECTS as ɵngrx_modules_effects_effects_h };
 //# sourceMappingURL=effects.js.map

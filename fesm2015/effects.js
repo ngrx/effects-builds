@@ -1,12 +1,12 @@
 /**
- * @license NgRx 9.0.0+6.sha-7598dc3
+ * @license NgRx 9.0.0+7.sha-59ce3e2
  * (c) 2015-2018 Brandon Roberts, Mike Ryan, Rob Wormald, Victor Savkin
  * License: MIT
  */
 import { compose, ScannedActionsSubject, Store, createAction, StoreRootModule, StoreFeatureModule } from '@ngrx/store';
 import { merge, Observable, Subject, defer, Notification } from 'rxjs';
 import { ignoreElements, materialize, map, catchError, filter, groupBy, mergeMap, exhaustMap, dematerialize, take, concatMap, finalize } from 'rxjs/operators';
-import { Injectable, Inject, InjectionToken, ErrorHandler, NgModule, Optional, SkipSelf } from '@angular/core';
+import { Injectable, Inject, InjectionToken, ErrorHandler, NgModule, Optional, Injector, SkipSelf } from '@angular/core';
 
 /**
  * @fileoverview added by tsickle
@@ -520,7 +520,13 @@ const _ROOT_EFFECTS_GUARD = new InjectionToken('@ngrx/effects Internal Root Guar
 /** @type {?} */
 const IMMEDIATE_EFFECTS = new InjectionToken('ngrx/effects: Immediate Effects');
 /** @type {?} */
+const USER_PROVIDED_EFFECTS = new InjectionToken('ngrx/effects: User Provided Effects');
+/** @type {?} */
+const _ROOT_EFFECTS = new InjectionToken('ngrx/effects: Internal Root Effects');
+/** @type {?} */
 const ROOT_EFFECTS = new InjectionToken('ngrx/effects: Root Effects');
+/** @type {?} */
+const _FEATURE_EFFECTS = new InjectionToken('ngrx/effects: Internal Feature Effects');
 /** @type {?} */
 const FEATURE_EFFECTS = new InjectionToken('ngrx/effects: Feature Effects');
 /** @type {?} */
@@ -806,28 +812,38 @@ EffectsFeatureModule.ctorParameters = () => [
  */
 class EffectsModule {
     /**
-     * @param {?} featureEffects
+     * @param {?=} featureEffects
      * @return {?}
      */
-    static forFeature(featureEffects) {
+    static forFeature(featureEffects = []) {
         return {
             ngModule: EffectsFeatureModule,
             providers: [
                 featureEffects,
                 {
+                    provide: _FEATURE_EFFECTS,
+                    multi: true,
+                    useValue: featureEffects,
+                },
+                {
+                    provide: USER_PROVIDED_EFFECTS,
+                    multi: true,
+                    useValue: [],
+                },
+                {
                     provide: FEATURE_EFFECTS,
                     multi: true,
-                    deps: featureEffects,
-                    useFactory: createSourceInstances,
+                    useFactory: createEffects,
+                    deps: [Injector, _FEATURE_EFFECTS, USER_PROVIDED_EFFECTS],
                 },
             ],
         };
     }
     /**
-     * @param {?} rootEffects
+     * @param {?=} rootEffects
      * @return {?}
      */
-    static forRoot(rootEffects) {
+    static forRoot(rootEffects = []) {
         return {
             ngModule: EffectsRootModule,
             providers: [
@@ -845,9 +861,18 @@ class EffectsModule {
                 Actions,
                 rootEffects,
                 {
+                    provide: _ROOT_EFFECTS,
+                    useValue: [rootEffects],
+                },
+                {
+                    provide: USER_PROVIDED_EFFECTS,
+                    multi: true,
+                    useValue: [],
+                },
+                {
                     provide: ROOT_EFFECTS,
-                    deps: rootEffects,
-                    useFactory: createSourceInstances,
+                    useFactory: createEffects,
+                    deps: [Injector, _ROOT_EFFECTS, USER_PROVIDED_EFFECTS],
                 },
             ],
         };
@@ -857,11 +882,33 @@ EffectsModule.decorators = [
     { type: NgModule, args: [{},] }
 ];
 /**
- * @param {...?} instances
+ * @param {?} injector
+ * @param {?} effectGroups
+ * @param {?} userProvidedEffectGroups
  * @return {?}
  */
-function createSourceInstances(...instances) {
-    return instances;
+function createEffects(injector, effectGroups, userProvidedEffectGroups) {
+    /** @type {?} */
+    const mergedEffects = [];
+    for (let effectGroup of effectGroups) {
+        mergedEffects.push(...effectGroup);
+    }
+    for (let userProvidedEffectGroup of userProvidedEffectGroups) {
+        mergedEffects.push(...userProvidedEffectGroup);
+    }
+    return createEffectInstances(injector, mergedEffects);
+}
+/**
+ * @param {?} injector
+ * @param {?} effects
+ * @return {?}
+ */
+function createEffectInstances(injector, effects) {
+    return effects.map((/**
+     * @param {?} effect
+     * @return {?}
+     */
+    effect => injector.get(effect)));
 }
 /**
  * @param {?} runner
@@ -1000,5 +1047,5 @@ configOrProject, errorFn) {
  * Generated bundle index. Do not edit.
  */
 
-export { Actions, EFFECTS_ERROR_HANDLER, Effect, EffectSources, EffectsFeatureModule, EffectsModule, EffectsRootModule, EffectsRunner, ROOT_EFFECTS_INIT, act, createEffect, defaultEffectsErrorHandler, getEffectsMetadata, mergeEffects, ofType, rootEffectsInit, getSourceMetadata as ɵngrx_modules_effects_effects_a, createSourceInstances as ɵngrx_modules_effects_effects_b, _provideForRootGuard as ɵngrx_modules_effects_effects_c, _ROOT_EFFECTS_GUARD as ɵngrx_modules_effects_effects_d, ROOT_EFFECTS as ɵngrx_modules_effects_effects_e, FEATURE_EFFECTS as ɵngrx_modules_effects_effects_f };
+export { Actions, EFFECTS_ERROR_HANDLER, Effect, EffectSources, EffectsFeatureModule, EffectsModule, EffectsRootModule, EffectsRunner, ROOT_EFFECTS_INIT, USER_PROVIDED_EFFECTS, act, createEffect, defaultEffectsErrorHandler, getEffectsMetadata, mergeEffects, ofType, rootEffectsInit, getSourceMetadata as ɵngrx_modules_effects_effects_a, createEffects as ɵngrx_modules_effects_effects_b, _provideForRootGuard as ɵngrx_modules_effects_effects_c, _ROOT_EFFECTS_GUARD as ɵngrx_modules_effects_effects_d, _ROOT_EFFECTS as ɵngrx_modules_effects_effects_e, ROOT_EFFECTS as ɵngrx_modules_effects_effects_f, _FEATURE_EFFECTS as ɵngrx_modules_effects_effects_g, FEATURE_EFFECTS as ɵngrx_modules_effects_effects_h };
 //# sourceMappingURL=effects.js.map

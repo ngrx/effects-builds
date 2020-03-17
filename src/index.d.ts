@@ -15,3 +15,4 @@ export { ROOT_EFFECTS_INIT, rootEffectsInit, EffectsRootModule, } from './effect
 export { EFFECTS_ERROR_HANDLER } from './tokens';
 export { act } from './act';
 export { OnIdentifyEffects, OnRunEffects, OnInitEffects, } from './lifecycle_hooks';
+export { USER_PROVIDED_EFFECTS } from './tokens';
