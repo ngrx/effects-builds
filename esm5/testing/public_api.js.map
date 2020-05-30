@@ -1,0 +1,1 @@
+{"version":3,"file":"public_api.js","sourceRoot":"ng://@ngrx/effects/testing/","sources":["public_api.ts"],"names":[],"mappings":";;;;;AAAA,mCAAc,WAAW,CAAC","sourcesContent":["export * from './testing';\n"]}

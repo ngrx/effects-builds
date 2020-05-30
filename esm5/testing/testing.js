@@ -1,5 +1,26 @@
 /**
- * Generated bundle index. Do not edit.
+ * @fileoverview added by tsickle
+ * Generated from: testing.ts
+ * @suppress {checkTypes,constantProperty,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
  */
-export * from './index';
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoidGVzdGluZy5qcyIsInNvdXJjZVJvb3QiOiIiLCJzb3VyY2VzIjpbIi4uLy4uLy4uLy4uLy4uLy4uLy4uLy4uLy4uLy4uL21vZHVsZXMvZWZmZWN0cy90ZXN0aW5nL3Rlc3RpbmcudHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7O0dBRUc7QUFFSCxjQUFjLFNBQVMsQ0FBQyIsInNvdXJjZXNDb250ZW50IjpbIi8qKlxuICogR2VuZXJhdGVkIGJ1bmRsZSBpbmRleC4gRG8gbm90IGVkaXQuXG4gKi9cblxuZXhwb3J0ICogZnJvbSAnLi9pbmRleCc7XG4iXX0=
+import { Actions } from '@ngrx/effects';
+import { defer } from 'rxjs';
+/**
+ * @param {?} factoryOrSource
+ * @return {?}
+ */
+export function provideMockActions(factoryOrSource) {
+    return {
+        provide: Actions,
+        useFactory: (/**
+         * @return {?}
+         */
+        function () {
+            if (typeof factoryOrSource === 'function') {
+                return new Actions(defer(factoryOrSource));
+            }
+            return new Actions(factoryOrSource);
+        }),
+    };
+}
+//# sourceMappingURL=testing.js.map

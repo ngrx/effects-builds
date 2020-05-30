@@ -1,0 +1,1 @@
+{"version":3,"file":"ngrx-effects-testing.js","sourceRoot":"ng://@ngrx/effects/testing/","sources":["ngrx-effects-testing.ts"],"names":[],"mappings":";;;;;;;;AAIA,mCAAc,cAAc,CAAC","sourcesContent":["/**\n * Generated bundle index. Do not edit.\n */\n\nexport * from './public_api';\n"]}
