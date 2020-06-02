@@ -409,7 +409,7 @@
             return observable;
         };
         Actions.decorators = [
-            { type: core.Injectable },
+            { type: core.Injectable }
         ];
         /** @nocollapse */
         Actions.ctorParameters = function () { return [
@@ -670,7 +670,7 @@
             })));
         };
         EffectSources.decorators = [
-            { type: core.Injectable },
+            { type: core.Injectable }
         ];
         /** @nocollapse */
         EffectSources.ctorParameters = function () { return [
@@ -758,7 +758,7 @@
             }
         };
         EffectsRunner.decorators = [
-            { type: core.Injectable },
+            { type: core.Injectable }
         ];
         /** @nocollapse */
         EffectsRunner.ctorParameters = function () { return [
@@ -819,7 +819,7 @@
             this.sources.addEffects(effectSourceInstance);
         };
         EffectsRootModule.decorators = [
-            { type: core.NgModule, args: [{},] },
+            { type: core.NgModule, args: [{},] }
         ];
         /** @nocollapse */
         EffectsRootModule.ctorParameters = function () { return [
@@ -863,7 +863,7 @@
             }));
         }
         EffectsFeatureModule.decorators = [
-            { type: core.NgModule, args: [{},] },
+            { type: core.NgModule, args: [{},] }
         ];
         /** @nocollapse */
         EffectsFeatureModule.ctorParameters = function () { return [
@@ -986,7 +986,7 @@
             };
         };
         EffectsModule.decorators = [
-            { type: core.NgModule, args: [{},] },
+            { type: core.NgModule, args: [{},] }
         ];
         return EffectsModule;
     }());

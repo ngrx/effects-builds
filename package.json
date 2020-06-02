@@ -49,7 +49,6 @@
   "typings": "ngrx-effects.d.ts",
   "metadata": "ngrx-effects.metadata.json",
   "dependencies": {
-    "tslib": "^1.10.0",
-    "@angular/platform-browser": "^9.1.0"
+    "tslib": "^1.10.0"
   }
 }

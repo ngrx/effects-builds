@@ -408,7 +408,7 @@ var Actions = /** @class */ (function (_super) {
         return observable;
     };
     Actions.decorators = [
-        { type: Injectable },
+        { type: Injectable }
     ];
     /** @nocollapse */
     Actions.ctorParameters = function () { return [
@@ -669,7 +669,7 @@ var EffectSources = /** @class */ (function (_super) {
         })));
     };
     EffectSources.decorators = [
-        { type: Injectable },
+        { type: Injectable }
     ];
     /** @nocollapse */
     EffectSources.ctorParameters = function () { return [
@@ -757,7 +757,7 @@ var EffectsRunner = /** @class */ (function () {
         }
     };
     EffectsRunner.decorators = [
-        { type: Injectable },
+        { type: Injectable }
     ];
     /** @nocollapse */
     EffectsRunner.ctorParameters = function () { return [
@@ -818,7 +818,7 @@ var EffectsRootModule = /** @class */ (function () {
         this.sources.addEffects(effectSourceInstance);
     };
     EffectsRootModule.decorators = [
-        { type: NgModule, args: [{},] },
+        { type: NgModule, args: [{},] }
     ];
     /** @nocollapse */
     EffectsRootModule.ctorParameters = function () { return [
@@ -862,7 +862,7 @@ var EffectsFeatureModule = /** @class */ (function () {
         }));
     }
     EffectsFeatureModule.decorators = [
-        { type: NgModule, args: [{},] },
+        { type: NgModule, args: [{},] }
     ];
     /** @nocollapse */
     EffectsFeatureModule.ctorParameters = function () { return [
@@ -985,7 +985,7 @@ var EffectsModule = /** @class */ (function () {
         };
     };
     EffectsModule.decorators = [
-        { type: NgModule, args: [{},] },
+        { type: NgModule, args: [{},] }
     ];
     return EffectsModule;
 }());

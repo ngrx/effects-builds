@@ -1,1 +1,0 @@
-{"version":3,"file":"effect_sources.ngfactory.js","sourceRoot":"ng://@ngrx/effects/","sources":["src/effect_sources.ngfactory.ts"],"names":[],"mappings":"","sourcesContent":["import * as i0 from '@angular/core';\ni0.ComponentFactory;\n"]}

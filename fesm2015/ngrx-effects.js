@@ -364,7 +364,7 @@ class Actions extends Observable {
     }
 }
 Actions.decorators = [
-    { type: Injectable },
+    { type: Injectable }
 ];
 /** @nocollapse */
 Actions.ctorParameters = () => [
@@ -597,7 +597,7 @@ class EffectSources extends Subject {
     }
 }
 EffectSources.decorators = [
-    { type: Injectable },
+    { type: Injectable }
 ];
 /** @nocollapse */
 EffectSources.ctorParameters = () => [
@@ -682,7 +682,7 @@ class EffectsRunner {
     }
 }
 EffectsRunner.decorators = [
-    { type: Injectable },
+    { type: Injectable }
 ];
 /** @nocollapse */
 EffectsRunner.ctorParameters = () => [
@@ -745,7 +745,7 @@ class EffectsRootModule {
     }
 }
 EffectsRootModule.decorators = [
-    { type: NgModule, args: [{},] },
+    { type: NgModule, args: [{},] }
 ];
 /** @nocollapse */
 EffectsRootModule.ctorParameters = () => [
@@ -790,7 +790,7 @@ class EffectsFeatureModule {
     }
 }
 EffectsFeatureModule.decorators = [
-    { type: NgModule, args: [{},] },
+    { type: NgModule, args: [{},] }
 ];
 /** @nocollapse */
 EffectsFeatureModule.ctorParameters = () => [
@@ -874,7 +874,7 @@ class EffectsModule {
     }
 }
 EffectsModule.decorators = [
-    { type: NgModule, args: [{},] },
+    { type: NgModule, args: [{},] }
 ];
 /**
  * @param {?} injector
