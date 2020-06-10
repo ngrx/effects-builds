@@ -113,13 +113,13 @@ function getCreateEffectMetadata(instance) {
      * @param {?} propertyName
      * @return {?}
      */
-    propertyName => instance[propertyName] &&
+    (propertyName) => instance[propertyName] &&
         instance[propertyName].hasOwnProperty(CREATE_EFFECT_METADATA_KEY)))
         .map((/**
      * @param {?} propertyName
      * @return {?}
      */
-    propertyName => {
+    (propertyName) => {
         /** @type {?} */
         const metaData = ((/** @type {?} */ (instance[propertyName])))[CREATE_EFFECT_METADATA_KEY];
         return Object.assign({ propertyName }, metaData);
@@ -321,7 +321,7 @@ function defaultEffectsErrorHandler(observable$, errorHandler, retryAttemptLeft 
      * @param {?} error
      * @return {?}
      */
-    error => {
+    (error) => {
         if (errorHandler)
             errorHandler.handleError(error);
         if (retryAttemptLeft <= 1) {
@@ -383,7 +383,7 @@ function ofType(...allowedTypes) {
      * @param {?} typeOrActionCreator
      * @return {?}
      */
-    typeOrActionCreator => {
+    (typeOrActionCreator) => {
         if (typeof typeOrActionCreator === 'string') {
             // Comparing the string to type
             return typeOrActionCreator === action.type;
@@ -558,25 +558,25 @@ class EffectSources extends Subject {
          * @param {?} source$
          * @return {?}
          */
-        source$ => {
+        (source$) => {
             return source$.pipe(groupBy(effectsInstance));
         })), mergeMap((/**
          * @param {?} source$
          * @return {?}
          */
-        source$ => {
+        (source$) => {
             /** @type {?} */
             const effect$ = source$.pipe(exhaustMap((/**
              * @param {?} sourceInstance
              * @return {?}
              */
-            sourceInstance => {
+            (sourceInstance) => {
                 return resolveEffectSource(this.errorHandler, this.effectsErrorHandler)(sourceInstance);
             })), map((/**
              * @param {?} output
              * @return {?}
              */
-            output => {
+            (output) => {
                 reportInvalidActions(output, this.errorHandler);
                 return output.notification;
             })), filter((/**
@@ -591,7 +591,7 @@ class EffectSources extends Subject {
              * @param {?} instance
              * @return {?}
              */
-            instance => instance.ngrxOnInitEffects())));
+            (instance) => instance.ngrxOnInitEffects())));
             return merge(effect$, init$);
         })));
     }
@@ -636,7 +636,7 @@ function resolveEffectSource(errorHandler, effectsErrorHandler) {
      * @param {?} sourceInstance
      * @return {?}
      */
-    sourceInstance => {
+    (sourceInstance) => {
         /** @type {?} */
         const mergedEffects$ = mergeEffects(sourceInstance, errorHandler, effectsErrorHandler);
         if (isOnRunEffects(sourceInstance)) {
@@ -733,7 +733,7 @@ class EffectsRootModule {
          * @param {?} effectSourceInstance
          * @return {?}
          */
-        effectSourceInstance => sources.addEffects(effectSourceInstance)));
+        (effectSourceInstance) => sources.addEffects(effectSourceInstance)));
         store.dispatch({ type: ROOT_EFFECTS_INIT });
     }
     /**
@@ -782,11 +782,11 @@ class EffectsFeatureModule {
          * @param {?} group
          * @return {?}
          */
-        group => group.forEach((/**
+        (group) => group.forEach((/**
          * @param {?} effectSourceInstance
          * @return {?}
          */
-        effectSourceInstance => root.addEffects(effectSourceInstance)))));
+        (effectSourceInstance) => root.addEffects(effectSourceInstance)))));
     }
 }
 EffectsFeatureModule.decorators = [
@@ -903,7 +903,7 @@ function createEffectInstances(injector, effects) {
      * @param {?} effect
      * @return {?}
      */
-    effect => injector.get(effect)));
+    (effect) => injector.get(effect)));
 }
 /**
  * @param {?} runner
@@ -961,7 +961,7 @@ configOrProject, errorFn) {
      * @param {?} source
      * @return {?}
      */
-    source => defer((/**
+    (source) => defer((/**
      * @return {?}
      */
     () => {

@@ -66,7 +66,9 @@ function visitEffectDecorator(node, visitor) {
         node.expression.expression.text === 'Effect') {
         visitor(node);
     }
-    ts.forEachChild(node, function (childNode) { return visitEffectDecorator(childNode, visitor); });
+    ts.forEachChild(node, function (childNode) {
+        return visitEffectDecorator(childNode, visitor);
+    });
 }
 function visitCreateEffectFunctionCreator(node, visitor) {
     if (ts.isCallExpression(node) &&
