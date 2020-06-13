@@ -16,10 +16,9 @@
     function provideMockActions(factoryOrSource) {
         return {
             provide: effects.Actions,
-            useFactory: (/**
+            useFactory: ( /**
              * @return {?}
-             */
-            function () {
+             */function () {
                 if (typeof factoryOrSource === 'function') {
                     return new effects.Actions(rxjs.defer(factoryOrSource));
                 }
@@ -27,6 +26,18 @@
             }),
         };
     }
+
+    /**
+     * @fileoverview added by tsickle
+     * Generated from: public_api.ts
+     * @suppress {checkTypes,constantProperty,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
+     */
+
+    /**
+     * @fileoverview added by tsickle
+     * Generated from: ngrx-effects-testing.ts
+     * @suppress {checkTypes,constantProperty,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
+     */
 
     exports.provideMockActions = provideMockActions;
 

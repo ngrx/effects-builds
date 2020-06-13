@@ -40,15 +40,13 @@
   },
   "sideEffects": false,
   "main": "bundles/ngrx-effects.umd.js",
-  "module": "fesm5/ngrx-effects.js",
+  "module": "fesm2015/ngrx-effects.js",
   "es2015": "fesm2015/ngrx-effects.js",
-  "esm5": "esm5/ngrx-effects.js",
   "esm2015": "esm2015/ngrx-effects.js",
-  "fesm5": "fesm5/ngrx-effects.js",
   "fesm2015": "fesm2015/ngrx-effects.js",
   "typings": "ngrx-effects.d.ts",
   "metadata": "ngrx-effects.metadata.json",
   "dependencies": {
-    "tslib": "^1.10.0"
+    "tslib": "^2.0.0"
   }
 }

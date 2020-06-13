@@ -52,17 +52,11 @@
         EffectMetadata.prototype.propertyName;
     }
 
-    var __assign = (this && this.__assign) || function () {
-        __assign = Object.assign || function(t) {
-            for (var s, i = 1, n = arguments.length; i < n; i++) {
-                s = arguments[i];
-                for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                    t[p] = s[p];
-            }
-            return t;
-        };
-        return __assign.apply(this, arguments);
-    };
+    /**
+     * @fileoverview added by tsickle
+     * Generated from: src/effect_creator.ts
+     * @suppress {checkTypes,constantProperty,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
+     */
     /**
      * \@description
      * Creates an effect from an `Observable` and an `EffectConfig`.
@@ -100,11 +94,11 @@
         /** @type {?} */
         var effect = source();
         /** @type {?} */
-        var value = __assign(__assign({}, DEFAULT_EFFECT_CONFIG), config);
+        var value = Object.assign(Object.assign({}, DEFAULT_EFFECT_CONFIG), config);
         Object.defineProperty(effect, CREATE_EFFECT_METADATA_KEY, {
             value: value,
         });
-        return (/** @type {?} */ (effect));
+        return ( /** @type {?} */(effect));
     }
     /**
      * @template T
@@ -113,25 +107,21 @@
      */
     function getCreateEffectMetadata(instance) {
         /** @type {?} */
-        var propertyNames = (/** @type {?} */ (Object.getOwnPropertyNames(instance)));
+        var propertyNames = ( /** @type {?} */(Object.getOwnPropertyNames(instance)));
         /** @type {?} */
         var metadata = propertyNames
-            .filter((/**
-         * @param {?} propertyName
-         * @return {?}
-         */
-        function (propertyName) {
-            return instance[propertyName] &&
-                instance[propertyName].hasOwnProperty(CREATE_EFFECT_METADATA_KEY);
-        }))
-            .map((/**
-         * @param {?} propertyName
-         * @return {?}
-         */
-        function (propertyName) {
+            .filter(( /**
+     * @param {?} propertyName
+     * @return {?}
+     */function (propertyName) { return instance[propertyName] &&
+            instance[propertyName].hasOwnProperty(CREATE_EFFECT_METADATA_KEY); }))
+            .map(( /**
+     * @param {?} propertyName
+     * @return {?}
+     */function (propertyName) {
             /** @type {?} */
-            var metaData = ((/** @type {?} */ (instance[propertyName])))[CREATE_EFFECT_METADATA_KEY];
-            return __assign({ propertyName: propertyName }, metaData);
+            var metaData = (( /** @type {?} */(instance[propertyName])))[CREATE_EFFECT_METADATA_KEY];
+            return Object.assign({ propertyName: propertyName }, metaData);
         }));
         return metadata;
     }
@@ -150,17 +140,11 @@
         return Object.getPrototypeOf(instance);
     }
 
-    var __assign$1 = (this && this.__assign) || function () {
-        __assign$1 = Object.assign || function(t) {
-            for (var s, i = 1, n = arguments.length; i < n; i++) {
-                s = arguments[i];
-                for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                    t[p] = s[p];
-            }
-            return t;
-        };
-        return __assign$1.apply(this, arguments);
-    };
+    /**
+     * @fileoverview added by tsickle
+     * Generated from: src/effect_decorator.ts
+     * @suppress {checkTypes,constantProperty,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
+     */
     /** @type {?} */
     var METADATA_KEY = '__@ngrx/effects__';
     /**
@@ -169,16 +153,16 @@
      */
     function Effect(config) {
         if (config === void 0) { config = {}; }
-        return (/**
+        return ( /**
          * @template T, K
          * @param {?} target
          * @param {?} propertyName
          * @return {?}
-         */
-        function (target, propertyName) {
+         */function (target, propertyName) {
             /** @type {?} */
-            var metadata = __assign$1(__assign$1(__assign$1({}, DEFAULT_EFFECT_CONFIG), config), { // Overrides any defaults if values are provided
-                propertyName: propertyName });
+            var metadata = Object.assign(Object.assign(Object.assign({}, DEFAULT_EFFECT_CONFIG), config), {
+                propertyName: propertyName
+            });
             addEffectMetadataEntry(target, metadata);
         });
     }
@@ -241,12 +225,11 @@
      * @return {?}
      */
     function getEffectsMetadata(instance) {
-        return getSourceMetadata(instance).reduce((/**
+        return getSourceMetadata(instance).reduce(( /**
          * @param {?} acc
          * @param {?} __1
          * @return {?}
-         */
-        function (acc, _a) {
+         */function (acc, _a) {
             var propertyName = _a.propertyName, dispatch = _a.dispatch, useEffectsErrorHandler = _a.useEffectsErrorHandler;
             acc[propertyName] = { dispatch: dispatch, useEffectsErrorHandler: useEffectsErrorHandler };
             return acc;
@@ -263,34 +246,305 @@
             getEffectDecoratorMetadata,
             getCreateEffectMetadata,
         ];
-        return effects.reduce((/**
+        return effects.reduce(( /**
          * @param {?} sources
          * @param {?} source
          * @return {?}
-         */
-        function (sources, source) { return sources.concat(source(instance)); }), []);
+         */function (sources, source) { return sources.concat(source(instance)); }), []);
     }
 
-    var __read = (this && this.__read) || function (o, n) {
+    /*! *****************************************************************************
+    Copyright (c) Microsoft Corporation.
+
+    Permission to use, copy, modify, and/or distribute this software for any
+    purpose with or without fee is hereby granted.
+
+    THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+    REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+    AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+    INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+    LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+    OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+    PERFORMANCE OF THIS SOFTWARE.
+    ***************************************************************************** */
+    /* global Reflect, Promise */
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b)
+                if (b.hasOwnProperty(p))
+                    d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    function __extends(d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    }
+    var __assign = function () {
+        __assign = Object.assign || function __assign(t) {
+            for (var s, i = 1, n = arguments.length; i < n; i++) {
+                s = arguments[i];
+                for (var p in s)
+                    if (Object.prototype.hasOwnProperty.call(s, p))
+                        t[p] = s[p];
+            }
+            return t;
+        };
+        return __assign.apply(this, arguments);
+    };
+    function __rest(s, e) {
+        var t = {};
+        for (var p in s)
+            if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+                t[p] = s[p];
+        if (s != null && typeof Object.getOwnPropertySymbols === "function")
+            for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+                if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                    t[p[i]] = s[p[i]];
+            }
+        return t;
+    }
+    function __decorate(decorators, target, key, desc) {
+        var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+        if (typeof Reflect === "object" && typeof Reflect.decorate === "function")
+            r = Reflect.decorate(decorators, target, key, desc);
+        else
+            for (var i = decorators.length - 1; i >= 0; i--)
+                if (d = decorators[i])
+                    r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+        return c > 3 && r && Object.defineProperty(target, key, r), r;
+    }
+    function __param(paramIndex, decorator) {
+        return function (target, key) { decorator(target, key, paramIndex); };
+    }
+    function __metadata(metadataKey, metadataValue) {
+        if (typeof Reflect === "object" && typeof Reflect.metadata === "function")
+            return Reflect.metadata(metadataKey, metadataValue);
+    }
+    function __awaiter(thisArg, _arguments, P, generator) {
+        function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+        return new (P || (P = Promise))(function (resolve, reject) {
+            function fulfilled(value) { try {
+                step(generator.next(value));
+            }
+            catch (e) {
+                reject(e);
+            } }
+            function rejected(value) { try {
+                step(generator["throw"](value));
+            }
+            catch (e) {
+                reject(e);
+            } }
+            function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+            step((generator = generator.apply(thisArg, _arguments || [])).next());
+        });
+    }
+    function __generator(thisArg, body) {
+        var _ = { label: 0, sent: function () { if (t[0] & 1)
+                throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+        return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function () { return this; }), g;
+        function verb(n) { return function (v) { return step([n, v]); }; }
+        function step(op) {
+            if (f)
+                throw new TypeError("Generator is already executing.");
+            while (_)
+                try {
+                    if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done)
+                        return t;
+                    if (y = 0, t)
+                        op = [op[0] & 2, t.value];
+                    switch (op[0]) {
+                        case 0:
+                        case 1:
+                            t = op;
+                            break;
+                        case 4:
+                            _.label++;
+                            return { value: op[1], done: false };
+                        case 5:
+                            _.label++;
+                            y = op[1];
+                            op = [0];
+                            continue;
+                        case 7:
+                            op = _.ops.pop();
+                            _.trys.pop();
+                            continue;
+                        default:
+                            if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) {
+                                _ = 0;
+                                continue;
+                            }
+                            if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) {
+                                _.label = op[1];
+                                break;
+                            }
+                            if (op[0] === 6 && _.label < t[1]) {
+                                _.label = t[1];
+                                t = op;
+                                break;
+                            }
+                            if (t && _.label < t[2]) {
+                                _.label = t[2];
+                                _.ops.push(op);
+                                break;
+                            }
+                            if (t[2])
+                                _.ops.pop();
+                            _.trys.pop();
+                            continue;
+                    }
+                    op = body.call(thisArg, _);
+                }
+                catch (e) {
+                    op = [6, e];
+                    y = 0;
+                }
+                finally {
+                    f = t = 0;
+                }
+            if (op[0] & 5)
+                throw op[1];
+            return { value: op[0] ? op[1] : void 0, done: true };
+        }
+    }
+    function __createBinding(o, m, k, k2) {
+        if (k2 === undefined)
+            k2 = k;
+        o[k2] = m[k];
+    }
+    function __exportStar(m, exports) {
+        for (var p in m)
+            if (p !== "default" && !exports.hasOwnProperty(p))
+                exports[p] = m[p];
+    }
+    function __values(o) {
+        var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
+        if (m)
+            return m.call(o);
+        if (o && typeof o.length === "number")
+            return {
+                next: function () {
+                    if (o && i >= o.length)
+                        o = void 0;
+                    return { value: o && o[i++], done: !o };
+                }
+            };
+        throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
+    }
+    function __read(o, n) {
         var m = typeof Symbol === "function" && o[Symbol.iterator];
-        if (!m) return o;
+        if (!m)
+            return o;
         var i = m.call(o), r, ar = [], e;
         try {
-            while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
+            while ((n === void 0 || n-- > 0) && !(r = i.next()).done)
+                ar.push(r.value);
         }
-        catch (error) { e = { error: error }; }
+        catch (error) {
+            e = { error: error };
+        }
         finally {
             try {
-                if (r && !r.done && (m = i["return"])) m.call(i);
+                if (r && !r.done && (m = i["return"]))
+                    m.call(i);
             }
-            finally { if (e) throw e.error; }
+            finally {
+                if (e)
+                    throw e.error;
+            }
         }
         return ar;
-    };
-    var __spread = (this && this.__spread) || function () {
-        for (var ar = [], i = 0; i < arguments.length; i++) ar = ar.concat(__read(arguments[i]));
+    }
+    function __spread() {
+        for (var ar = [], i = 0; i < arguments.length; i++)
+            ar = ar.concat(__read(arguments[i]));
         return ar;
-    };
+    }
+    function __spreadArrays() {
+        for (var s = 0, i = 0, il = arguments.length; i < il; i++)
+            s += arguments[i].length;
+        for (var r = Array(s), k = 0, i = 0; i < il; i++)
+            for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
+                r[k] = a[j];
+        return r;
+    }
+    ;
+    function __await(v) {
+        return this instanceof __await ? (this.v = v, this) : new __await(v);
+    }
+    function __asyncGenerator(thisArg, _arguments, generator) {
+        if (!Symbol.asyncIterator)
+            throw new TypeError("Symbol.asyncIterator is not defined.");
+        var g = generator.apply(thisArg, _arguments || []), i, q = [];
+        return i = {}, verb("next"), verb("throw"), verb("return"), i[Symbol.asyncIterator] = function () { return this; }, i;
+        function verb(n) { if (g[n])
+            i[n] = function (v) { return new Promise(function (a, b) { q.push([n, v, a, b]) > 1 || resume(n, v); }); }; }
+        function resume(n, v) { try {
+            step(g[n](v));
+        }
+        catch (e) {
+            settle(q[0][3], e);
+        } }
+        function step(r) { r.value instanceof __await ? Promise.resolve(r.value.v).then(fulfill, reject) : settle(q[0][2], r); }
+        function fulfill(value) { resume("next", value); }
+        function reject(value) { resume("throw", value); }
+        function settle(f, v) { if (f(v), q.shift(), q.length)
+            resume(q[0][0], q[0][1]); }
+    }
+    function __asyncDelegator(o) {
+        var i, p;
+        return i = {}, verb("next"), verb("throw", function (e) { throw e; }), verb("return"), i[Symbol.iterator] = function () { return this; }, i;
+        function verb(n, f) { i[n] = o[n] ? function (v) { return (p = !p) ? { value: __await(o[n](v)), done: n === "return" } : f ? f(v) : v; } : f; }
+    }
+    function __asyncValues(o) {
+        if (!Symbol.asyncIterator)
+            throw new TypeError("Symbol.asyncIterator is not defined.");
+        var m = o[Symbol.asyncIterator], i;
+        return m ? m.call(o) : (o = typeof __values === "function" ? __values(o) : o[Symbol.iterator](), i = {}, verb("next"), verb("throw"), verb("return"), i[Symbol.asyncIterator] = function () { return this; }, i);
+        function verb(n) { i[n] = o[n] && function (v) { return new Promise(function (resolve, reject) { v = o[n](v), settle(resolve, reject, v.done, v.value); }); }; }
+        function settle(resolve, reject, d, v) { Promise.resolve(v).then(function (v) { resolve({ value: v, done: d }); }, reject); }
+    }
+    function __makeTemplateObject(cooked, raw) {
+        if (Object.defineProperty) {
+            Object.defineProperty(cooked, "raw", { value: raw });
+        }
+        else {
+            cooked.raw = raw;
+        }
+        return cooked;
+    }
+    ;
+    function __importStar(mod) {
+        if (mod && mod.__esModule)
+            return mod;
+        var result = {};
+        if (mod != null)
+            for (var k in mod)
+                if (Object.hasOwnProperty.call(mod, k))
+                    result[k] = mod[k];
+        result.default = mod;
+        return result;
+    }
+    function __importDefault(mod) {
+        return (mod && mod.__esModule) ? mod : { default: mod };
+    }
+    function __classPrivateFieldGet(receiver, privateMap) {
+        if (!privateMap.has(receiver)) {
+            throw new TypeError("attempted to get private field on non-instance");
+        }
+        return privateMap.get(receiver);
+    }
+    function __classPrivateFieldSet(receiver, privateMap, value) {
+        if (!privateMap.has(receiver)) {
+            throw new TypeError("attempted to set private field on non-instance");
+        }
+        privateMap.set(receiver, value);
+        return value;
+    }
+
     /**
      * @param {?} sourceInstance
      * @param {?} globalErrorHandler
@@ -301,11 +555,10 @@
         /** @type {?} */
         var sourceName = getSourceForInstance(sourceInstance).constructor.name;
         /** @type {?} */
-        var observables$ = getSourceMetadata(sourceInstance).map((/**
+        var observables$ = getSourceMetadata(sourceInstance).map(( /**
          * @param {?} __0
          * @return {?}
-         */
-        function (_a) {
+         */function (_a) {
             var propertyName = _a.propertyName, dispatch = _a.dispatch, useEffectsErrorHandler = _a.useEffectsErrorHandler;
             /** @type {?} */
             var observable$ = typeof sourceInstance[propertyName] === 'function'
@@ -320,11 +573,10 @@
             }
             /** @type {?} */
             var materialized$ = effectAction$.pipe(operators.materialize());
-            return materialized$.pipe(operators.map((/**
+            return materialized$.pipe(operators.map(( /**
              * @param {?} notification
              * @return {?}
-             */
-            function (notification) { return ({
+             */function (notification) { return ({
                 effect: sourceInstance[propertyName],
                 notification: notification,
                 propertyName: propertyName,
@@ -351,11 +603,10 @@
      */
     function defaultEffectsErrorHandler(observable$, errorHandler, retryAttemptLeft) {
         if (retryAttemptLeft === void 0) { retryAttemptLeft = MAX_NUMBER_OF_RETRY_ATTEMPTS; }
-        return observable$.pipe(operators.catchError((/**
+        return observable$.pipe(operators.catchError(( /**
          * @param {?} error
          * @return {?}
-         */
-        function (error) {
+         */function (error) {
             if (errorHandler)
                 errorHandler.handleError(error);
             if (retryAttemptLeft <= 1) {
@@ -366,24 +617,14 @@
         })));
     }
 
-    var __extends = (this && this.__extends) || (function () {
-        var extendStatics = function (d, b) {
-            extendStatics = Object.setPrototypeOf ||
-                ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-                function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-            return extendStatics(d, b);
-        };
-        return function (d, b) {
-            extendStatics(d, b);
-            function __() { this.constructor = d; }
-            d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-        };
-    })();
     /**
      * @template V
      */
     var Actions = /** @class */ (function (_super) {
         __extends(Actions, _super);
+        /**
+         * @param {?=} source
+         */
         function Actions(source) {
             var _this = _super.call(this) || this;
             if (source) {
@@ -396,27 +637,22 @@
          * @param {?} operator
          * @return {?}
          */
-        Actions.prototype.lift = /**
-         * @template R
-         * @param {?} operator
-         * @return {?}
-         */
-        function (operator) {
+        Actions.prototype.lift = function (operator) {
             /** @type {?} */
             var observable = new Actions();
             observable.source = this;
             observable.operator = operator;
             return observable;
         };
-        Actions.decorators = [
-            { type: core.Injectable }
-        ];
-        /** @nocollapse */
-        Actions.ctorParameters = function () { return [
-            { type: rxjs.Observable, decorators: [{ type: core.Inject, args: [store.ScannedActionsSubject,] }] }
-        ]; };
         return Actions;
     }(rxjs.Observable));
+    Actions.decorators = [
+        { type: core.Injectable }
+    ];
+    /** @nocollapse */
+    Actions.ctorParameters = function () { return [
+        { type: rxjs.Observable, decorators: [{ type: core.Inject, args: [store.ScannedActionsSubject,] }] }
+    ]; };
     /**
      * @param {...?} allowedTypes
      * @return {?}
@@ -426,24 +662,20 @@
         for (var _i = 0; _i < arguments.length; _i++) {
             allowedTypes[_i] = arguments[_i];
         }
-        return operators.filter((/**
+        return operators.filter(( /**
          * @param {?} action
          * @return {?}
-         */
-        function (action) {
-            return allowedTypes.some((/**
-             * @param {?} typeOrActionCreator
-             * @return {?}
-             */
-            function (typeOrActionCreator) {
-                if (typeof typeOrActionCreator === 'string') {
-                    // Comparing the string to type
-                    return typeOrActionCreator === action.type;
-                }
-                // We are filtering by ActionCreator
-                return typeOrActionCreator.type === action.type;
-            }));
-        }));
+         */function (action) { return allowedTypes.some(( /**
+         * @param {?} typeOrActionCreator
+         * @return {?}
+         */function (typeOrActionCreator) {
+            if (typeof typeOrActionCreator === 'string') {
+                // Comparing the string to type
+                return typeOrActionCreator === action.type;
+            }
+            // We are filtering by ActionCreator
+            return typeOrActionCreator.type === action.type;
+        })); }));
     }
 
     /**
@@ -497,8 +729,8 @@
      * @param {?} __0
      * @return {?}
      */
-    function getEffectName(_a) {
-        var propertyName = _a.propertyName, sourceInstance = _a.sourceInstance, sourceName = _a.sourceName;
+    function getEffectName(_b) {
+        var propertyName = _b.propertyName, sourceInstance = _b.sourceInstance, sourceName = _b.sourceName;
         /** @type {?} */
         var isMethod = typeof sourceInstance[propertyName] === 'function';
         return "\"" + sourceName + "." + String(propertyName) + (isMethod ? '()' : '') + "\"";
@@ -581,21 +813,12 @@
     /** @type {?} */
     var EFFECTS_ERROR_HANDLER = new core.InjectionToken('ngrx/effects: Effects Error Handler');
 
-    var __extends$1 = (this && this.__extends) || (function () {
-        var extendStatics = function (d, b) {
-            extendStatics = Object.setPrototypeOf ||
-                ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-                function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-            return extendStatics(d, b);
-        };
-        return function (d, b) {
-            extendStatics(d, b);
-            function __() { this.constructor = d; }
-            d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-        };
-    })();
     var EffectSources = /** @class */ (function (_super) {
-        __extends$1(EffectSources, _super);
+        __extends(EffectSources, _super);
+        /**
+         * @param {?} errorHandler
+         * @param {?} effectsErrorHandler
+         */
         function EffectSources(errorHandler, effectsErrorHandler) {
             var _this = _super.call(this) || this;
             _this.errorHandler = errorHandler;
@@ -606,79 +829,60 @@
          * @param {?} effectSourceInstance
          * @return {?}
          */
-        EffectSources.prototype.addEffects = /**
-         * @param {?} effectSourceInstance
-         * @return {?}
-         */
-        function (effectSourceInstance) {
+        EffectSources.prototype.addEffects = function (effectSourceInstance) {
             this.next(effectSourceInstance);
         };
         /**
-         * @internal
-         */
-        /**
          * \@internal
          * @return {?}
          */
-        EffectSources.prototype.toActions = /**
-         * \@internal
-         * @return {?}
-         */
-        function () {
+        EffectSources.prototype.toActions = function () {
             var _this = this;
-            return this.pipe(operators.groupBy(getSourceForInstance), operators.mergeMap((/**
+            return this.pipe(operators.groupBy(getSourceForInstance), operators.mergeMap(( /**
              * @param {?} source$
              * @return {?}
-             */
-            function (source$) {
+             */function (source$) {
                 return source$.pipe(operators.groupBy(effectsInstance));
-            })), operators.mergeMap((/**
+            })), operators.mergeMap(( /**
              * @param {?} source$
              * @return {?}
-             */
-            function (source$) {
+             */function (source$) {
                 /** @type {?} */
-                var effect$ = source$.pipe(operators.exhaustMap((/**
+                var effect$ = source$.pipe(operators.exhaustMap(( /**
                  * @param {?} sourceInstance
                  * @return {?}
-                 */
-                function (sourceInstance) {
+                 */function (sourceInstance) {
                     return resolveEffectSource(_this.errorHandler, _this.effectsErrorHandler)(sourceInstance);
-                })), operators.map((/**
+                })), operators.map(( /**
                  * @param {?} output
                  * @return {?}
-                 */
-                function (output) {
+                 */function (output) {
                     reportInvalidActions(output, _this.errorHandler);
                     return output.notification;
-                })), operators.filter((/**
+                })), operators.filter(( /**
                  * @param {?} notification
                  * @return {?}
-                 */
-                function (notification) {
-                    return notification.kind === 'N';
-                })), operators.dematerialize());
+                 */function (notification) { return notification.kind === 'N'; })), operators.dematerialize());
                 // start the stream with an INIT action
                 // do this only for the first Effect instance
                 /** @type {?} */
-                var init$ = source$.pipe(operators.take(1), operators.filter(isOnInitEffects), operators.map((/**
+                var init$ = source$.pipe(operators.take(1), operators.filter(isOnInitEffects), operators.map(( /**
                  * @param {?} instance
                  * @return {?}
-                 */
-                function (instance) { return instance.ngrxOnInitEffects(); })));
+                 */function (instance) { return instance.ngrxOnInitEffects(); })));
                 return rxjs.merge(effect$, init$);
             })));
         };
-        EffectSources.decorators = [
-            { type: core.Injectable }
-        ];
-        /** @nocollapse */
-        EffectSources.ctorParameters = function () { return [
-            { type: core.ErrorHandler },
-            { type: undefined, decorators: [{ type: core.Inject, args: [EFFECTS_ERROR_HANDLER,] }] }
-        ]; };
         return EffectSources;
     }(rxjs.Subject));
+    EffectSources.decorators = [
+        { type: core.Injectable }
+    ];
+    /** @nocollapse */
+    EffectSources.ctorParameters = function () { return [
+        { type: core.ErrorHandler },
+        { type: undefined, decorators: [{ type: core.Inject, args: [EFFECTS_ERROR_HANDLER,] }] }
+    ]; };
     if (false) {
         /**
          * @type {?}
@@ -707,11 +911,10 @@
      * @return {?}
      */
     function resolveEffectSource(errorHandler, effectsErrorHandler) {
-        return (/**
+        return ( /**
          * @param {?} sourceInstance
          * @return {?}
-         */
-        function (sourceInstance) {
+         */function (sourceInstance) {
             /** @type {?} */
             var mergedEffects$ = mergeEffects(sourceInstance, errorHandler, effectsErrorHandler);
             if (isOnRunEffects(sourceInstance)) {
@@ -727,6 +930,10 @@
      * @suppress {checkTypes,constantProperty,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
      */
     var EffectsRunner = /** @class */ (function () {
+        /**
+         * @param {?} effectSources
+         * @param {?} store
+         */
         function EffectsRunner(effectSources, store) {
             this.effectSources = effectSources;
             this.store = store;
@@ -735,10 +942,7 @@
         /**
          * @return {?}
          */
-        EffectsRunner.prototype.start = /**
-         * @return {?}
-         */
-        function () {
+        EffectsRunner.prototype.start = function () {
             if (!this.effectsSubscription) {
                 this.effectsSubscription = this.effectSources
                     .toActions()
@@ -748,25 +952,22 @@
         /**
          * @return {?}
          */
-        EffectsRunner.prototype.ngOnDestroy = /**
-         * @return {?}
-         */
-        function () {
+        EffectsRunner.prototype.ngOnDestroy = function () {
             if (this.effectsSubscription) {
                 this.effectsSubscription.unsubscribe();
                 this.effectsSubscription = null;
             }
         };
-        EffectsRunner.decorators = [
-            { type: core.Injectable }
-        ];
-        /** @nocollapse */
-        EffectsRunner.ctorParameters = function () { return [
-            { type: EffectSources },
-            { type: store.Store }
-        ]; };
         return EffectsRunner;
     }());
+    EffectsRunner.decorators = [
+        { type: core.Injectable }
+    ];
+    /** @nocollapse */
+    EffectsRunner.ctorParameters = function () { return [
+        { type: EffectSources },
+        { type: store.Store }
+    ]; };
     if (false) {
         /**
          * @type {?}
@@ -795,44 +996,46 @@
     /** @type {?} */
     var rootEffectsInit = store.createAction(ROOT_EFFECTS_INIT);
     var EffectsRootModule = /** @class */ (function () {
+        /**
+         * @param {?} sources
+         * @param {?} runner
+         * @param {?} store
+         * @param {?} rootEffects
+         * @param {?} storeRootModule
+         * @param {?} storeFeatureModule
+         * @param {?} guard
+         */
         function EffectsRootModule(sources, runner, store, rootEffects, storeRootModule, storeFeatureModule, guard) {
             this.sources = sources;
             runner.start();
-            rootEffects.forEach((/**
+            rootEffects.forEach(( /**
              * @param {?} effectSourceInstance
              * @return {?}
-             */
-            function (effectSourceInstance) {
-                return sources.addEffects(effectSourceInstance);
-            }));
+             */function (effectSourceInstance) { return sources.addEffects(effectSourceInstance); }));
             store.dispatch({ type: ROOT_EFFECTS_INIT });
         }
         /**
          * @param {?} effectSourceInstance
          * @return {?}
          */
-        EffectsRootModule.prototype.addEffects = /**
-         * @param {?} effectSourceInstance
-         * @return {?}
-         */
-        function (effectSourceInstance) {
+        EffectsRootModule.prototype.addEffects = function (effectSourceInstance) {
             this.sources.addEffects(effectSourceInstance);
         };
-        EffectsRootModule.decorators = [
-            { type: core.NgModule, args: [{},] }
-        ];
-        /** @nocollapse */
-        EffectsRootModule.ctorParameters = function () { return [
-            { type: EffectSources },
-            { type: EffectsRunner },
-            { type: store.Store },
-            { type: Array, decorators: [{ type: core.Inject, args: [ROOT_EFFECTS,] }] },
-            { type: store.StoreRootModule, decorators: [{ type: core.Optional }] },
-            { type: store.StoreFeatureModule, decorators: [{ type: core.Optional }] },
-            { type: undefined, decorators: [{ type: core.Optional }, { type: core.Inject, args: [_ROOT_EFFECTS_GUARD,] }] }
-        ]; };
         return EffectsRootModule;
     }());
+    EffectsRootModule.decorators = [
+        { type: core.NgModule, args: [{},] }
+    ];
+    /** @nocollapse */
+    EffectsRootModule.ctorParameters = function () { return [
+        { type: EffectSources },
+        { type: EffectsRunner },
+        { type: store.Store },
+        { type: Array, decorators: [{ type: core.Inject, args: [ROOT_EFFECTS,] }] },
+        { type: store.StoreRootModule, decorators: [{ type: core.Optional }] },
+        { type: store.StoreFeatureModule, decorators: [{ type: core.Optional }] },
+        { type: undefined, decorators: [{ type: core.Optional }, { type: core.Inject, args: [_ROOT_EFFECTS_GUARD,] }] }
+    ]; };
     if (false) {
         /**
          * @type {?}
@@ -847,65 +1050,34 @@
      * @suppress {checkTypes,constantProperty,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
      */
     var EffectsFeatureModule = /** @class */ (function () {
+        /**
+         * @param {?} root
+         * @param {?} effectSourceGroups
+         * @param {?} storeRootModule
+         * @param {?} storeFeatureModule
+         */
         function EffectsFeatureModule(root, effectSourceGroups, storeRootModule, storeFeatureModule) {
-            effectSourceGroups.forEach((/**
+            effectSourceGroups.forEach(( /**
              * @param {?} group
              * @return {?}
-             */
-            function (group) {
-                return group.forEach((/**
-                 * @param {?} effectSourceInstance
-                 * @return {?}
-                 */
-                function (effectSourceInstance) {
-                    return root.addEffects(effectSourceInstance);
-                }));
-            }));
+             */function (group) { return group.forEach(( /**
+             * @param {?} effectSourceInstance
+             * @return {?}
+             */function (effectSourceInstance) { return root.addEffects(effectSourceInstance); })); }));
         }
-        EffectsFeatureModule.decorators = [
-            { type: core.NgModule, args: [{},] }
-        ];
-        /** @nocollapse */
-        EffectsFeatureModule.ctorParameters = function () { return [
-            { type: EffectsRootModule },
-            { type: Array, decorators: [{ type: core.Inject, args: [FEATURE_EFFECTS,] }] },
-            { type: store.StoreRootModule, decorators: [{ type: core.Optional }] },
-            { type: store.StoreFeatureModule, decorators: [{ type: core.Optional }] }
-        ]; };
         return EffectsFeatureModule;
     }());
+    EffectsFeatureModule.decorators = [
+        { type: core.NgModule, args: [{},] }
+    ];
+    /** @nocollapse */
+    EffectsFeatureModule.ctorParameters = function () { return [
+        { type: EffectsRootModule },
+        { type: Array, decorators: [{ type: core.Inject, args: [FEATURE_EFFECTS,] }] },
+        { type: store.StoreRootModule, decorators: [{ type: core.Optional }] },
+        { type: store.StoreFeatureModule, decorators: [{ type: core.Optional }] }
+    ]; };
 
-    var __values = (this && this.__values) || function(o) {
-        var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
-        if (m) return m.call(o);
-        if (o && typeof o.length === "number") return {
-            next: function () {
-                if (o && i >= o.length) o = void 0;
-                return { value: o && o[i++], done: !o };
-            }
-        };
-        throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
-    };
-    var __read$1 = (this && this.__read) || function (o, n) {
-        var m = typeof Symbol === "function" && o[Symbol.iterator];
-        if (!m) return o;
-        var i = m.call(o), r, ar = [], e;
-        try {
-            while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
-        }
-        catch (error) { e = { error: error }; }
-        finally {
-            try {
-                if (r && !r.done && (m = i["return"])) m.call(i);
-            }
-            finally { if (e) throw e.error; }
-        }
-        return ar;
-    };
-    var __spread$1 = (this && this.__spread) || function () {
-        for (var ar = [], i = 0; i < arguments.length; i++) ar = ar.concat(__read$1(arguments[i]));
-        return ar;
-    };
     var EffectsModule = /** @class */ (function () {
         function EffectsModule() {
         }
@@ -913,11 +1085,7 @@
          * @param {?=} featureEffects
          * @return {?}
          */
-        EffectsModule.forFeature = /**
-         * @param {?=} featureEffects
-         * @return {?}
-         */
-        function (featureEffects) {
+        EffectsModule.forFeature = function (featureEffects) {
             if (featureEffects === void 0) { featureEffects = []; }
             return {
                 ngModule: EffectsFeatureModule,
@@ -946,11 +1114,7 @@
          * @param {?=} rootEffects
          * @return {?}
          */
-        EffectsModule.forRoot = /**
-         * @param {?=} rootEffects
-         * @return {?}
-         */
-        function (rootEffects) {
+        EffectsModule.forRoot = function (rootEffects) {
             if (rootEffects === void 0) { rootEffects = []; }
             return {
                 ngModule: EffectsRootModule,
@@ -985,11 +1149,11 @@
                 ],
             };
         };
-        EffectsModule.decorators = [
-            { type: core.NgModule, args: [{},] }
-        ];
         return EffectsModule;
     }());
+    EffectsModule.decorators = [
+        { type: core.NgModule, args: [{},] }
+    ];
     /**
      * @param {?} injector
      * @param {?} effectGroups
@@ -1003,7 +1167,7 @@
         try {
             for (var effectGroups_1 = __values(effectGroups), effectGroups_1_1 = effectGroups_1.next(); !effectGroups_1_1.done; effectGroups_1_1 = effectGroups_1.next()) {
                 var effectGroup = effectGroups_1_1.value;
-                mergedEffects.push.apply(mergedEffects, __spread$1(effectGroup));
+                mergedEffects.push.apply(mergedEffects, __spread(effectGroup));
             }
         }
         catch (e_1_1) { e_1 = { error: e_1_1 }; }
@@ -1016,7 +1180,7 @@
         try {
             for (var userProvidedEffectGroups_1 = __values(userProvidedEffectGroups), userProvidedEffectGroups_1_1 = userProvidedEffectGroups_1.next(); !userProvidedEffectGroups_1_1.done; userProvidedEffectGroups_1_1 = userProvidedEffectGroups_1.next()) {
                 var userProvidedEffectGroup = userProvidedEffectGroups_1_1.value;
-                mergedEffects.push.apply(mergedEffects, __spread$1(userProvidedEffectGroup));
+                mergedEffects.push.apply(mergedEffects, __spread(userProvidedEffectGroup));
             }
         }
         catch (e_2_1) { e_2 = { error: e_2_1 }; }
@@ -1034,11 +1198,10 @@
      * @return {?}
      */
     function createEffectInstances(injector, effects) {
-        return effects.map((/**
+        return effects.map(( /**
          * @param {?} effect
          * @return {?}
-         */
-        function (effect) { return injector.get(effect); }));
+         */function (effect) { return injector.get(effect); }));
     }
     /**
      * @param {?} runner
@@ -1051,17 +1214,11 @@
         return 'guarded';
     }
 
-    var __assign$2 = (this && this.__assign) || function () {
-        __assign$2 = Object.assign || function(t) {
-            for (var s, i = 1, n = arguments.length; i < n; i++) {
-                s = arguments[i];
-                for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                    t[p] = s[p];
-            }
-            return t;
-        };
-        return __assign$2.apply(this, arguments);
-    };
+    /**
+     * @fileoverview added by tsickle
+     * Generated from: src/act.ts
+     * @suppress {checkTypes,constantProperty,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
+     */
     /**
      * Represents config with named paratemeters for act
      * @record
@@ -1092,78 +1249,91 @@
         var _a = typeof configOrProject === 'function'
             ? {
                 project: configOrProject,
-                error: (/** @type {?} */ (errorFn)),
+                error: ( /** @type {?} */(errorFn)),
                 operator: operators.concatMap,
                 complete: undefined,
                 unsubscribe: undefined,
             }
-            : __assign$2(__assign$2({}, configOrProject), { operator: configOrProject.operator || operators.concatMap }), project = _a.project, error = _a.error, complete = _a.complete, operator = _a.operator, unsubscribe = _a.unsubscribe;
-        return (/**
+            : Object.assign(Object.assign({}, configOrProject), { operator: configOrProject.operator || operators.concatMap }), project = _a.project, error = _a.error, complete = _a.complete, operator = _a.operator, unsubscribe = _a.unsubscribe;
+        return ( /**
          * @param {?} source
          * @return {?}
-         */
-        function (source) {
-            return rxjs.defer((/**
+         */function (source) { return rxjs.defer(( /**
+         * @return {?}
+         */function () {
+            /** @type {?} */
+            var subject = new rxjs.Subject();
+            return rxjs.merge(source.pipe(operator(( /**
+             * @param {?} input
+             * @param {?} index
              * @return {?}
-             */
-            function () {
+             */function (input, index) { return rxjs.defer(( /**
+             * @return {?}
+             */function () {
                 /** @type {?} */
-                var subject = new rxjs.Subject();
-                return rxjs.merge(source.pipe(operator((/**
-                 * @param {?} input
-                 * @param {?} index
+                var completed = false;
+                /** @type {?} */
+                var errored = false;
+                /** @type {?} */
+                var projectedCount = 0;
+                return project(input, index).pipe(operators.materialize(), operators.map(( /**
+                 * @param {?} notification
                  * @return {?}
-                 */
-                function (input, index) {
-                    return rxjs.defer((/**
-                     * @return {?}
-                     */
-                    function () {
-                        /** @type {?} */
-                        var completed = false;
-                        /** @type {?} */
-                        var errored = false;
-                        /** @type {?} */
-                        var projectedCount = 0;
-                        return project(input, index).pipe(operators.materialize(), operators.map((/**
-                         * @param {?} notification
-                         * @return {?}
-                         */
-                        function (notification) {
-                            switch (notification.kind) {
-                                case 'E':
-                                    errored = true;
-                                    return new rxjs.Notification((/** @type {?} */ (
-                                    // TODO: remove any in RxJS 6.5
-                                    'N')), error(notification.error, input));
-                                case 'C':
-                                    completed = true;
-                                    return complete
-                                        ? new rxjs.Notification((/** @type {?} */ (
-                                        // TODO: remove any in RxJS 6.5
-                                        'N')), complete(projectedCount, input))
-                                        : undefined;
-                                default:
-                                    ++projectedCount;
-                                    return notification;
-                            }
-                        })), operators.filter((/**
-                         * @param {?} n
-                         * @return {?}
-                         */
-                        function (n) { return n != null; })), operators.dematerialize(), operators.finalize((/**
-                         * @return {?}
-                         */
-                        function () {
-                            if (!completed && !errored && unsubscribe) {
-                                subject.next(unsubscribe(projectedCount, input));
-                            }
-                        })));
-                    }));
-                }))), subject);
-            }));
-        });
+                 */function (notification) {
+                    switch (notification.kind) {
+                        case 'E':
+                            errored = true;
+                            return new rxjs.Notification(( /** @type {?} */(
+                            // TODO: remove any in RxJS 6.5
+                            'N')), error(notification.error, input));
+                        case 'C':
+                            completed = true;
+                            return complete
+                                ? new rxjs.Notification(( /** @type {?} */(
+                                // TODO: remove any in RxJS 6.5
+                                'N')), complete(projectedCount, input))
+                                : undefined;
+                        default:
+                            ++projectedCount;
+                            return notification;
+                    }
+                })), operators.filter(( /**
+                 * @param {?} n
+                 * @return {?}
+                 */function (n) { return n != null; })), operators.dematerialize(), operators.finalize(( /**
+                 * @return {?}
+                 */function () {
+                    if (!completed && !errored && unsubscribe) {
+                        subject.next(unsubscribe(projectedCount, input));
+                    }
+                })));
+            })); }))), subject);
+        })); });
     }
+
+    /**
+     * @fileoverview added by tsickle
+     * Generated from: src/index.ts
+     * @suppress {checkTypes,constantProperty,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
+     */
+
+    /**
+     * @fileoverview added by tsickle
+     * Generated from: public_api.ts
+     * @suppress {checkTypes,constantProperty,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
+     */
+
+    /**
+     * @fileoverview added by tsickle
+     * Generated from: index.ts
+     * @suppress {checkTypes,constantProperty,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
+     */
+
+    /**
+     * @fileoverview added by tsickle
+     * Generated from: ngrx-effects.ts
+     * @suppress {checkTypes,constantProperty,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
+     */
 
     exports.Actions = Actions;
     exports.EFFECTS_ERROR_HANDLER = EFFECTS_ERROR_HANDLER;
