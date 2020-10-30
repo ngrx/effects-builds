@@ -808,19 +808,17 @@
     /** @type {?} */
     var _ROOT_EFFECTS_GUARD = new core.InjectionToken('@ngrx/effects Internal Root Guard');
     /** @type {?} */
-    var IMMEDIATE_EFFECTS = new core.InjectionToken('ngrx/effects: Immediate Effects');
+    var USER_PROVIDED_EFFECTS = new core.InjectionToken('@ngrx/effects User Provided Effects');
     /** @type {?} */
-    var USER_PROVIDED_EFFECTS = new core.InjectionToken('ngrx/effects: User Provided Effects');
+    var _ROOT_EFFECTS = new core.InjectionToken('@ngrx/effects Internal Root Effects');
     /** @type {?} */
-    var _ROOT_EFFECTS = new core.InjectionToken('ngrx/effects: Internal Root Effects');
+    var ROOT_EFFECTS = new core.InjectionToken('@ngrx/effects Root Effects');
     /** @type {?} */
-    var ROOT_EFFECTS = new core.InjectionToken('ngrx/effects: Root Effects');
+    var _FEATURE_EFFECTS = new core.InjectionToken('@ngrx/effects Internal Feature Effects');
     /** @type {?} */
-    var _FEATURE_EFFECTS = new core.InjectionToken('ngrx/effects: Internal Feature Effects');
+    var FEATURE_EFFECTS = new core.InjectionToken('@ngrx/effects Feature Effects');
     /** @type {?} */
-    var FEATURE_EFFECTS = new core.InjectionToken('ngrx/effects: Feature Effects');
-    /** @type {?} */
-    var EFFECTS_ERROR_HANDLER = new core.InjectionToken('ngrx/effects: Effects Error Handler');
+    var EFFECTS_ERROR_HANDLER = new core.InjectionToken('@ngrx/effects Effects Error Handler');
 
     var EffectSources = /** @class */ (function (_super) {
         __extends(EffectSources, _super);

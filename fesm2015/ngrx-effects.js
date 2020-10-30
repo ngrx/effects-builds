@@ -513,19 +513,17 @@ function isFunction(instance, functionName) {
 /** @type {?} */
 const _ROOT_EFFECTS_GUARD = new InjectionToken('@ngrx/effects Internal Root Guard');
 /** @type {?} */
-const IMMEDIATE_EFFECTS = new InjectionToken('ngrx/effects: Immediate Effects');
+const USER_PROVIDED_EFFECTS = new InjectionToken('@ngrx/effects User Provided Effects');
 /** @type {?} */
-const USER_PROVIDED_EFFECTS = new InjectionToken('ngrx/effects: User Provided Effects');
+const _ROOT_EFFECTS = new InjectionToken('@ngrx/effects Internal Root Effects');
 /** @type {?} */
-const _ROOT_EFFECTS = new InjectionToken('ngrx/effects: Internal Root Effects');
+const ROOT_EFFECTS = new InjectionToken('@ngrx/effects Root Effects');
 /** @type {?} */
-const ROOT_EFFECTS = new InjectionToken('ngrx/effects: Root Effects');
+const _FEATURE_EFFECTS = new InjectionToken('@ngrx/effects Internal Feature Effects');
 /** @type {?} */
-const _FEATURE_EFFECTS = new InjectionToken('ngrx/effects: Internal Feature Effects');
+const FEATURE_EFFECTS = new InjectionToken('@ngrx/effects Feature Effects');
 /** @type {?} */
-const FEATURE_EFFECTS = new InjectionToken('ngrx/effects: Feature Effects');
-/** @type {?} */
-const EFFECTS_ERROR_HANDLER = new InjectionToken('ngrx/effects: Effects Error Handler');
+const EFFECTS_ERROR_HANDLER = new InjectionToken('@ngrx/effects Effects Error Handler');
 
 /**
  * @fileoverview added by tsickle
