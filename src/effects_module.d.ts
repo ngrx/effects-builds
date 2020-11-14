@@ -8,4 +8,4 @@ export declare class EffectsModule {
 }
 export declare function createEffects(injector: Injector, effectGroups: Type<any>[][], userProvidedEffectGroups: Type<any>[][]): any[];
 export declare function createEffectInstances(injector: Injector, effects: Type<any>[]): any[];
-export declare function _provideForRootGuard(runner: EffectsRunner): any;
+export declare function _provideForRootGuard(runner: EffectsRunner, rootEffects: any[][]): any;

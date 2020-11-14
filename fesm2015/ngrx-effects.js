@@ -1,7 +1,7 @@
 import { compose, ScannedActionsSubject, Store, createAction, StoreRootModule, StoreFeatureModule } from '@ngrx/store';
 import { merge, Observable, Subject, defer, Notification } from 'rxjs';
 import { ignoreElements, materialize, map, catchError, filter, groupBy, mergeMap, exhaustMap, dematerialize, take, concatMap, finalize } from 'rxjs/operators';
-import { Injectable, Inject, InjectionToken, ErrorHandler, NgModule, Optional, Injector, SkipSelf } from '@angular/core';
+import { Injectable, Inject, InjectionToken, ErrorHandler, NgModule, Optional, Injector, SkipSelf, Self } from '@angular/core';
 
 /**
  * @fileoverview added by tsickle
@@ -841,11 +841,6 @@ class EffectsModule {
             ngModule: EffectsRootModule,
             providers: [
                 {
-                    provide: _ROOT_EFFECTS_GUARD,
-                    useFactory: _provideForRootGuard,
-                    deps: [[EffectsRunner, new Optional(), new SkipSelf()]],
-                },
-                {
                     provide: EFFECTS_ERROR_HANDLER,
                     useValue: defaultEffectsErrorHandler,
                 },
@@ -856,6 +851,14 @@ class EffectsModule {
                 {
                     provide: _ROOT_EFFECTS,
                     useValue: [rootEffects],
+                },
+                {
+                    provide: _ROOT_EFFECTS_GUARD,
+                    useFactory: _provideForRootGuard,
+                    deps: [
+                        [EffectsRunner, new Optional(), new SkipSelf()],
+                        [_ROOT_EFFECTS, new Self()],
+                    ],
                 },
                 {
                     provide: USER_PROVIDED_EFFECTS,
@@ -905,10 +908,14 @@ function createEffectInstances(injector, effects) {
 }
 /**
  * @param {?} runner
+ * @param {?} rootEffects
  * @return {?}
  */
-function _provideForRootGuard(runner) {
-    if (runner) {
+function _provideForRootGuard(runner, rootEffects) {
+    // check whether any effects are actually passed
+    /** @type {?} */
+    const hasEffects = !(rootEffects.length === 1 && rootEffects[0].length === 0);
+    if (hasEffects && runner) {
         throw new TypeError(`EffectsModule.forRoot() called twice. Feature modules should use EffectsModule.forFeature() instead.`);
     }
     return 'guarded';

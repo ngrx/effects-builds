@@ -1127,11 +1127,6 @@
                 ngModule: EffectsRootModule,
                 providers: [
                     {
-                        provide: _ROOT_EFFECTS_GUARD,
-                        useFactory: _provideForRootGuard,
-                        deps: [[EffectsRunner, new core.Optional(), new core.SkipSelf()]],
-                    },
-                    {
                         provide: EFFECTS_ERROR_HANDLER,
                         useValue: defaultEffectsErrorHandler,
                     },
@@ -1142,6 +1137,14 @@
                     {
                         provide: _ROOT_EFFECTS,
                         useValue: [rootEffects],
+                    },
+                    {
+                        provide: _ROOT_EFFECTS_GUARD,
+                        useFactory: _provideForRootGuard,
+                        deps: [
+                            [EffectsRunner, new core.Optional(), new core.SkipSelf()],
+                            [_ROOT_EFFECTS, new core.Self()],
+                        ],
                     },
                     {
                         provide: USER_PROVIDED_EFFECTS,
@@ -1212,10 +1215,14 @@
     }
     /**
      * @param {?} runner
+     * @param {?} rootEffects
      * @return {?}
      */
-    function _provideForRootGuard(runner) {
-        if (runner) {
+    function _provideForRootGuard(runner, rootEffects) {
+        // check whether any effects are actually passed
+        /** @type {?} */
+        var hasEffects = !(rootEffects.length === 1 && rootEffects[0].length === 0);
+        if (hasEffects && runner) {
             throw new TypeError("EffectsModule.forRoot() called twice. Feature modules should use EffectsModule.forFeature() instead.");
         }
         return 'guarded';
