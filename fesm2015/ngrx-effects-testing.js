@@ -22,7 +22,6 @@ function provideMockActions(factoryOrSource) {
             }
             return new Actions(factoryOrSource);
         }),
-        deps: [],
     };
 }
 

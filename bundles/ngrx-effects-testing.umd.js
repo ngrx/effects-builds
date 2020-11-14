@@ -24,7 +24,6 @@
                 }
                 return new effects.Actions(factoryOrSource);
             }),
-            deps: [],
         };
     }
 
