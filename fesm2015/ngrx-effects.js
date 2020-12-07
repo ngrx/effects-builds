@@ -581,7 +581,7 @@ class EffectSources extends Subject {
              * @param {?} notification
              * @return {?}
              */
-            (notification) => notification.kind === 'N')), dematerialize());
+            (notification) => notification.kind === 'N' && notification.value != null)), dematerialize());
             // start the stream with an INIT action
             // do this only for the first Effect instance
             /** @type {?} */
@@ -927,7 +927,7 @@ function _provideForRootGuard(runner, rootEffects) {
  * @suppress {checkTypes,constantProperty,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
  */
 /**
- * Represents config with named paratemeters for act
+ * Represents config with named parameters for act
  * @record
  * @template Input, OutputAction, ErrorAction, CompleteAction, UnsubscribeAction
  */
@@ -995,19 +995,15 @@ configOrProject, errorFn) {
                 switch (notification.kind) {
                     case 'E':
                         errored = true;
-                        return new Notification((/** @type {?} */ (
-                        // TODO: remove any in RxJS 6.5
-                        'N')), error(notification.error, input));
+                        return (/** @type {?} */ (new Notification('N', error(notification.error, input))));
                     case 'C':
                         completed = true;
                         return complete
-                            ? new Notification((/** @type {?} */ (
-                            // TODO: remove any in RxJS 6.5
-                            'N')), complete(projectedCount, input))
+                            ? ((/** @type {?} */ (new Notification('N', complete(projectedCount, input)))))
                             : undefined;
                     default:
                         ++projectedCount;
-                        return notification;
+                        return (/** @type {?} */ (notification));
                 }
             })), filter((/**
              * @param {?} n

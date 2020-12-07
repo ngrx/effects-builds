@@ -869,7 +869,7 @@
                 })), operators.filter(( /**
                  * @param {?} notification
                  * @return {?}
-                 */function (notification) { return notification.kind === 'N'; })), operators.dematerialize());
+                 */function (notification) { return notification.kind === 'N' && notification.value != null; })), operators.dematerialize());
                 // start the stream with an INIT action
                 // do this only for the first Effect instance
                 /** @type {?} */
@@ -1234,7 +1234,7 @@
      * @suppress {checkTypes,constantProperty,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
      */
     /**
-     * Represents config with named paratemeters for act
+     * Represents config with named parameters for act
      * @record
      * @template Input, OutputAction, ErrorAction, CompleteAction, UnsubscribeAction
      */
@@ -1297,19 +1297,15 @@
                     switch (notification.kind) {
                         case 'E':
                             errored = true;
-                            return new rxjs.Notification(( /** @type {?} */(
-                            // TODO: remove any in RxJS 6.5
-                            'N')), error(notification.error, input));
+                            return ( /** @type {?} */(new rxjs.Notification('N', error(notification.error, input))));
                         case 'C':
                             completed = true;
                             return complete
-                                ? new rxjs.Notification(( /** @type {?} */(
-                                // TODO: remove any in RxJS 6.5
-                                'N')), complete(projectedCount, input))
+                                ? (( /** @type {?} */(new rxjs.Notification('N', complete(projectedCount, input)))))
                                 : undefined;
                         default:
                             ++projectedCount;
-                            return notification;
+                            return ( /** @type {?} */(notification));
                     }
                 })), operators.filter(( /**
                  * @param {?} n

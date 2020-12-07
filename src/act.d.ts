@@ -1,6 +1,6 @@
 import { Action } from '@ngrx/store';
 import { Observable, OperatorFunction } from 'rxjs';
-/** Represents config with named paratemeters for act */
+/** Represents config with named parameters for act */
 export interface ActConfig<Input, OutputAction extends Action, ErrorAction extends Action, CompleteAction extends Action, UnsubscribeAction extends Action> {
     project: (input: Input, index: number) => Observable<OutputAction>;
     error: (error: any, input: Input) => ErrorAction;
