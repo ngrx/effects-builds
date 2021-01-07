@@ -149,6 +149,8 @@ function getSourceForInstance(instance) {
 /** @type {?} */
 const METADATA_KEY = '__@ngrx/effects__';
 /**
+ * @deprecated The Effect decorator (`\@Effect`) is deprecated in favor for the `createEffect` method.
+ * See the docs for more info {\@link https://ngrx.io/guide/migration/v11#the-effect-decorator}
  * @param {?=} config
  * @return {?}
  */
