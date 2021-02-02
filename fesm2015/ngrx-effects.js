@@ -1,6 +1,6 @@
 import { compose, ScannedActionsSubject, Store, createAction, StoreRootModule, StoreFeatureModule } from '@ngrx/store';
-import { merge, Observable, Subject, defer, Notification } from 'rxjs';
-import { ignoreElements, materialize, map, catchError, filter, groupBy, mergeMap, exhaustMap, dematerialize, take, concatMap, finalize } from 'rxjs/operators';
+import { merge, Observable, Subject, defer, Notification, pipe, of } from 'rxjs';
+import { ignoreElements, materialize, map, catchError, filter, groupBy, mergeMap, exhaustMap, dematerialize, take, concatMap, finalize, withLatestFrom } from 'rxjs/operators';
 import { Injectable, Inject, InjectionToken, ErrorHandler, NgModule, Optional, Injector, SkipSelf, Self } from '@angular/core';
 
 /**
@@ -1025,6 +1025,35 @@ configOrProject, errorFn) {
 
 /**
  * @fileoverview added by tsickle
+ * Generated from: src/concat_latest_from.ts
+ * @suppress {checkTypes,constantProperty,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
+ */
+/**
+ * 'concatLatestFrom' combines the source value
+ * and the last available value from a lazily evaluated Observable
+ * in a new array
+ * @template T, V, R
+ * @param {?} observablesFactory
+ * @return {?}
+ */
+function concatLatestFrom(observablesFactory) {
+    return pipe(concatMap((/**
+     * @param {?} value
+     * @return {?}
+     */
+    (value) => {
+        /** @type {?} */
+        const observables = observablesFactory(value);
+        /** @type {?} */
+        const observablesAsArray = Array.isArray(observables)
+            ? observables
+            : [observables];
+        return (/** @type {?} */ (of(value).pipe(withLatestFrom(...observablesAsArray))));
+    })));
+}
+
+/**
+ * @fileoverview added by tsickle
  * Generated from: src/index.ts
  * @suppress {checkTypes,constantProperty,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
  */
@@ -1047,5 +1076,5 @@ configOrProject, errorFn) {
  * @suppress {checkTypes,constantProperty,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
  */
 
-export { Actions, EFFECTS_ERROR_HANDLER, Effect, EffectSources, EffectsFeatureModule, EffectsModule, EffectsRootModule, EffectsRunner, ROOT_EFFECTS_INIT, USER_PROVIDED_EFFECTS, act, createEffect, defaultEffectsErrorHandler, getEffectsMetadata, mergeEffects, ofType, rootEffectsInit, getSourceMetadata as ɵa, createEffects as ɵb, _provideForRootGuard as ɵc, _ROOT_EFFECTS_GUARD as ɵd, _ROOT_EFFECTS as ɵe, ROOT_EFFECTS as ɵf, _FEATURE_EFFECTS as ɵg, FEATURE_EFFECTS as ɵh };
+export { Actions, EFFECTS_ERROR_HANDLER, Effect, EffectSources, EffectsFeatureModule, EffectsModule, EffectsRootModule, EffectsRunner, ROOT_EFFECTS_INIT, USER_PROVIDED_EFFECTS, act, concatLatestFrom, createEffect, defaultEffectsErrorHandler, getEffectsMetadata, mergeEffects, ofType, rootEffectsInit, getSourceMetadata as ɵa, createEffects as ɵb, _provideForRootGuard as ɵc, _ROOT_EFFECTS_GUARD as ɵd, _ROOT_EFFECTS as ɵe, ROOT_EFFECTS as ɵf, _FEATURE_EFFECTS as ɵg, FEATURE_EFFECTS as ɵh };
 //# sourceMappingURL=ngrx-effects.js.map

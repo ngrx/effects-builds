@@ -1324,6 +1324,29 @@
     }
 
     /**
+     * 'concatLatestFrom' combines the source value
+     * and the last available value from a lazily evaluated Observable
+     * in a new array
+     * @template T, V, R
+     * @param {?} observablesFactory
+     * @return {?}
+     */
+    function concatLatestFrom(observablesFactory) {
+        return rxjs.pipe(operators.concatMap(( /**
+         * @param {?} value
+         * @return {?}
+         */function (value) {
+            /** @type {?} */
+            var observables = observablesFactory(value);
+            /** @type {?} */
+            var observablesAsArray = Array.isArray(observables)
+                ? observables
+                : [observables];
+            return ( /** @type {?} */(rxjs.of(value).pipe(operators.withLatestFrom.apply(void 0, __spread(observablesAsArray)))));
+        })));
+    }
+
+    /**
      * @fileoverview added by tsickle
      * Generated from: src/index.ts
      * @suppress {checkTypes,constantProperty,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
@@ -1358,6 +1381,7 @@
     exports.ROOT_EFFECTS_INIT = ROOT_EFFECTS_INIT;
     exports.USER_PROVIDED_EFFECTS = USER_PROVIDED_EFFECTS;
     exports.act = act;
+    exports.concatLatestFrom = concatLatestFrom;
     exports.createEffect = createEffect;
     exports.defaultEffectsErrorHandler = defaultEffectsErrorHandler;
     exports.getEffectsMetadata = getEffectsMetadata;
