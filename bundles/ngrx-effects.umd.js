@@ -1,67 +1,24 @@
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@ngrx/store'), require('rxjs'), require('rxjs/operators'), require('@angular/core')) :
     typeof define === 'function' && define.amd ? define('@ngrx/effects', ['exports', '@ngrx/store', 'rxjs', 'rxjs/operators', '@angular/core'], factory) :
-    (global = global || self, factory((global.ngrx = global.ngrx || {}, global.ngrx.effects = {}), global.ngrx.store, global.rxjs, global.rxjs.operators, global.ng.core));
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory((global.ngrx = global.ngrx || {}, global.ngrx.effects = {}), global.ngrx.store, global.rxjs, global.rxjs.operators, global.ng.core));
 }(this, (function (exports, store, rxjs, operators, core) { 'use strict';
 
-    /**
-     * @fileoverview added by tsickle
-     * Generated from: src/models.ts
-     * @suppress {checkTypes,constantProperty,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
-     */
-    /**
-     * Configures an effect created by `createEffect`.
-     * @record
-     */
-    function EffectConfig() { }
-    if (false) {
-        /**
-         * Determines if the action emitted by the effect is dispatched to the store.
-         * If false, effect does not need to return type `Observable<Action>`.
-         * @type {?|undefined}
-         */
-        EffectConfig.prototype.dispatch;
-        /**
-         * Determines if the effect will be resubscribed to if an error occurs in the main actions stream.
-         * @type {?|undefined}
-         */
-        EffectConfig.prototype.useEffectsErrorHandler;
-    }
-    /** @type {?} */
     var DEFAULT_EFFECT_CONFIG = {
         dispatch: true,
         useEffectsErrorHandler: true,
     };
-    /** @type {?} */
     var CREATE_EFFECT_METADATA_KEY = '__@ngrx/effects_create__';
-    /**
-     * @record
-     */
-    function CreateEffectMetadata() { }
-    if (false) {
-        /* Skipping unnamed member:
-        [CREATE_EFFECT_METADATA_KEY]: EffectConfig;*/
-    }
-    /**
-     * @record
-     * @template T
-     */
-    function EffectMetadata() { }
-    if (false) {
-        /** @type {?} */
-        EffectMetadata.prototype.propertyName;
-    }
 
     /**
-     * @fileoverview added by tsickle
-     * Generated from: src/effect_creator.ts
-     * @suppress {checkTypes,constantProperty,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
-     */
-    /**
-     * \@description
+     * @description
      * Creates an effect from an `Observable` and an `EffectConfig`.
      *
-     * \@usageNotes
+     * @param source A function which returns an `Observable`.
+     * @param config A `Partial<EffectConfig>` to configure the effect.  By default, `dispatch` is true and `useEffectsErrorHandler` is true.
+     * @returns If `EffectConfig`#`dispatch` is true, returns `Observable<Action>`.  Else, returns `Observable<unknown>`.
+     *
+     * @usageNotes
      *
      * ** Mapping to a different action **
      * ```ts
@@ -84,117 +41,57 @@
      *   // FeatureActions.actionOne is not dispatched
      * );
      * ```
-     * @template C, DT, OT, R
-     * @param {?} source A function which returns an `Observable`.
-     * @param {?=} config A `Partial<EffectConfig>` to configure the effect.  By default, `dispatch` is true and `useEffectsErrorHandler` is true.
-     * @return {?} If `EffectConfig`#`dispatch` is true, returns `Observable<Action>`.  Else, returns `Observable<unknown>`.
-     *
      */
     function createEffect(source, config) {
-        /** @type {?} */
         var effect = source();
-        /** @type {?} */
         var value = Object.assign(Object.assign({}, DEFAULT_EFFECT_CONFIG), config);
         Object.defineProperty(effect, CREATE_EFFECT_METADATA_KEY, {
             value: value,
         });
-        return ( /** @type {?} */(effect));
+        return effect;
     }
-    /**
-     * @template T
-     * @param {?} instance
-     * @return {?}
-     */
     function getCreateEffectMetadata(instance) {
-        /** @type {?} */
-        var propertyNames = ( /** @type {?} */(Object.getOwnPropertyNames(instance)));
-        /** @type {?} */
+        var propertyNames = Object.getOwnPropertyNames(instance);
         var metadata = propertyNames
-            .filter(( /**
-     * @param {?} propertyName
-     * @return {?}
-     */function (propertyName) { return instance[propertyName] &&
-            instance[propertyName].hasOwnProperty(CREATE_EFFECT_METADATA_KEY); }))
-            .map(( /**
-     * @param {?} propertyName
-     * @return {?}
-     */function (propertyName) {
-            /** @type {?} */
-            var metaData = (( /** @type {?} */(instance[propertyName])))[CREATE_EFFECT_METADATA_KEY];
+            .filter(function (propertyName) { return instance[propertyName] &&
+            instance[propertyName].hasOwnProperty(CREATE_EFFECT_METADATA_KEY); })
+            .map(function (propertyName) {
+            var metaData = instance[propertyName][CREATE_EFFECT_METADATA_KEY];
             return Object.assign({ propertyName: propertyName }, metaData);
-        }));
+        });
         return metadata;
     }
 
-    /**
-     * @fileoverview added by tsickle
-     * Generated from: src/utils.ts
-     * @suppress {checkTypes,constantProperty,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
-     */
-    /**
-     * @template T
-     * @param {?} instance
-     * @return {?}
-     */
     function getSourceForInstance(instance) {
         return Object.getPrototypeOf(instance);
     }
 
-    /**
-     * @fileoverview added by tsickle
-     * Generated from: src/effect_decorator.ts
-     * @suppress {checkTypes,constantProperty,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
-     */
-    /** @type {?} */
     var METADATA_KEY = '__@ngrx/effects__';
     /**
-     * @deprecated The Effect decorator (`\@Effect`) is deprecated in favor for the `createEffect` method.
-     * See the docs for more info {\@link https://ngrx.io/guide/migration/v11#the-effect-decorator}
-     * @param {?=} config
-     * @return {?}
+     * @deprecated The Effect decorator (`@Effect`) is deprecated in favor for the `createEffect` method.
+     * See the docs for more info {@link https://ngrx.io/guide/migration/v11#the-effect-decorator}
      */
     function Effect(config) {
         if (config === void 0) { config = {}; }
-        return ( /**
-         * @template T, K
-         * @param {?} target
-         * @param {?} propertyName
-         * @return {?}
-         */function (target, propertyName) {
-            /** @type {?} */
+        return function (target, propertyName) {
             var metadata = Object.assign(Object.assign(Object.assign({}, DEFAULT_EFFECT_CONFIG), config), {
                 propertyName: propertyName
             });
             addEffectMetadataEntry(target, metadata);
-        });
+        };
     }
-    /**
-     * @template T
-     * @param {?} instance
-     * @return {?}
-     */
     function getEffectDecoratorMetadata(instance) {
-        /** @type {?} */
         var effectsDecorators = store.compose(getEffectMetadataEntries, getSourceForInstance)(instance);
         return effectsDecorators;
     }
     /**
      * Type guard to detemine whether METADATA_KEY is already present on the Class
      * constructor
-     * @template T
-     * @param {?} sourceProto
-     * @return {?}
      */
     function hasMetadataEntries(sourceProto) {
         return sourceProto.constructor.hasOwnProperty(METADATA_KEY);
     }
-    /**
-     * Add Effect Metadata to the Effect Class constructor under specific key
-     * @template T
-     * @param {?} sourceProto
-     * @param {?} metadata
-     * @return {?}
-     */
+    /** Add Effect Metadata to the Effect Class constructor under specific key */
     function addEffectMetadataEntry(sourceProto, metadata) {
         if (hasMetadataEntries(sourceProto)) {
             sourceProto.constructor[METADATA_KEY].push(metadata);
@@ -205,54 +102,25 @@
             });
         }
     }
-    /**
-     * @template T
-     * @param {?} sourceProto
-     * @return {?}
-     */
     function getEffectMetadataEntries(sourceProto) {
         return hasMetadataEntries(sourceProto)
             ? sourceProto.constructor[METADATA_KEY]
             : [];
     }
 
-    /**
-     * @fileoverview added by tsickle
-     * Generated from: src/effects_metadata.ts
-     * @suppress {checkTypes,constantProperty,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
-     */
-    /**
-     * @template T
-     * @param {?} instance
-     * @return {?}
-     */
     function getEffectsMetadata(instance) {
-        return getSourceMetadata(instance).reduce(( /**
-         * @param {?} acc
-         * @param {?} __1
-         * @return {?}
-         */function (acc, _a) {
+        return getSourceMetadata(instance).reduce(function (acc, _a) {
             var propertyName = _a.propertyName, dispatch = _a.dispatch, useEffectsErrorHandler = _a.useEffectsErrorHandler;
             acc[propertyName] = { dispatch: dispatch, useEffectsErrorHandler: useEffectsErrorHandler };
             return acc;
-        }), {});
+        }, {});
     }
-    /**
-     * @template T
-     * @param {?} instance
-     * @return {?}
-     */
     function getSourceMetadata(instance) {
-        /** @type {?} */
         var effects = [
             getEffectDecoratorMetadata,
             getCreateEffectMetadata,
         ];
-        return effects.reduce(( /**
-         * @param {?} sources
-         * @param {?} source
-         * @return {?}
-         */function (sources, source) { return sources.concat(source(instance)); }), []);
+        return effects.reduce(function (sources, source) { return sources.concat(source(instance)); }, []);
     }
 
     /*! *****************************************************************************
@@ -556,68 +424,35 @@
         return value;
     }
 
-    /**
-     * @param {?} sourceInstance
-     * @param {?} globalErrorHandler
-     * @param {?} effectsErrorHandler
-     * @return {?}
-     */
     function mergeEffects(sourceInstance, globalErrorHandler, effectsErrorHandler) {
-        /** @type {?} */
         var sourceName = getSourceForInstance(sourceInstance).constructor.name;
-        /** @type {?} */
-        var observables$ = getSourceMetadata(sourceInstance).map(( /**
-         * @param {?} __0
-         * @return {?}
-         */function (_a) {
+        var observables$ = getSourceMetadata(sourceInstance).map(function (_a) {
             var propertyName = _a.propertyName, dispatch = _a.dispatch, useEffectsErrorHandler = _a.useEffectsErrorHandler;
-            /** @type {?} */
             var observable$ = typeof sourceInstance[propertyName] === 'function'
                 ? sourceInstance[propertyName]()
                 : sourceInstance[propertyName];
-            /** @type {?} */
             var effectAction$ = useEffectsErrorHandler
                 ? effectsErrorHandler(observable$, globalErrorHandler)
                 : observable$;
             if (dispatch === false) {
                 return effectAction$.pipe(operators.ignoreElements());
             }
-            /** @type {?} */
             var materialized$ = effectAction$.pipe(operators.materialize());
-            return materialized$.pipe(operators.map(( /**
-             * @param {?} notification
-             * @return {?}
-             */function (notification) { return ({
+            return materialized$.pipe(operators.map(function (notification) { return ({
                 effect: sourceInstance[propertyName],
                 notification: notification,
                 propertyName: propertyName,
                 sourceName: sourceName,
                 sourceInstance: sourceInstance,
-            }); })));
-        }));
+            }); }));
+        });
         return rxjs.merge.apply(void 0, __spread(observables$));
     }
 
-    /**
-     * @fileoverview added by tsickle
-     * Generated from: src/effects_error_handler.ts
-     * @suppress {checkTypes,constantProperty,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
-     */
-    /** @type {?} */
     var MAX_NUMBER_OF_RETRY_ATTEMPTS = 10;
-    /**
-     * @template T
-     * @param {?} observable$
-     * @param {?} errorHandler
-     * @param {?=} retryAttemptLeft
-     * @return {?}
-     */
     function defaultEffectsErrorHandler(observable$, errorHandler, retryAttemptLeft) {
         if (retryAttemptLeft === void 0) { retryAttemptLeft = MAX_NUMBER_OF_RETRY_ATTEMPTS; }
-        return observable$.pipe(operators.catchError(( /**
-         * @param {?} error
-         * @return {?}
-         */function (error) {
+        return observable$.pipe(operators.catchError(function (error) {
             if (errorHandler)
                 errorHandler.handleError(error);
             if (retryAttemptLeft <= 1) {
@@ -625,17 +460,11 @@
             }
             // Return observable that produces this particular effect
             return defaultEffectsErrorHandler(observable$, errorHandler, retryAttemptLeft - 1);
-        })));
+        }));
     }
 
-    /**
-     * @template V
-     */
     var Actions = /** @class */ (function (_super) {
         __extends(Actions, _super);
-        /**
-         * @param {?=} source
-         */
         function Actions(source) {
             var _this = _super.call(this) || this;
             if (source) {
@@ -643,13 +472,7 @@
             }
             return _this;
         }
-        /**
-         * @template R
-         * @param {?} operator
-         * @return {?}
-         */
         Actions.prototype.lift = function (operator) {
-            /** @type {?} */
             var observable = new Actions();
             observable.source = this;
             observable.operator = operator;
@@ -664,92 +487,41 @@
     Actions.ctorParameters = function () { return [
         { type: rxjs.Observable, decorators: [{ type: core.Inject, args: [store.ScannedActionsSubject,] }] }
     ]; };
-    /**
-     * @param {...?} allowedTypes
-     * @return {?}
-     */
     function ofType() {
         var allowedTypes = [];
         for (var _i = 0; _i < arguments.length; _i++) {
             allowedTypes[_i] = arguments[_i];
         }
-        return operators.filter(( /**
-         * @param {?} action
-         * @return {?}
-         */function (action) { return allowedTypes.some(( /**
-         * @param {?} typeOrActionCreator
-         * @return {?}
-         */function (typeOrActionCreator) {
+        return operators.filter(function (action) { return allowedTypes.some(function (typeOrActionCreator) {
             if (typeof typeOrActionCreator === 'string') {
                 // Comparing the string to type
                 return typeOrActionCreator === action.type;
             }
             // We are filtering by ActionCreator
             return typeOrActionCreator.type === action.type;
-        })); }));
+        }); });
     }
 
-    /**
-     * @fileoverview added by tsickle
-     * Generated from: src/effect_notification.ts
-     * @suppress {checkTypes,constantProperty,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
-     */
-    /**
-     * @record
-     */
-    function EffectNotification() { }
-    if (false) {
-        /** @type {?} */
-        EffectNotification.prototype.effect;
-        /** @type {?} */
-        EffectNotification.prototype.propertyName;
-        /** @type {?} */
-        EffectNotification.prototype.sourceName;
-        /** @type {?} */
-        EffectNotification.prototype.sourceInstance;
-        /** @type {?} */
-        EffectNotification.prototype.notification;
-    }
-    /**
-     * @param {?} output
-     * @param {?} reporter
-     * @return {?}
-     */
     function reportInvalidActions(output, reporter) {
         if (output.notification.kind === 'N') {
-            /** @type {?} */
             var action = output.notification.value;
-            /** @type {?} */
             var isInvalidAction = !isAction(action);
             if (isInvalidAction) {
                 reporter.handleError(new Error("Effect " + getEffectName(output) + " dispatched an invalid action: " + stringify(action)));
             }
         }
     }
-    /**
-     * @param {?} action
-     * @return {?}
-     */
     function isAction(action) {
         return (typeof action !== 'function' &&
             action &&
             action.type &&
             typeof action.type === 'string');
     }
-    /**
-     * @param {?} __0
-     * @return {?}
-     */
     function getEffectName(_b) {
         var propertyName = _b.propertyName, sourceInstance = _b.sourceInstance, sourceName = _b.sourceName;
-        /** @type {?} */
         var isMethod = typeof sourceInstance[propertyName] === 'function';
         return "\"" + sourceName + "." + String(propertyName) + (isMethod ? '()' : '') + "\"";
     }
-    /**
-     * @param {?} action
-     * @return {?}
-     */
     function stringify(action) {
         try {
             return JSON.stringify(action);
@@ -759,128 +531,62 @@
         }
     }
 
-    /**
-     * @fileoverview added by tsickle
-     * Generated from: src/lifecycle_hooks.ts
-     * @suppress {checkTypes,constantProperty,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
-     */
-    /** @type {?} */
     var onIdentifyEffectsKey = 'ngrxOnIdentifyEffects';
-    /**
-     * @param {?} instance
-     * @return {?}
-     */
     function isOnIdentifyEffects(instance) {
         return isFunction(instance, onIdentifyEffectsKey);
     }
-    /** @type {?} */
     var onRunEffectsKey = 'ngrxOnRunEffects';
-    /**
-     * @param {?} instance
-     * @return {?}
-     */
     function isOnRunEffects(instance) {
         return isFunction(instance, onRunEffectsKey);
     }
-    /** @type {?} */
     var onInitEffects = 'ngrxOnInitEffects';
-    /**
-     * @param {?} instance
-     * @return {?}
-     */
     function isOnInitEffects(instance) {
         return isFunction(instance, onInitEffects);
     }
-    /**
-     * @param {?} instance
-     * @param {?} functionName
-     * @return {?}
-     */
     function isFunction(instance, functionName) {
         return (instance &&
             functionName in instance &&
             typeof instance[functionName] === 'function');
     }
 
-    /**
-     * @fileoverview added by tsickle
-     * Generated from: src/tokens.ts
-     * @suppress {checkTypes,constantProperty,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
-     */
-    /** @type {?} */
     var _ROOT_EFFECTS_GUARD = new core.InjectionToken('@ngrx/effects Internal Root Guard');
-    /** @type {?} */
     var USER_PROVIDED_EFFECTS = new core.InjectionToken('@ngrx/effects User Provided Effects');
-    /** @type {?} */
     var _ROOT_EFFECTS = new core.InjectionToken('@ngrx/effects Internal Root Effects');
-    /** @type {?} */
     var ROOT_EFFECTS = new core.InjectionToken('@ngrx/effects Root Effects');
-    /** @type {?} */
     var _FEATURE_EFFECTS = new core.InjectionToken('@ngrx/effects Internal Feature Effects');
-    /** @type {?} */
     var FEATURE_EFFECTS = new core.InjectionToken('@ngrx/effects Feature Effects');
-    /** @type {?} */
     var EFFECTS_ERROR_HANDLER = new core.InjectionToken('@ngrx/effects Effects Error Handler');
 
     var EffectSources = /** @class */ (function (_super) {
         __extends(EffectSources, _super);
-        /**
-         * @param {?} errorHandler
-         * @param {?} effectsErrorHandler
-         */
         function EffectSources(errorHandler, effectsErrorHandler) {
             var _this = _super.call(this) || this;
             _this.errorHandler = errorHandler;
             _this.effectsErrorHandler = effectsErrorHandler;
             return _this;
         }
-        /**
-         * @param {?} effectSourceInstance
-         * @return {?}
-         */
         EffectSources.prototype.addEffects = function (effectSourceInstance) {
             this.next(effectSourceInstance);
         };
         /**
-         * \@internal
-         * @return {?}
+         * @internal
          */
         EffectSources.prototype.toActions = function () {
             var _this = this;
-            return this.pipe(operators.groupBy(getSourceForInstance), operators.mergeMap(( /**
-             * @param {?} source$
-             * @return {?}
-             */function (source$) {
+            return this.pipe(operators.groupBy(getSourceForInstance), operators.mergeMap(function (source$) {
                 return source$.pipe(operators.groupBy(effectsInstance));
-            })), operators.mergeMap(( /**
-             * @param {?} source$
-             * @return {?}
-             */function (source$) {
-                /** @type {?} */
-                var effect$ = source$.pipe(operators.exhaustMap(( /**
-                 * @param {?} sourceInstance
-                 * @return {?}
-                 */function (sourceInstance) {
+            }), operators.mergeMap(function (source$) {
+                var effect$ = source$.pipe(operators.exhaustMap(function (sourceInstance) {
                     return resolveEffectSource(_this.errorHandler, _this.effectsErrorHandler)(sourceInstance);
-                })), operators.map(( /**
-                 * @param {?} output
-                 * @return {?}
-                 */function (output) {
+                }), operators.map(function (output) {
                     reportInvalidActions(output, _this.errorHandler);
                     return output.notification;
-                })), operators.filter(( /**
-                 * @param {?} notification
-                 * @return {?}
-                 */function (notification) { return notification.kind === 'N' && notification.value != null; })), operators.dematerialize());
+                }), operators.filter(function (notification) { return notification.kind === 'N' && notification.value != null; }), operators.dematerialize());
                 // start the stream with an INIT action
                 // do this only for the first Effect instance
-                /** @type {?} */
-                var init$ = source$.pipe(operators.take(1), operators.filter(isOnInitEffects), operators.map(( /**
-                 * @param {?} instance
-                 * @return {?}
-                 */function (instance) { return instance.ngrxOnInitEffects(); })));
+                var init$ = source$.pipe(operators.take(1), operators.filter(isOnInitEffects), operators.map(function (instance) { return instance.ngrxOnInitEffects(); }));
                 return rxjs.merge(effect$, init$);
-            })));
+            }));
         };
         return EffectSources;
     }(rxjs.Subject));
@@ -892,65 +598,28 @@
         { type: core.ErrorHandler },
         { type: undefined, decorators: [{ type: core.Inject, args: [EFFECTS_ERROR_HANDLER,] }] }
     ]; };
-    if (false) {
-        /**
-         * @type {?}
-         * @private
-         */
-        EffectSources.prototype.errorHandler;
-        /**
-         * @type {?}
-         * @private
-         */
-        EffectSources.prototype.effectsErrorHandler;
-    }
-    /**
-     * @param {?} sourceInstance
-     * @return {?}
-     */
     function effectsInstance(sourceInstance) {
         if (isOnIdentifyEffects(sourceInstance)) {
             return sourceInstance.ngrxOnIdentifyEffects();
         }
         return '';
     }
-    /**
-     * @param {?} errorHandler
-     * @param {?} effectsErrorHandler
-     * @return {?}
-     */
     function resolveEffectSource(errorHandler, effectsErrorHandler) {
-        return ( /**
-         * @param {?} sourceInstance
-         * @return {?}
-         */function (sourceInstance) {
-            /** @type {?} */
+        return function (sourceInstance) {
             var mergedEffects$ = mergeEffects(sourceInstance, errorHandler, effectsErrorHandler);
             if (isOnRunEffects(sourceInstance)) {
                 return sourceInstance.ngrxOnRunEffects(mergedEffects$);
             }
             return mergedEffects$;
-        });
+        };
     }
 
-    /**
-     * @fileoverview added by tsickle
-     * Generated from: src/effects_runner.ts
-     * @suppress {checkTypes,constantProperty,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
-     */
     var EffectsRunner = /** @class */ (function () {
-        /**
-         * @param {?} effectSources
-         * @param {?} store
-         */
         function EffectsRunner(effectSources, store) {
             this.effectSources = effectSources;
             this.store = store;
             this.effectsSubscription = null;
         }
-        /**
-         * @return {?}
-         */
         EffectsRunner.prototype.start = function () {
             if (!this.effectsSubscription) {
                 this.effectsSubscription = this.effectSources
@@ -958,9 +627,6 @@
                     .subscribe(this.store);
             }
         };
-        /**
-         * @return {?}
-         */
         EffectsRunner.prototype.ngOnDestroy = function () {
             if (this.effectsSubscription) {
                 this.effectsSubscription.unsubscribe();
@@ -977,56 +643,16 @@
         { type: EffectSources },
         { type: store.Store }
     ]; };
-    if (false) {
-        /**
-         * @type {?}
-         * @private
-         */
-        EffectsRunner.prototype.effectsSubscription;
-        /**
-         * @type {?}
-         * @private
-         */
-        EffectsRunner.prototype.effectSources;
-        /**
-         * @type {?}
-         * @private
-         */
-        EffectsRunner.prototype.store;
-    }
 
-    /**
-     * @fileoverview added by tsickle
-     * Generated from: src/effects_root_module.ts
-     * @suppress {checkTypes,constantProperty,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
-     */
-    /** @type {?} */
     var ROOT_EFFECTS_INIT = '@ngrx/effects/init';
-    /** @type {?} */
     var rootEffectsInit = store.createAction(ROOT_EFFECTS_INIT);
     var EffectsRootModule = /** @class */ (function () {
-        /**
-         * @param {?} sources
-         * @param {?} runner
-         * @param {?} store
-         * @param {?} rootEffects
-         * @param {?} storeRootModule
-         * @param {?} storeFeatureModule
-         * @param {?} guard
-         */
         function EffectsRootModule(sources, runner, store, rootEffects, storeRootModule, storeFeatureModule, guard) {
             this.sources = sources;
             runner.start();
-            rootEffects.forEach(( /**
-             * @param {?} effectSourceInstance
-             * @return {?}
-             */function (effectSourceInstance) { return sources.addEffects(effectSourceInstance); }));
+            rootEffects.forEach(function (effectSourceInstance) { return sources.addEffects(effectSourceInstance); });
             store.dispatch({ type: ROOT_EFFECTS_INIT });
         }
-        /**
-         * @param {?} effectSourceInstance
-         * @return {?}
-         */
         EffectsRootModule.prototype.addEffects = function (effectSourceInstance) {
             this.sources.addEffects(effectSourceInstance);
         };
@@ -1045,34 +671,10 @@
         { type: store.StoreFeatureModule, decorators: [{ type: core.Optional }] },
         { type: undefined, decorators: [{ type: core.Optional }, { type: core.Inject, args: [_ROOT_EFFECTS_GUARD,] }] }
     ]; };
-    if (false) {
-        /**
-         * @type {?}
-         * @private
-         */
-        EffectsRootModule.prototype.sources;
-    }
 
-    /**
-     * @fileoverview added by tsickle
-     * Generated from: src/effects_feature_module.ts
-     * @suppress {checkTypes,constantProperty,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
-     */
     var EffectsFeatureModule = /** @class */ (function () {
-        /**
-         * @param {?} root
-         * @param {?} effectSourceGroups
-         * @param {?} storeRootModule
-         * @param {?} storeFeatureModule
-         */
         function EffectsFeatureModule(root, effectSourceGroups, storeRootModule, storeFeatureModule) {
-            effectSourceGroups.forEach(( /**
-             * @param {?} group
-             * @return {?}
-             */function (group) { return group.forEach(( /**
-             * @param {?} effectSourceInstance
-             * @return {?}
-             */function (effectSourceInstance) { return root.addEffects(effectSourceInstance); })); }));
+            effectSourceGroups.forEach(function (group) { return group.forEach(function (effectSourceInstance) { return root.addEffects(effectSourceInstance); }); });
         }
         return EffectsFeatureModule;
     }());
@@ -1090,10 +692,6 @@
     var EffectsModule = /** @class */ (function () {
         function EffectsModule() {
         }
-        /**
-         * @param {?=} featureEffects
-         * @return {?}
-         */
         EffectsModule.forFeature = function (featureEffects) {
             if (featureEffects === void 0) { featureEffects = []; }
             return {
@@ -1119,10 +717,6 @@
                 ],
             };
         };
-        /**
-         * @param {?=} rootEffects
-         * @return {?}
-         */
         EffectsModule.forRoot = function (rootEffects) {
             if (rootEffects === void 0) { rootEffects = []; }
             return {
@@ -1166,15 +760,8 @@
     EffectsModule.decorators = [
         { type: core.NgModule, args: [{},] }
     ];
-    /**
-     * @param {?} injector
-     * @param {?} effectGroups
-     * @param {?} userProvidedEffectGroups
-     * @return {?}
-     */
     function createEffects(injector, effectGroups, userProvidedEffectGroups) {
         var e_1, _a, e_2, _b;
-        /** @type {?} */
         var mergedEffects = [];
         try {
             for (var effectGroups_1 = __values(effectGroups), effectGroups_1_1 = effectGroups_1.next(); !effectGroups_1_1.done; effectGroups_1_1 = effectGroups_1.next()) {
@@ -1204,25 +791,11 @@
         }
         return createEffectInstances(injector, mergedEffects);
     }
-    /**
-     * @param {?} injector
-     * @param {?} effects
-     * @return {?}
-     */
     function createEffectInstances(injector, effects) {
-        return effects.map(( /**
-         * @param {?} effect
-         * @return {?}
-         */function (effect) { return injector.get(effect); }));
+        return effects.map(function (effect) { return injector.get(effect); });
     }
-    /**
-     * @param {?} runner
-     * @param {?} rootEffects
-     * @return {?}
-     */
     function _provideForRootGuard(runner, rootEffects) {
         // check whether any effects are actually passed
-        /** @type {?} */
         var hasEffects = !(rootEffects.length === 1 && rootEffects[0].length === 0);
         if (hasEffects && runner) {
             throw new TypeError("EffectsModule.forRoot() called twice. Feature modules should use EffectsModule.forFeature() instead.");
@@ -1230,144 +803,70 @@
         return 'guarded';
     }
 
-    /**
-     * @fileoverview added by tsickle
-     * Generated from: src/act.ts
-     * @suppress {checkTypes,constantProperty,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
-     */
-    /**
-     * Represents config with named parameters for act
-     * @record
-     * @template Input, OutputAction, ErrorAction, CompleteAction, UnsubscribeAction
-     */
-    function ActConfig() { }
-    if (false) {
-        /** @type {?} */
-        ActConfig.prototype.project;
-        /** @type {?} */
-        ActConfig.prototype.error;
-        /** @type {?|undefined} */
-        ActConfig.prototype.complete;
-        /** @type {?|undefined} */
-        ActConfig.prototype.operator;
-        /** @type {?|undefined} */
-        ActConfig.prototype.unsubscribe;
-    }
-    /**
-     * @template Input, OutputAction, ErrorAction, CompleteAction, UnsubscribeAction
-     * @param {?} configOrProject
-     * @param {?=} errorFn
-     * @return {?}
-     */
     function act(
     /** Allow to take either config object or project/error functions */
     configOrProject, errorFn) {
         var _a = typeof configOrProject === 'function'
             ? {
                 project: configOrProject,
-                error: ( /** @type {?} */(errorFn)),
+                error: errorFn,
                 operator: operators.concatMap,
                 complete: undefined,
                 unsubscribe: undefined,
             }
             : Object.assign(Object.assign({}, configOrProject), { operator: configOrProject.operator || operators.concatMap }), project = _a.project, error = _a.error, complete = _a.complete, operator = _a.operator, unsubscribe = _a.unsubscribe;
-        return ( /**
-         * @param {?} source
-         * @return {?}
-         */function (source) { return rxjs.defer(( /**
-         * @return {?}
-         */function () {
-            /** @type {?} */
+        return function (source) { return rxjs.defer(function () {
             var subject = new rxjs.Subject();
-            return rxjs.merge(source.pipe(operator(( /**
-             * @param {?} input
-             * @param {?} index
-             * @return {?}
-             */function (input, index) { return rxjs.defer(( /**
-             * @return {?}
-             */function () {
-                /** @type {?} */
+            return rxjs.merge(source.pipe(operator(function (input, index) { return rxjs.defer(function () {
                 var completed = false;
-                /** @type {?} */
                 var errored = false;
-                /** @type {?} */
                 var projectedCount = 0;
-                return project(input, index).pipe(operators.materialize(), operators.map(( /**
-                 * @param {?} notification
-                 * @return {?}
-                 */function (notification) {
+                return project(input, index).pipe(operators.materialize(), operators.map(function (notification) {
                     switch (notification.kind) {
                         case 'E':
                             errored = true;
-                            return ( /** @type {?} */(new rxjs.Notification('N', error(notification.error, input))));
+                            return new rxjs.Notification('N', error(notification.error, input));
                         case 'C':
                             completed = true;
                             return complete
-                                ? (( /** @type {?} */(new rxjs.Notification('N', complete(projectedCount, input)))))
+                                ? new rxjs.Notification('N', complete(projectedCount, input))
                                 : undefined;
                         default:
                             ++projectedCount;
-                            return ( /** @type {?} */(notification));
+                            return notification;
                     }
-                })), operators.filter(( /**
-                 * @param {?} n
-                 * @return {?}
-                 */function (n) { return n != null; })), operators.dematerialize(), operators.finalize(( /**
-                 * @return {?}
-                 */function () {
+                }), operators.filter(function (n) { return n != null; }), operators.dematerialize(), operators.finalize(function () {
                     if (!completed && !errored && unsubscribe) {
                         subject.next(unsubscribe(projectedCount, input));
                     }
-                })));
-            })); }))), subject);
-        })); });
+                }));
+            }); })), subject);
+        }); };
     }
 
     /**
      * 'concatLatestFrom' combines the source value
      * and the last available value from a lazily evaluated Observable
      * in a new array
-     * @template T, V, R
-     * @param {?} observablesFactory
-     * @return {?}
      */
     function concatLatestFrom(observablesFactory) {
-        return rxjs.pipe(operators.concatMap(( /**
-         * @param {?} value
-         * @return {?}
-         */function (value) {
-            /** @type {?} */
+        return rxjs.pipe(operators.concatMap(function (value) {
             var observables = observablesFactory(value);
-            /** @type {?} */
             var observablesAsArray = Array.isArray(observables)
                 ? observables
                 : [observables];
-            return ( /** @type {?} */(rxjs.of(value).pipe(operators.withLatestFrom.apply(void 0, __spread(observablesAsArray)))));
-        })));
+            return rxjs.of(value).pipe(operators.withLatestFrom.apply(void 0, __spread(observablesAsArray)));
+        }));
     }
 
     /**
-     * @fileoverview added by tsickle
-     * Generated from: src/index.ts
-     * @suppress {checkTypes,constantProperty,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
+     * DO NOT EDIT
+     *
+     * This file is automatically generated at build
      */
 
     /**
-     * @fileoverview added by tsickle
-     * Generated from: public_api.ts
-     * @suppress {checkTypes,constantProperty,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
-     */
-
-    /**
-     * @fileoverview added by tsickle
-     * Generated from: index.ts
-     * @suppress {checkTypes,constantProperty,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
-     */
-
-    /**
-     * @fileoverview added by tsickle
-     * Generated from: ngrx-effects.ts
-     * @suppress {checkTypes,constantProperty,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
+     * Generated bundle index. Do not edit.
      */
 
     exports.Actions = Actions;
