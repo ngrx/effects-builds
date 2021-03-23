@@ -53,8 +53,17 @@
     function getCreateEffectMetadata(instance) {
         var propertyNames = Object.getOwnPropertyNames(instance);
         var metadata = propertyNames
-            .filter(function (propertyName) { return instance[propertyName] &&
-            instance[propertyName].hasOwnProperty(CREATE_EFFECT_METADATA_KEY); })
+            .filter(function (propertyName) {
+            if (instance[propertyName] &&
+                instance[propertyName].hasOwnProperty(CREATE_EFFECT_METADATA_KEY)) {
+                // If the property type has overridden `hasOwnProperty` we need to ensure
+                // that the metadata is valid (containing a `dispatch`property)
+                // https://github.com/ngrx/platform/issues/2975
+                var property = instance[propertyName];
+                return property[CREATE_EFFECT_METADATA_KEY].hasOwnProperty('dispatch');
+            }
+            return false;
+        })
             .map(function (propertyName) {
             var metaData = instance[propertyName][CREATE_EFFECT_METADATA_KEY];
             return Object.assign({ propertyName: propertyName }, metaData);
