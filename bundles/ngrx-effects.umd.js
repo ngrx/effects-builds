@@ -151,11 +151,13 @@
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
             function (d, b) { for (var p in b)
-                if (b.hasOwnProperty(p))
+                if (Object.prototype.hasOwnProperty.call(b, p))
                     d[p] = b[p]; };
         return extendStatics(d, b);
     };
     function __extends(d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
         extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
@@ -298,10 +300,10 @@
             k2 = k;
         o[k2] = m[k];
     });
-    function __exportStar(m, exports) {
+    function __exportStar(m, o) {
         for (var p in m)
-            if (p !== "default" && !exports.hasOwnProperty(p))
-                __createBinding(exports, m, p);
+            if (p !== "default" && !Object.prototype.hasOwnProperty.call(o, p))
+                __createBinding(o, m, p);
     }
     function __values(o) {
         var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
@@ -341,11 +343,13 @@
         }
         return ar;
     }
+    /** @deprecated */
     function __spread() {
         for (var ar = [], i = 0; i < arguments.length; i++)
             ar = ar.concat(__read(arguments[i]));
         return ar;
     }
+    /** @deprecated */
     function __spreadArrays() {
         for (var s = 0, i = 0, il = arguments.length; i < il; i++)
             s += arguments[i].length;
@@ -354,7 +358,11 @@
                 r[k] = a[j];
         return r;
     }
-    ;
+    function __spreadArray(to, from) {
+        for (var i = 0, il = from.length, j = to.length; i < il; i++, j++)
+            to[j] = from[i];
+        return to;
+    }
     function __await(v) {
         return this instanceof __await ? (this.v = v, this) : new __await(v);
     }
@@ -411,7 +419,7 @@
         var result = {};
         if (mod != null)
             for (var k in mod)
-                if (Object.hasOwnProperty.call(mod, k))
+                if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k))
                     __createBinding(result, mod, k);
         __setModuleDefault(result, mod);
         return result;
@@ -419,18 +427,21 @@
     function __importDefault(mod) {
         return (mod && mod.__esModule) ? mod : { default: mod };
     }
-    function __classPrivateFieldGet(receiver, privateMap) {
-        if (!privateMap.has(receiver)) {
-            throw new TypeError("attempted to get private field on non-instance");
-        }
-        return privateMap.get(receiver);
+    function __classPrivateFieldGet(receiver, state, kind, f) {
+        if (kind === "a" && !f)
+            throw new TypeError("Private accessor was defined without a getter");
+        if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver))
+            throw new TypeError("Cannot read private member from an object whose class did not declare it");
+        return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
     }
-    function __classPrivateFieldSet(receiver, privateMap, value) {
-        if (!privateMap.has(receiver)) {
-            throw new TypeError("attempted to set private field on non-instance");
-        }
-        privateMap.set(receiver, value);
-        return value;
+    function __classPrivateFieldSet(receiver, state, value, kind, f) {
+        if (kind === "m")
+            throw new TypeError("Private method is not writable");
+        if (kind === "a" && !f)
+            throw new TypeError("Private accessor was defined without a setter");
+        if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver))
+            throw new TypeError("Cannot write private member to an object whose class did not declare it");
+        return (kind === "a" ? f.call(receiver, value) : f ? f.value = value : state.set(receiver, value)), value;
     }
 
     function mergeEffects(sourceInstance, globalErrorHandler, effectsErrorHandler) {
@@ -455,7 +466,7 @@
                 sourceInstance: sourceInstance,
             }); }));
         });
-        return rxjs.merge.apply(void 0, __spread(observables$));
+        return rxjs.merge.apply(void 0, __spreadArray([], __read(observables$)));
     }
 
     var MAX_NUMBER_OF_RETRY_ATTEMPTS = 10;
@@ -775,7 +786,7 @@
         try {
             for (var effectGroups_1 = __values(effectGroups), effectGroups_1_1 = effectGroups_1.next(); !effectGroups_1_1.done; effectGroups_1_1 = effectGroups_1.next()) {
                 var effectGroup = effectGroups_1_1.value;
-                mergedEffects.push.apply(mergedEffects, __spread(effectGroup));
+                mergedEffects.push.apply(mergedEffects, __spreadArray([], __read(effectGroup)));
             }
         }
         catch (e_1_1) { e_1 = { error: e_1_1 }; }
@@ -788,7 +799,7 @@
         try {
             for (var userProvidedEffectGroups_1 = __values(userProvidedEffectGroups), userProvidedEffectGroups_1_1 = userProvidedEffectGroups_1.next(); !userProvidedEffectGroups_1_1.done; userProvidedEffectGroups_1_1 = userProvidedEffectGroups_1.next()) {
                 var userProvidedEffectGroup = userProvidedEffectGroups_1_1.value;
-                mergedEffects.push.apply(mergedEffects, __spread(userProvidedEffectGroup));
+                mergedEffects.push.apply(mergedEffects, __spreadArray([], __read(userProvidedEffectGroup)));
             }
         }
         catch (e_2_1) { e_2 = { error: e_2_1 }; }
@@ -864,7 +875,7 @@
             var observablesAsArray = Array.isArray(observables)
                 ? observables
                 : [observables];
-            return rxjs.of(value).pipe(operators.withLatestFrom.apply(void 0, __spread(observablesAsArray)));
+            return rxjs.of(value).pipe(operators.withLatestFrom.apply(void 0, __spreadArray([], __read(observablesAsArray))));
         }));
     }
 
