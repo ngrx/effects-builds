@@ -444,10 +444,10 @@ EffectsModule.decorators = [
 ];
 function createEffects(injector, effectGroups, userProvidedEffectGroups) {
     const mergedEffects = [];
-    for (let effectGroup of effectGroups) {
+    for (const effectGroup of effectGroups) {
         mergedEffects.push(...effectGroup);
     }
-    for (let userProvidedEffectGroup of userProvidedEffectGroups) {
+    for (const userProvidedEffectGroup of userProvidedEffectGroups) {
         mergedEffects.push(...userProvidedEffectGroup);
     }
     return createEffectInstances(injector, mergedEffects);
@@ -470,6 +470,7 @@ configOrProject, errorFn) {
     const { project, error, complete, operator, unsubscribe } = typeof configOrProject === 'function'
         ? {
             project: configOrProject,
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             error: errorFn,
             operator: concatMap,
             complete: undefined,

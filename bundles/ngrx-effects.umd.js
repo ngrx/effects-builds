@@ -829,6 +829,7 @@
         var _a = typeof configOrProject === 'function'
             ? {
                 project: configOrProject,
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 error: errorFn,
                 operator: operators.concatMap,
                 complete: undefined,
