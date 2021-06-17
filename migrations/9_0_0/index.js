@@ -16,10 +16,9 @@ var __read = (this && this.__read) || function (o, n) {
     return ar;
 };
 exports.__esModule = true;
-var schematics_1 = require("@angular-devkit/schematics");
-var schematics_core_1 = require("@ngrx/effects/schematics-core");
-var schematics_core_2 = require("@ngrx/effects/schematics-core");
 var ts = require("typescript");
+var schematics_1 = require("@angular-devkit/schematics");
+var schematics_core_1 = require("../../schematics-core");
 function renameErrorHandlerConfig() {
     return function (tree, ctx) {
         schematics_core_1.visitTSSourceFiles(tree, function (sourceFile) {
@@ -47,7 +46,7 @@ function replaceEffectConfigKeys(sourceFile, oldText, newText) {
     return changes;
     function findAndReplaceText(node) {
         visitIdentifierWithText(node, oldText, function (match) {
-            changes.push(schematics_core_2.createReplaceChange(sourceFile, match, oldText, newText));
+            changes.push(schematics_core_1.createReplaceChange(sourceFile, match, oldText, newText));
         });
     }
 }

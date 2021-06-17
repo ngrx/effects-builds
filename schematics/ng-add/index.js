@@ -38,9 +38,9 @@ var __values = (this && this.__values) || function(o) {
     throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
 };
 exports.__esModule = true;
-var schematics_1 = require("@angular-devkit/schematics");
-var schematics_core_1 = require("@ngrx/effects/schematics-core");
 var ts = require("typescript");
+var schematics_1 = require("@angular-devkit/schematics");
+var schematics_core_1 = require("../../schematics-core");
 var tasks_1 = require("@angular-devkit/schematics/tasks");
 function addImportToNgModule(options) {
     return function (host) {
