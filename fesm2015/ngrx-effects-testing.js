@@ -1,6 +1,57 @@
 import { Actions } from '@ngrx/effects';
 import { defer } from 'rxjs';
 
+/**
+ * @description
+ * Creates mock actions provider.
+ *
+ * @param factoryOrSource Actions' source or source creation function
+ *
+ * @usageNotes
+ *
+ * **With `TestBed.configureTestingModule`**
+ *
+ * ```ts
+ * describe('Books Effects', () => {
+ *   let actions$: Observable<any>;
+ *   let effects: BooksEffects;
+ *
+ *   beforeEach(() => {
+ *     TestBed.configureTestingModule({
+ *       providers: [
+ *         provideMockActions(() => actions$),
+ *         BooksEffects,
+ *       ],
+ *     });
+ *
+ *     actions$ = TestBed.inject(Actions);
+ *     effects = TestBed.inject(BooksEffects);
+ *   });
+ * });
+ * ```
+ *
+ * **With `Injector.create`**
+ *
+ * ```ts
+ * describe('Counter Effects', () => {
+ *   let injector: Injector;
+ *   let actions$: Observable<any>;
+ *   let effects: CounterEffects;
+ *
+ *   beforeEach(() => {
+ *     injector = Injector.create({
+ *       providers: [
+ *         provideMockActions(() => actions$),
+ *         CounterEffects,
+ *       ],
+ *     });
+ *
+ *     actions$ = injector.get(Actions);
+ *     effects = injector.get(CounterEffects);
+ *   });
+ * });
+ * ```
+ */
 function provideMockActions(factoryOrSource) {
     return {
         provide: Actions,

@@ -507,6 +507,28 @@
     Actions.ctorParameters = function () { return [
         { type: rxjs.Observable, decorators: [{ type: core.Inject, args: [store.ScannedActionsSubject,] }] }
     ]; };
+    /**
+     * `ofType` filters an Observable of `Actions` into an Observable of the actions
+     * whose type strings are passed to it.
+     *
+     * For example, if `actions` has type `Actions<AdditionAction|SubstractionAction>`, and
+     * the type of the `Addition` action is `add`, then
+     * `actions.pipe(ofType('add'))` returns an `Observable<AdditionAction>`.
+     *
+     * Properly typing this function is hard and requires some advanced TS tricks
+     * below.
+     *
+     * Type narrowing automatically works, as long as your `actions` object
+     * starts with a `Actions<SomeUnionOfActions>` instead of generic `Actions`.
+     *
+     * For backwards compatibility, when one passes a single type argument
+     * `ofType<T>('something')` the result is an `Observable<T>`. Note, that `T`
+     * completely overrides any possible inference from 'something'.
+     *
+     * Unfortunately, for unknown 'actions: Actions' these types will produce
+     * 'Observable<never>'. In such cases one has to manually set the generic type
+     * like `actions.ofType<AdditionAction>('add')`.
+     */
     function ofType() {
         var allowedTypes = [];
         for (var _i = 0; _i < arguments.length; _i++) {
@@ -823,6 +845,11 @@
         return 'guarded';
     }
 
+    /**
+     * Wraps project fn with error handling making it safe to use in Effects.
+     * Takes either a config with named properties that represent different possible
+     * callbacks or project/error callbacks that are required.
+     */
     function act(
     /** Allow to take either config object or project/error functions */
     configOrProject, errorFn) {
@@ -866,7 +893,7 @@
     }
 
     /**
-     * 'concatLatestFrom' combines the source value
+     * `concatLatestFrom` combines the source value
      * and the last available value from a lazily evaluated Observable
      * in a new array
      */
