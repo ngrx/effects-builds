@@ -528,6 +528,19 @@
      * Unfortunately, for unknown 'actions: Actions' these types will produce
      * 'Observable<never>'. In such cases one has to manually set the generic type
      * like `actions.ofType<AdditionAction>('add')`.
+     *
+     * @usageNotes
+     *
+     * Filter the Actions stream on the "customers page loaded" action
+     *
+     * ```ts
+     * import { ofType } from '@ngrx/effects';
+     * import * fromCustomers from '../customers';
+     *
+     * this.actions$.pipe(
+     *  ofType(fromCustomers.pageLoaded)
+     * )
+     * ```
      */
     function ofType() {
         var allowedTypes = [];
@@ -896,6 +909,30 @@
      * `concatLatestFrom` combines the source value
      * and the last available value from a lazily evaluated Observable
      * in a new array
+     *
+     * @usageNotes
+     *
+     * Select the active customer from the NgRx Store
+     *
+     * ```ts
+     * import { concatLatestFrom } from '@ngrx/effects';
+     * import * fromCustomers from '../customers';
+     *
+     * this.actions$.pipe(
+     *  concatLatestFrom(() => this.store.select(fromCustomers.selectActiveCustomer))
+     * )
+     * ```
+     *
+     * Select a customer from the NgRx Store by its id that is available on the action
+     *
+     * ```ts
+     * import { concatLatestFrom } from '@ngrx/effects';
+     * import * fromCustomers from '../customers';
+     *
+     * this.actions$.pipe(
+     *  concatLatestFrom((action) => this.store.select(fromCustomers.selectCustomer(action.customerId)))
+     * )
+     * ```
      */
     function concatLatestFrom(observablesFactory) {
         return rxjs.pipe(operators.concatMap(function (value) {
