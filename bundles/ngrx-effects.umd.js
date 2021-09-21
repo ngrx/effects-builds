@@ -500,10 +500,17 @@
         };
         return Actions;
     }(rxjs.Observable));
+    /** @type {!Array<{type: !Function, args: (undefined|!Array<?>)}>} */
     Actions.decorators = [
         { type: core.Injectable }
     ];
-    /** @nocollapse */
+    /**
+     * @type {function(): !Array<(null|{
+     *   type: ?,
+     *   decorators: (undefined|!Array<{type: !Function, args: (undefined|!Array<?>)}>),
+     * })>}
+     * @nocollapse
+     */
     Actions.ctorParameters = function () { return [
         { type: rxjs.Observable, decorators: [{ type: core.Inject, args: [store.ScannedActionsSubject,] }] }
     ]; };
@@ -645,10 +652,17 @@
         };
         return EffectSources;
     }(rxjs.Subject));
+    /** @type {!Array<{type: !Function, args: (undefined|!Array<?>)}>} */
     EffectSources.decorators = [
         { type: core.Injectable }
     ];
-    /** @nocollapse */
+    /**
+     * @type {function(): !Array<(null|{
+     *   type: ?,
+     *   decorators: (undefined|!Array<{type: !Function, args: (undefined|!Array<?>)}>),
+     * })>}
+     * @nocollapse
+     */
     EffectSources.ctorParameters = function () { return [
         { type: core.ErrorHandler },
         { type: undefined, decorators: [{ type: core.Inject, args: [EFFECTS_ERROR_HANDLER,] }] }
@@ -690,10 +704,17 @@
         };
         return EffectsRunner;
     }());
+    /** @type {!Array<{type: !Function, args: (undefined|!Array<?>)}>} */
     EffectsRunner.decorators = [
         { type: core.Injectable }
     ];
-    /** @nocollapse */
+    /**
+     * @type {function(): !Array<(null|{
+     *   type: ?,
+     *   decorators: (undefined|!Array<{type: !Function, args: (undefined|!Array<?>)}>),
+     * })>}
+     * @nocollapse
+     */
     EffectsRunner.ctorParameters = function () { return [
         { type: EffectSources },
         { type: store.Store }
@@ -713,10 +734,17 @@
         };
         return EffectsRootModule;
     }());
+    /** @type {!Array<{type: !Function, args: (undefined|!Array<?>)}>} */
     EffectsRootModule.decorators = [
         { type: core.NgModule, args: [{},] }
     ];
-    /** @nocollapse */
+    /**
+     * @type {function(): !Array<(null|{
+     *   type: ?,
+     *   decorators: (undefined|!Array<{type: !Function, args: (undefined|!Array<?>)}>),
+     * })>}
+     * @nocollapse
+     */
     EffectsRootModule.ctorParameters = function () { return [
         { type: EffectSources },
         { type: EffectsRunner },
@@ -733,10 +761,17 @@
         }
         return EffectsFeatureModule;
     }());
+    /** @type {!Array<{type: !Function, args: (undefined|!Array<?>)}>} */
     EffectsFeatureModule.decorators = [
         { type: core.NgModule, args: [{},] }
     ];
-    /** @nocollapse */
+    /**
+     * @type {function(): !Array<(null|{
+     *   type: ?,
+     *   decorators: (undefined|!Array<{type: !Function, args: (undefined|!Array<?>)}>),
+     * })>}
+     * @nocollapse
+     */
     EffectsFeatureModule.ctorParameters = function () { return [
         { type: EffectsRootModule },
         { type: Array, decorators: [{ type: core.Inject, args: [FEATURE_EFFECTS,] }] },
@@ -812,6 +847,7 @@
         };
         return EffectsModule;
     }());
+    /** @type {!Array<{type: !Function, args: (undefined|!Array<?>)}>} */
     EffectsModule.decorators = [
         { type: core.NgModule, args: [{},] }
     ];

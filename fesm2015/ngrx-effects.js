@@ -179,10 +179,17 @@ class Actions extends Observable {
         return observable;
     }
 }
+/** @type {!Array<{type: !Function, args: (undefined|!Array<?>)}>} */
 Actions.decorators = [
     { type: Injectable }
 ];
-/** @nocollapse */
+/**
+ * @type {function(): !Array<(null|{
+ *   type: ?,
+ *   decorators: (undefined|!Array<{type: !Function, args: (undefined|!Array<?>)}>),
+ * })>}
+ * @nocollapse
+ */
 Actions.ctorParameters = () => [
     { type: Observable, decorators: [{ type: Inject, args: [ScannedActionsSubject,] }] }
 ];
@@ -315,10 +322,17 @@ class EffectSources extends Subject {
         }));
     }
 }
+/** @type {!Array<{type: !Function, args: (undefined|!Array<?>)}>} */
 EffectSources.decorators = [
     { type: Injectable }
 ];
-/** @nocollapse */
+/**
+ * @type {function(): !Array<(null|{
+ *   type: ?,
+ *   decorators: (undefined|!Array<{type: !Function, args: (undefined|!Array<?>)}>),
+ * })>}
+ * @nocollapse
+ */
 EffectSources.ctorParameters = () => [
     { type: ErrorHandler },
     { type: undefined, decorators: [{ type: Inject, args: [EFFECTS_ERROR_HANDLER,] }] }
@@ -359,10 +373,17 @@ class EffectsRunner {
         }
     }
 }
+/** @type {!Array<{type: !Function, args: (undefined|!Array<?>)}>} */
 EffectsRunner.decorators = [
     { type: Injectable }
 ];
-/** @nocollapse */
+/**
+ * @type {function(): !Array<(null|{
+ *   type: ?,
+ *   decorators: (undefined|!Array<{type: !Function, args: (undefined|!Array<?>)}>),
+ * })>}
+ * @nocollapse
+ */
 EffectsRunner.ctorParameters = () => [
     { type: EffectSources },
     { type: Store }
@@ -381,10 +402,17 @@ class EffectsRootModule {
         this.sources.addEffects(effectSourceInstance);
     }
 }
+/** @type {!Array<{type: !Function, args: (undefined|!Array<?>)}>} */
 EffectsRootModule.decorators = [
     { type: NgModule, args: [{},] }
 ];
-/** @nocollapse */
+/**
+ * @type {function(): !Array<(null|{
+ *   type: ?,
+ *   decorators: (undefined|!Array<{type: !Function, args: (undefined|!Array<?>)}>),
+ * })>}
+ * @nocollapse
+ */
 EffectsRootModule.ctorParameters = () => [
     { type: EffectSources },
     { type: EffectsRunner },
@@ -400,10 +428,17 @@ class EffectsFeatureModule {
         effectSourceGroups.forEach((group) => group.forEach((effectSourceInstance) => root.addEffects(effectSourceInstance)));
     }
 }
+/** @type {!Array<{type: !Function, args: (undefined|!Array<?>)}>} */
 EffectsFeatureModule.decorators = [
     { type: NgModule, args: [{},] }
 ];
-/** @nocollapse */
+/**
+ * @type {function(): !Array<(null|{
+ *   type: ?,
+ *   decorators: (undefined|!Array<{type: !Function, args: (undefined|!Array<?>)}>),
+ * })>}
+ * @nocollapse
+ */
 EffectsFeatureModule.ctorParameters = () => [
     { type: EffectsRootModule },
     { type: Array, decorators: [{ type: Inject, args: [FEATURE_EFFECTS,] }] },
@@ -474,6 +509,7 @@ class EffectsModule {
         };
     }
 }
+/** @type {!Array<{type: !Function, args: (undefined|!Array<?>)}>} */
 EffectsModule.decorators = [
     { type: NgModule, args: [{},] }
 ];
