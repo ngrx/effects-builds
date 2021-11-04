@@ -2,7 +2,31 @@
     typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@ngrx/store'), require('rxjs'), require('rxjs/operators'), require('@angular/core')) :
     typeof define === 'function' && define.amd ? define('@ngrx/effects', ['exports', '@ngrx/store', 'rxjs', 'rxjs/operators', '@angular/core'], factory) :
     (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory((global.ngrx = global.ngrx || {}, global.ngrx.effects = {}), global.ngrx.store, global.rxjs, global.rxjs.operators, global.ng.core));
-}(this, (function (exports, store, rxjs, operators, core) { 'use strict';
+}(this, (function (exports, i3, i1, operators, i0) { 'use strict';
+
+    function _interopNamespace(e) {
+        if (e && e.__esModule) return e;
+        var n = Object.create(null);
+        if (e) {
+            Object.keys(e).forEach(function (k) {
+                if (k !== 'default') {
+                    var d = Object.getOwnPropertyDescriptor(e, k);
+                    Object.defineProperty(n, k, d.get ? d : {
+                        enumerable: true,
+                        get: function () {
+                            return e[k];
+                        }
+                    });
+                }
+            });
+        }
+        n['default'] = e;
+        return Object.freeze(n);
+    }
+
+    var i3__namespace = /*#__PURE__*/_interopNamespace(i3);
+    var i1__namespace = /*#__PURE__*/_interopNamespace(i1);
+    var i0__namespace = /*#__PURE__*/_interopNamespace(i0);
 
     var DEFAULT_EFFECT_CONFIG = {
         dispatch: true,
@@ -90,7 +114,7 @@
         };
     }
     function getEffectDecoratorMetadata(instance) {
-        var effectsDecorators = store.compose(getEffectMetadataEntries, getSourceForInstance)(instance);
+        var effectsDecorators = i3.compose(getEffectMetadataEntries, getSourceForInstance)(instance);
         return effectsDecorators;
     }
     /**
@@ -358,10 +382,16 @@
                 r[k] = a[j];
         return r;
     }
-    function __spreadArray(to, from) {
-        for (var i = 0, il = from.length, j = to.length; i < il; i++, j++)
-            to[j] = from[i];
-        return to;
+    function __spreadArray(to, from, pack) {
+        if (pack || arguments.length === 2)
+            for (var i = 0, l = from.length, ar; i < l; i++) {
+                if (ar || !(i in from)) {
+                    if (!ar)
+                        ar = Array.prototype.slice.call(from, 0, i);
+                    ar[i] = from[i];
+                }
+            }
+        return to.concat(ar || Array.prototype.slice.call(from));
     }
     function __await(v) {
         return this instanceof __await ? (this.v = v, this) : new __await(v);
@@ -466,7 +496,7 @@
                 sourceInstance: sourceInstance,
             }); }));
         });
-        return rxjs.merge.apply(void 0, __spreadArray([], __read(observables$)));
+        return i1.merge.apply(void 0, __spreadArray([], __read(observables$)));
     }
 
     var MAX_NUMBER_OF_RETRY_ATTEMPTS = 10;
@@ -499,21 +529,17 @@
             return observable;
         };
         return Actions;
-    }(rxjs.Observable));
-    /** @type {!Array<{type: !Function, args: (undefined|!Array<?>)}>} */
-    Actions.decorators = [
-        { type: core.Injectable }
-    ];
-    /**
-     * @type {function(): !Array<(null|{
-     *   type: ?,
-     *   decorators: (undefined|!Array<{type: !Function, args: (undefined|!Array<?>)}>),
-     * })>}
-     * @nocollapse
-     */
-    Actions.ctorParameters = function () { return [
-        { type: rxjs.Observable, decorators: [{ type: core.Inject, args: [store.ScannedActionsSubject,] }] }
-    ]; };
+    }(i1.Observable));
+    /** @nocollapse */ Actions.ɵfac = i0__namespace.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "12.2.6", ngImport: i0__namespace, type: Actions, deps: [{ token: i3.ScannedActionsSubject }], target: i0__namespace.ɵɵFactoryTarget.Injectable });
+    /** @nocollapse */ Actions.ɵprov = i0__namespace.ɵɵngDeclareInjectable({ minVersion: "12.0.0", version: "12.2.6", ngImport: i0__namespace, type: Actions });
+    i0__namespace.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "12.2.6", ngImport: i0__namespace, type: Actions, decorators: [{
+                type: i0.Injectable
+            }], ctorParameters: function () {
+            return [{ type: i1__namespace.Observable, decorators: [{
+                            type: i0.Inject,
+                            args: [i3.ScannedActionsSubject]
+                        }] }];
+        } });
     /**
      * `ofType` filters an Observable of `Actions` into an Observable of the actions
      * whose type strings are passed to it.
@@ -611,13 +637,13 @@
             typeof instance[functionName] === 'function');
     }
 
-    var _ROOT_EFFECTS_GUARD = new core.InjectionToken('@ngrx/effects Internal Root Guard');
-    var USER_PROVIDED_EFFECTS = new core.InjectionToken('@ngrx/effects User Provided Effects');
-    var _ROOT_EFFECTS = new core.InjectionToken('@ngrx/effects Internal Root Effects');
-    var ROOT_EFFECTS = new core.InjectionToken('@ngrx/effects Root Effects');
-    var _FEATURE_EFFECTS = new core.InjectionToken('@ngrx/effects Internal Feature Effects');
-    var FEATURE_EFFECTS = new core.InjectionToken('@ngrx/effects Feature Effects');
-    var EFFECTS_ERROR_HANDLER = new core.InjectionToken('@ngrx/effects Effects Error Handler');
+    var _ROOT_EFFECTS_GUARD = new i0.InjectionToken('@ngrx/effects Internal Root Guard');
+    var USER_PROVIDED_EFFECTS = new i0.InjectionToken('@ngrx/effects User Provided Effects');
+    var _ROOT_EFFECTS = new i0.InjectionToken('@ngrx/effects Internal Root Effects');
+    var ROOT_EFFECTS = new i0.InjectionToken('@ngrx/effects Root Effects');
+    var _FEATURE_EFFECTS = new i0.InjectionToken('@ngrx/effects Internal Feature Effects');
+    var FEATURE_EFFECTS = new i0.InjectionToken('@ngrx/effects Feature Effects');
+    var EFFECTS_ERROR_HANDLER = new i0.InjectionToken('@ngrx/effects Effects Error Handler');
 
     var EffectSources = /** @class */ (function (_super) {
         __extends(EffectSources, _super);
@@ -647,26 +673,21 @@
                 // start the stream with an INIT action
                 // do this only for the first Effect instance
                 var init$ = source$.pipe(operators.take(1), operators.filter(isOnInitEffects), operators.map(function (instance) { return instance.ngrxOnInitEffects(); }));
-                return rxjs.merge(effect$, init$);
+                return i1.merge(effect$, init$);
             }));
         };
         return EffectSources;
-    }(rxjs.Subject));
-    /** @type {!Array<{type: !Function, args: (undefined|!Array<?>)}>} */
-    EffectSources.decorators = [
-        { type: core.Injectable }
-    ];
-    /**
-     * @type {function(): !Array<(null|{
-     *   type: ?,
-     *   decorators: (undefined|!Array<{type: !Function, args: (undefined|!Array<?>)}>),
-     * })>}
-     * @nocollapse
-     */
-    EffectSources.ctorParameters = function () { return [
-        { type: core.ErrorHandler },
-        { type: undefined, decorators: [{ type: core.Inject, args: [EFFECTS_ERROR_HANDLER,] }] }
-    ]; };
+    }(i1.Subject));
+    /** @nocollapse */ EffectSources.ɵfac = i0__namespace.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "12.2.6", ngImport: i0__namespace, type: EffectSources, deps: [{ token: i0__namespace.ErrorHandler }, { token: EFFECTS_ERROR_HANDLER }], target: i0__namespace.ɵɵFactoryTarget.Injectable });
+    /** @nocollapse */ EffectSources.ɵprov = i0__namespace.ɵɵngDeclareInjectable({ minVersion: "12.0.0", version: "12.2.6", ngImport: i0__namespace, type: EffectSources });
+    i0__namespace.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "12.2.6", ngImport: i0__namespace, type: EffectSources, decorators: [{
+                type: i0.Injectable
+            }], ctorParameters: function () {
+            return [{ type: i0__namespace.ErrorHandler }, { type: undefined, decorators: [{
+                            type: i0.Inject,
+                            args: [EFFECTS_ERROR_HANDLER]
+                        }] }];
+        } });
     function effectsInstance(sourceInstance) {
         if (isOnIdentifyEffects(sourceInstance)) {
             return sourceInstance.ngrxOnIdentifyEffects();
@@ -704,24 +725,14 @@
         };
         return EffectsRunner;
     }());
-    /** @type {!Array<{type: !Function, args: (undefined|!Array<?>)}>} */
-    EffectsRunner.decorators = [
-        { type: core.Injectable }
-    ];
-    /**
-     * @type {function(): !Array<(null|{
-     *   type: ?,
-     *   decorators: (undefined|!Array<{type: !Function, args: (undefined|!Array<?>)}>),
-     * })>}
-     * @nocollapse
-     */
-    EffectsRunner.ctorParameters = function () { return [
-        { type: EffectSources },
-        { type: store.Store }
-    ]; };
+    /** @nocollapse */ EffectsRunner.ɵfac = i0__namespace.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "12.2.6", ngImport: i0__namespace, type: EffectsRunner, deps: [{ token: EffectSources }, { token: i3__namespace.Store }], target: i0__namespace.ɵɵFactoryTarget.Injectable });
+    /** @nocollapse */ EffectsRunner.ɵprov = i0__namespace.ɵɵngDeclareInjectable({ minVersion: "12.0.0", version: "12.2.6", ngImport: i0__namespace, type: EffectsRunner });
+    i0__namespace.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "12.2.6", ngImport: i0__namespace, type: EffectsRunner, decorators: [{
+                type: i0.Injectable
+            }], ctorParameters: function () { return [{ type: EffectSources }, { type: i3__namespace.Store }]; } });
 
     var ROOT_EFFECTS_INIT = '@ngrx/effects/init';
-    var rootEffectsInit = store.createAction(ROOT_EFFECTS_INIT);
+    var rootEffectsInit = i3.createAction(ROOT_EFFECTS_INIT);
     var EffectsRootModule = /** @class */ (function () {
         function EffectsRootModule(sources, runner, store, rootEffects, storeRootModule, storeFeatureModule, guard) {
             this.sources = sources;
@@ -734,26 +745,27 @@
         };
         return EffectsRootModule;
     }());
-    /** @type {!Array<{type: !Function, args: (undefined|!Array<?>)}>} */
-    EffectsRootModule.decorators = [
-        { type: core.NgModule, args: [{},] }
-    ];
-    /**
-     * @type {function(): !Array<(null|{
-     *   type: ?,
-     *   decorators: (undefined|!Array<{type: !Function, args: (undefined|!Array<?>)}>),
-     * })>}
-     * @nocollapse
-     */
-    EffectsRootModule.ctorParameters = function () { return [
-        { type: EffectSources },
-        { type: EffectsRunner },
-        { type: store.Store },
-        { type: Array, decorators: [{ type: core.Inject, args: [ROOT_EFFECTS,] }] },
-        { type: store.StoreRootModule, decorators: [{ type: core.Optional }] },
-        { type: store.StoreFeatureModule, decorators: [{ type: core.Optional }] },
-        { type: undefined, decorators: [{ type: core.Optional }, { type: core.Inject, args: [_ROOT_EFFECTS_GUARD,] }] }
-    ]; };
+    /** @nocollapse */ EffectsRootModule.ɵfac = i0__namespace.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "12.2.6", ngImport: i0__namespace, type: EffectsRootModule, deps: [{ token: EffectSources }, { token: EffectsRunner }, { token: i3__namespace.Store }, { token: ROOT_EFFECTS }, { token: i3__namespace.StoreRootModule, optional: true }, { token: i3__namespace.StoreFeatureModule, optional: true }, { token: _ROOT_EFFECTS_GUARD, optional: true }], target: i0__namespace.ɵɵFactoryTarget.NgModule });
+    /** @nocollapse */ EffectsRootModule.ɵmod = i0__namespace.ɵɵngDeclareNgModule({ minVersion: "12.0.0", version: "12.2.6", ngImport: i0__namespace, type: EffectsRootModule });
+    /** @nocollapse */ EffectsRootModule.ɵinj = i0__namespace.ɵɵngDeclareInjector({ minVersion: "12.0.0", version: "12.2.6", ngImport: i0__namespace, type: EffectsRootModule });
+    i0__namespace.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "12.2.6", ngImport: i0__namespace, type: EffectsRootModule, decorators: [{
+                type: i0.NgModule,
+                args: [{}]
+            }], ctorParameters: function () {
+            return [{ type: EffectSources }, { type: EffectsRunner }, { type: i3__namespace.Store }, { type: undefined, decorators: [{
+                            type: i0.Inject,
+                            args: [ROOT_EFFECTS]
+                        }] }, { type: i3__namespace.StoreRootModule, decorators: [{
+                            type: i0.Optional
+                        }] }, { type: i3__namespace.StoreFeatureModule, decorators: [{
+                            type: i0.Optional
+                        }] }, { type: undefined, decorators: [{
+                            type: i0.Optional
+                        }, {
+                            type: i0.Inject,
+                            args: [_ROOT_EFFECTS_GUARD]
+                        }] }];
+        } });
 
     var EffectsFeatureModule = /** @class */ (function () {
         function EffectsFeatureModule(root, effectSourceGroups, storeRootModule, storeFeatureModule) {
@@ -761,23 +773,22 @@
         }
         return EffectsFeatureModule;
     }());
-    /** @type {!Array<{type: !Function, args: (undefined|!Array<?>)}>} */
-    EffectsFeatureModule.decorators = [
-        { type: core.NgModule, args: [{},] }
-    ];
-    /**
-     * @type {function(): !Array<(null|{
-     *   type: ?,
-     *   decorators: (undefined|!Array<{type: !Function, args: (undefined|!Array<?>)}>),
-     * })>}
-     * @nocollapse
-     */
-    EffectsFeatureModule.ctorParameters = function () { return [
-        { type: EffectsRootModule },
-        { type: Array, decorators: [{ type: core.Inject, args: [FEATURE_EFFECTS,] }] },
-        { type: store.StoreRootModule, decorators: [{ type: core.Optional }] },
-        { type: store.StoreFeatureModule, decorators: [{ type: core.Optional }] }
-    ]; };
+    /** @nocollapse */ EffectsFeatureModule.ɵfac = i0__namespace.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "12.2.6", ngImport: i0__namespace, type: EffectsFeatureModule, deps: [{ token: EffectsRootModule }, { token: FEATURE_EFFECTS }, { token: i3__namespace.StoreRootModule, optional: true }, { token: i3__namespace.StoreFeatureModule, optional: true }], target: i0__namespace.ɵɵFactoryTarget.NgModule });
+    /** @nocollapse */ EffectsFeatureModule.ɵmod = i0__namespace.ɵɵngDeclareNgModule({ minVersion: "12.0.0", version: "12.2.6", ngImport: i0__namespace, type: EffectsFeatureModule });
+    /** @nocollapse */ EffectsFeatureModule.ɵinj = i0__namespace.ɵɵngDeclareInjector({ minVersion: "12.0.0", version: "12.2.6", ngImport: i0__namespace, type: EffectsFeatureModule });
+    i0__namespace.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "12.2.6", ngImport: i0__namespace, type: EffectsFeatureModule, decorators: [{
+                type: i0.NgModule,
+                args: [{}]
+            }], ctorParameters: function () {
+            return [{ type: EffectsRootModule }, { type: undefined, decorators: [{
+                            type: i0.Inject,
+                            args: [FEATURE_EFFECTS]
+                        }] }, { type: i3__namespace.StoreRootModule, decorators: [{
+                            type: i0.Optional
+                        }] }, { type: i3__namespace.StoreFeatureModule, decorators: [{
+                            type: i0.Optional
+                        }] }];
+        } });
 
     var EffectsModule = /** @class */ (function () {
         function EffectsModule() {
@@ -802,7 +813,7 @@
                         provide: FEATURE_EFFECTS,
                         multi: true,
                         useFactory: createEffects,
-                        deps: [core.Injector, _FEATURE_EFFECTS, USER_PROVIDED_EFFECTS],
+                        deps: [i0.Injector, _FEATURE_EFFECTS, USER_PROVIDED_EFFECTS],
                     },
                 ],
             };
@@ -828,8 +839,8 @@
                         provide: _ROOT_EFFECTS_GUARD,
                         useFactory: _provideForRootGuard,
                         deps: [
-                            [EffectsRunner, new core.Optional(), new core.SkipSelf()],
-                            [_ROOT_EFFECTS, new core.Self()],
+                            [EffectsRunner, new i0.Optional(), new i0.SkipSelf()],
+                            [_ROOT_EFFECTS, new i0.Self()],
                         ],
                     },
                     {
@@ -840,17 +851,20 @@
                     {
                         provide: ROOT_EFFECTS,
                         useFactory: createEffects,
-                        deps: [core.Injector, _ROOT_EFFECTS, USER_PROVIDED_EFFECTS],
+                        deps: [i0.Injector, _ROOT_EFFECTS, USER_PROVIDED_EFFECTS],
                     },
                 ],
             };
         };
         return EffectsModule;
     }());
-    /** @type {!Array<{type: !Function, args: (undefined|!Array<?>)}>} */
-    EffectsModule.decorators = [
-        { type: core.NgModule, args: [{},] }
-    ];
+    /** @nocollapse */ EffectsModule.ɵfac = i0__namespace.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "12.2.6", ngImport: i0__namespace, type: EffectsModule, deps: [], target: i0__namespace.ɵɵFactoryTarget.NgModule });
+    /** @nocollapse */ EffectsModule.ɵmod = i0__namespace.ɵɵngDeclareNgModule({ minVersion: "12.0.0", version: "12.2.6", ngImport: i0__namespace, type: EffectsModule });
+    /** @nocollapse */ EffectsModule.ɵinj = i0__namespace.ɵɵngDeclareInjector({ minVersion: "12.0.0", version: "12.2.6", ngImport: i0__namespace, type: EffectsModule });
+    i0__namespace.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "12.2.6", ngImport: i0__namespace, type: EffectsModule, decorators: [{
+                type: i0.NgModule,
+                args: [{}]
+            }] });
     function createEffects(injector, effectGroups, userProvidedEffectGroups) {
         var e_1, _a, e_2, _b;
         var mergedEffects = [];
@@ -912,9 +926,9 @@
                 unsubscribe: undefined,
             }
             : Object.assign(Object.assign({}, configOrProject), { operator: configOrProject.operator || operators.concatMap }), project = _a.project, error = _a.error, complete = _a.complete, operator = _a.operator, unsubscribe = _a.unsubscribe;
-        return function (source) { return rxjs.defer(function () {
-            var subject = new rxjs.Subject();
-            return rxjs.merge(source.pipe(operator(function (input, index) { return rxjs.defer(function () {
+        return function (source) { return i1.defer(function () {
+            var subject = new i1.Subject();
+            return i1.merge(source.pipe(operator(function (input, index) { return i1.defer(function () {
                 var completed = false;
                 var errored = false;
                 var projectedCount = 0;
@@ -922,11 +936,11 @@
                     switch (notification.kind) {
                         case 'E':
                             errored = true;
-                            return new rxjs.Notification('N', error(notification.error, input));
+                            return new i1.Notification('N', error(notification.error, input));
                         case 'C':
                             completed = true;
                             return complete
-                                ? new rxjs.Notification('N', complete(projectedCount, input))
+                                ? new i1.Notification('N', complete(projectedCount, input))
                                 : undefined;
                         default:
                             ++projectedCount;
@@ -971,12 +985,12 @@
      * ```
      */
     function concatLatestFrom(observablesFactory) {
-        return rxjs.pipe(operators.concatMap(function (value) {
+        return i1.pipe(operators.concatMap(function (value) {
             var observables = observablesFactory(value);
             var observablesAsArray = Array.isArray(observables)
                 ? observables
                 : [observables];
-            return rxjs.of(value).pipe(operators.withLatestFrom.apply(void 0, __spreadArray([], __read(observablesAsArray))));
+            return i1.of(value).pipe(operators.withLatestFrom.apply(void 0, __spreadArray([], __read(observablesAsArray))));
         }));
     }
 
@@ -1008,14 +1022,6 @@
     exports.mergeEffects = mergeEffects;
     exports.ofType = ofType;
     exports.rootEffectsInit = rootEffectsInit;
-    exports.ɵa = getSourceMetadata;
-    exports.ɵb = createEffects;
-    exports.ɵc = _provideForRootGuard;
-    exports.ɵd = _ROOT_EFFECTS_GUARD;
-    exports.ɵe = _ROOT_EFFECTS;
-    exports.ɵf = ROOT_EFFECTS;
-    exports.ɵg = _FEATURE_EFFECTS;
-    exports.ɵh = FEATURE_EFFECTS;
 
     Object.defineProperty(exports, '__esModule', { value: true });
 

@@ -1,27 +1,25 @@
 import { NgModule, Inject, Optional } from '@angular/core';
-import { StoreRootModule, StoreFeatureModule } from '@ngrx/store';
-import { EffectsRootModule } from './effects_root_module';
 import { FEATURE_EFFECTS } from './tokens';
+import * as i0 from "@angular/core";
+import * as i1 from "./effects_root_module";
+import * as i2 from "@ngrx/store";
 export class EffectsFeatureModule {
     constructor(root, effectSourceGroups, storeRootModule, storeFeatureModule) {
         effectSourceGroups.forEach((group) => group.forEach((effectSourceInstance) => root.addEffects(effectSourceInstance)));
     }
 }
-/** @type {!Array<{type: !Function, args: (undefined|!Array<?>)}>} */
-EffectsFeatureModule.decorators = [
-    { type: NgModule, args: [{},] }
-];
-/**
- * @type {function(): !Array<(null|{
- *   type: ?,
- *   decorators: (undefined|!Array<{type: !Function, args: (undefined|!Array<?>)}>),
- * })>}
- * @nocollapse
- */
-EffectsFeatureModule.ctorParameters = () => [
-    { type: EffectsRootModule },
-    { type: Array, decorators: [{ type: Inject, args: [FEATURE_EFFECTS,] }] },
-    { type: StoreRootModule, decorators: [{ type: Optional }] },
-    { type: StoreFeatureModule, decorators: [{ type: Optional }] }
-];
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiZWZmZWN0c19mZWF0dXJlX21vZHVsZS5qcyIsInNvdXJjZVJvb3QiOiIiLCJzb3VyY2VzIjpbIi4uLy4uLy4uLy4uLy4uL21vZHVsZXMvZWZmZWN0cy9zcmMvZWZmZWN0c19mZWF0dXJlX21vZHVsZS50cyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQSxPQUFPLEVBQUUsUUFBUSxFQUFFLE1BQU0sRUFBRSxRQUFRLEVBQUUsTUFBTSxlQUFlLENBQUM7QUFDM0QsT0FBTyxFQUFFLGVBQWUsRUFBRSxrQkFBa0IsRUFBRSxNQUFNLGFBQWEsQ0FBQztBQUNsRSxPQUFPLEVBQUUsaUJBQWlCLEVBQUUsTUFBTSx1QkFBdUIsQ0FBQztBQUMxRCxPQUFPLEVBQUUsZUFBZSxFQUFFLE1BQU0sVUFBVSxDQUFDO0FBRzNDLE1BQU0sT0FBTyxvQkFBb0I7SUFDL0IsWUFDRSxJQUF1QixFQUNFLGtCQUEyQixFQUN4QyxlQUFnQyxFQUNoQyxrQkFBc0M7UUFFbEQsa0JBQWtCLENBQUMsT0FBTyxDQUFDLENBQUMsS0FBSyxFQUFFLEVBQUUsQ0FDbkMsS0FBSyxDQUFDLE9BQU8sQ0FBQyxDQUFDLG9CQUFvQixFQUFFLEVBQUUsQ0FDckMsSUFBSSxDQUFDLFVBQVUsQ0FBQyxvQkFBb0IsQ0FBQyxDQUN0QyxDQUNGLENBQUM7SUFDSixDQUFDOzs7O1lBYkYsUUFBUSxTQUFDLEVBQUU7Ozs7Ozs7Ozs7WUFISCxpQkFBaUI7d0NBT3JCLE1BQU0sU0FBQyxlQUFlO1lBUmxCLGVBQWUsdUJBU25CLFFBQVE7WUFUYSxrQkFBa0IsdUJBVXZDLFFBQVEiLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgeyBOZ01vZHVsZSwgSW5qZWN0LCBPcHRpb25hbCB9IGZyb20gJ0Bhbmd1bGFyL2NvcmUnO1xuaW1wb3J0IHsgU3RvcmVSb290TW9kdWxlLCBTdG9yZUZlYXR1cmVNb2R1bGUgfSBmcm9tICdAbmdyeC9zdG9yZSc7XG5pbXBvcnQgeyBFZmZlY3RzUm9vdE1vZHVsZSB9IGZyb20gJy4vZWZmZWN0c19yb290X21vZHVsZSc7XG5pbXBvcnQgeyBGRUFUVVJFX0VGRkVDVFMgfSBmcm9tICcuL3Rva2Vucyc7XG5cbkBOZ01vZHVsZSh7fSlcbmV4cG9ydCBjbGFzcyBFZmZlY3RzRmVhdHVyZU1vZHVsZSB7XG4gIGNvbnN0cnVjdG9yKFxuICAgIHJvb3Q6IEVmZmVjdHNSb290TW9kdWxlLFxuICAgIEBJbmplY3QoRkVBVFVSRV9FRkZFQ1RTKSBlZmZlY3RTb3VyY2VHcm91cHM6IGFueVtdW10sXG4gICAgQE9wdGlvbmFsKCkgc3RvcmVSb290TW9kdWxlOiBTdG9yZVJvb3RNb2R1bGUsXG4gICAgQE9wdGlvbmFsKCkgc3RvcmVGZWF0dXJlTW9kdWxlOiBTdG9yZUZlYXR1cmVNb2R1bGVcbiAgKSB7XG4gICAgZWZmZWN0U291cmNlR3JvdXBzLmZvckVhY2goKGdyb3VwKSA9PlxuICAgICAgZ3JvdXAuZm9yRWFjaCgoZWZmZWN0U291cmNlSW5zdGFuY2UpID0+XG4gICAgICAgIHJvb3QuYWRkRWZmZWN0cyhlZmZlY3RTb3VyY2VJbnN0YW5jZSlcbiAgICAgIClcbiAgICApO1xuICB9XG59XG4iXX0=
+/** @nocollapse */ EffectsFeatureModule.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "12.2.6", ngImport: i0, type: EffectsFeatureModule, deps: [{ token: i1.EffectsRootModule }, { token: FEATURE_EFFECTS }, { token: i2.StoreRootModule, optional: true }, { token: i2.StoreFeatureModule, optional: true }], target: i0.ɵɵFactoryTarget.NgModule });
+/** @nocollapse */ EffectsFeatureModule.ɵmod = i0.ɵɵngDeclareNgModule({ minVersion: "12.0.0", version: "12.2.6", ngImport: i0, type: EffectsFeatureModule });
+/** @nocollapse */ EffectsFeatureModule.ɵinj = i0.ɵɵngDeclareInjector({ minVersion: "12.0.0", version: "12.2.6", ngImport: i0, type: EffectsFeatureModule });
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "12.2.6", ngImport: i0, type: EffectsFeatureModule, decorators: [{
+            type: NgModule,
+            args: [{}]
+        }], ctorParameters: function () { return [{ type: i1.EffectsRootModule }, { type: undefined, decorators: [{
+                    type: Inject,
+                    args: [FEATURE_EFFECTS]
+                }] }, { type: i2.StoreRootModule, decorators: [{
+                    type: Optional
+                }] }, { type: i2.StoreFeatureModule, decorators: [{
+                    type: Optional
+                }] }]; } });
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiZWZmZWN0c19mZWF0dXJlX21vZHVsZS5qcyIsInNvdXJjZVJvb3QiOiIiLCJzb3VyY2VzIjpbIi4uLy4uLy4uLy4uLy4uL21vZHVsZXMvZWZmZWN0cy9zcmMvZWZmZWN0c19mZWF0dXJlX21vZHVsZS50cyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQSxPQUFPLEVBQUUsUUFBUSxFQUFFLE1BQU0sRUFBRSxRQUFRLEVBQUUsTUFBTSxlQUFlLENBQUM7QUFHM0QsT0FBTyxFQUFFLGVBQWUsRUFBRSxNQUFNLFVBQVUsQ0FBQzs7OztBQUczQyxNQUFNLE9BQU8sb0JBQW9CO0lBQy9CLFlBQ0UsSUFBdUIsRUFDRSxrQkFBMkIsRUFDeEMsZUFBZ0MsRUFDaEMsa0JBQXNDO1FBRWxELGtCQUFrQixDQUFDLE9BQU8sQ0FBQyxDQUFDLEtBQUssRUFBRSxFQUFFLENBQ25DLEtBQUssQ0FBQyxPQUFPLENBQUMsQ0FBQyxvQkFBb0IsRUFBRSxFQUFFLENBQ3JDLElBQUksQ0FBQyxVQUFVLENBQUMsb0JBQW9CLENBQUMsQ0FDdEMsQ0FDRixDQUFDO0lBQ0osQ0FBQzs7b0lBWlUsb0JBQW9CLG1EQUdyQixlQUFlO3FJQUhkLG9CQUFvQjtxSUFBcEIsb0JBQW9COzJGQUFwQixvQkFBb0I7a0JBRGhDLFFBQVE7bUJBQUMsRUFBRTs7MEJBSVAsTUFBTTsyQkFBQyxlQUFlOzswQkFDdEIsUUFBUTs7MEJBQ1IsUUFBUSIsInNvdXJjZXNDb250ZW50IjpbImltcG9ydCB7IE5nTW9kdWxlLCBJbmplY3QsIE9wdGlvbmFsIH0gZnJvbSAnQGFuZ3VsYXIvY29yZSc7XG5pbXBvcnQgeyBTdG9yZVJvb3RNb2R1bGUsIFN0b3JlRmVhdHVyZU1vZHVsZSB9IGZyb20gJ0BuZ3J4L3N0b3JlJztcbmltcG9ydCB7IEVmZmVjdHNSb290TW9kdWxlIH0gZnJvbSAnLi9lZmZlY3RzX3Jvb3RfbW9kdWxlJztcbmltcG9ydCB7IEZFQVRVUkVfRUZGRUNUUyB9IGZyb20gJy4vdG9rZW5zJztcblxuQE5nTW9kdWxlKHt9KVxuZXhwb3J0IGNsYXNzIEVmZmVjdHNGZWF0dXJlTW9kdWxlIHtcbiAgY29uc3RydWN0b3IoXG4gICAgcm9vdDogRWZmZWN0c1Jvb3RNb2R1bGUsXG4gICAgQEluamVjdChGRUFUVVJFX0VGRkVDVFMpIGVmZmVjdFNvdXJjZUdyb3VwczogYW55W11bXSxcbiAgICBAT3B0aW9uYWwoKSBzdG9yZVJvb3RNb2R1bGU6IFN0b3JlUm9vdE1vZHVsZSxcbiAgICBAT3B0aW9uYWwoKSBzdG9yZUZlYXR1cmVNb2R1bGU6IFN0b3JlRmVhdHVyZU1vZHVsZVxuICApIHtcbiAgICBlZmZlY3RTb3VyY2VHcm91cHMuZm9yRWFjaCgoZ3JvdXApID0+XG4gICAgICBncm91cC5mb3JFYWNoKChlZmZlY3RTb3VyY2VJbnN0YW5jZSkgPT5cbiAgICAgICAgcm9vdC5hZGRFZmZlY3RzKGVmZmVjdFNvdXJjZUluc3RhbmNlKVxuICAgICAgKVxuICAgICk7XG4gIH1cbn1cbiJdfQ==

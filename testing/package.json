@@ -8,6 +8,5 @@
   "esm2015": "../esm2015/testing/ngrx-effects-testing.js",
   "fesm5": "../fesm5/testing.js",
   "fesm2015": "../fesm2015/ngrx-effects-testing.js",
-  "metadata": "ngrx-effects-testing.metadata.json",
   "sideEffects": false
 }

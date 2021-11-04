@@ -1,8 +1,11 @@
 import { Action, ActionCreator, Creator } from '@ngrx/store';
 import { Observable, OperatorFunction, Operator } from 'rxjs';
+import * as i0 from "@angular/core";
 export declare class Actions<V = Action> extends Observable<V> {
     constructor(source?: Observable<V>);
     lift<R>(operator: Operator<V, R>): Observable<R>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<Actions<any>, never>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<Actions<any>>;
 }
 declare type ActionExtractor<T extends string | AC, AC extends ActionCreator<string, Creator>, E> = T extends string ? E : ReturnType<Extract<T, AC>>;
 export declare function ofType<AC extends ActionCreator<string, Creator>[], U extends Action = Action, V = ReturnType<AC[number]>>(...allowedTypes: AC): OperatorFunction<U, V>;

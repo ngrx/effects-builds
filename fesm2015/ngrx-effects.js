@@ -1,7 +1,10 @@
-import { compose, ScannedActionsSubject, Store, createAction, StoreRootModule, StoreFeatureModule } from '@ngrx/store';
+import * as i3 from '@ngrx/store';
+import { compose, ScannedActionsSubject, createAction } from '@ngrx/store';
+import * as i1 from 'rxjs';
 import { merge, Observable, Subject, defer, Notification, pipe, of } from 'rxjs';
 import { ignoreElements, materialize, map, catchError, filter, groupBy, mergeMap, exhaustMap, dematerialize, take, concatMap, finalize, withLatestFrom } from 'rxjs/operators';
-import { Injectable, Inject, InjectionToken, ErrorHandler, NgModule, Optional, Injector, SkipSelf, Self } from '@angular/core';
+import * as i0 from '@angular/core';
+import { Injectable, Inject, InjectionToken, NgModule, Optional, Injector, SkipSelf, Self } from '@angular/core';
 
 const DEFAULT_EFFECT_CONFIG = {
     dispatch: true,
@@ -179,20 +182,14 @@ class Actions extends Observable {
         return observable;
     }
 }
-/** @type {!Array<{type: !Function, args: (undefined|!Array<?>)}>} */
-Actions.decorators = [
-    { type: Injectable }
-];
-/**
- * @type {function(): !Array<(null|{
- *   type: ?,
- *   decorators: (undefined|!Array<{type: !Function, args: (undefined|!Array<?>)}>),
- * })>}
- * @nocollapse
- */
-Actions.ctorParameters = () => [
-    { type: Observable, decorators: [{ type: Inject, args: [ScannedActionsSubject,] }] }
-];
+/** @nocollapse */ Actions.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "12.2.6", ngImport: i0, type: Actions, deps: [{ token: ScannedActionsSubject }], target: i0.ɵɵFactoryTarget.Injectable });
+/** @nocollapse */ Actions.ɵprov = i0.ɵɵngDeclareInjectable({ minVersion: "12.0.0", version: "12.2.6", ngImport: i0, type: Actions });
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "12.2.6", ngImport: i0, type: Actions, decorators: [{
+            type: Injectable
+        }], ctorParameters: function () { return [{ type: i1.Observable, decorators: [{
+                    type: Inject,
+                    args: [ScannedActionsSubject]
+                }] }]; } });
 /**
  * `ofType` filters an Observable of `Actions` into an Observable of the actions
  * whose type strings are passed to it.
@@ -322,21 +319,14 @@ class EffectSources extends Subject {
         }));
     }
 }
-/** @type {!Array<{type: !Function, args: (undefined|!Array<?>)}>} */
-EffectSources.decorators = [
-    { type: Injectable }
-];
-/**
- * @type {function(): !Array<(null|{
- *   type: ?,
- *   decorators: (undefined|!Array<{type: !Function, args: (undefined|!Array<?>)}>),
- * })>}
- * @nocollapse
- */
-EffectSources.ctorParameters = () => [
-    { type: ErrorHandler },
-    { type: undefined, decorators: [{ type: Inject, args: [EFFECTS_ERROR_HANDLER,] }] }
-];
+/** @nocollapse */ EffectSources.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "12.2.6", ngImport: i0, type: EffectSources, deps: [{ token: i0.ErrorHandler }, { token: EFFECTS_ERROR_HANDLER }], target: i0.ɵɵFactoryTarget.Injectable });
+/** @nocollapse */ EffectSources.ɵprov = i0.ɵɵngDeclareInjectable({ minVersion: "12.0.0", version: "12.2.6", ngImport: i0, type: EffectSources });
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "12.2.6", ngImport: i0, type: EffectSources, decorators: [{
+            type: Injectable
+        }], ctorParameters: function () { return [{ type: i0.ErrorHandler }, { type: undefined, decorators: [{
+                    type: Inject,
+                    args: [EFFECTS_ERROR_HANDLER]
+                }] }]; } });
 function effectsInstance(sourceInstance) {
     if (isOnIdentifyEffects(sourceInstance)) {
         return sourceInstance.ngrxOnIdentifyEffects();
@@ -373,21 +363,11 @@ class EffectsRunner {
         }
     }
 }
-/** @type {!Array<{type: !Function, args: (undefined|!Array<?>)}>} */
-EffectsRunner.decorators = [
-    { type: Injectable }
-];
-/**
- * @type {function(): !Array<(null|{
- *   type: ?,
- *   decorators: (undefined|!Array<{type: !Function, args: (undefined|!Array<?>)}>),
- * })>}
- * @nocollapse
- */
-EffectsRunner.ctorParameters = () => [
-    { type: EffectSources },
-    { type: Store }
-];
+/** @nocollapse */ EffectsRunner.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "12.2.6", ngImport: i0, type: EffectsRunner, deps: [{ token: EffectSources }, { token: i3.Store }], target: i0.ɵɵFactoryTarget.Injectable });
+/** @nocollapse */ EffectsRunner.ɵprov = i0.ɵɵngDeclareInjectable({ minVersion: "12.0.0", version: "12.2.6", ngImport: i0, type: EffectsRunner });
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "12.2.6", ngImport: i0, type: EffectsRunner, decorators: [{
+            type: Injectable
+        }], ctorParameters: function () { return [{ type: EffectSources }, { type: i3.Store }]; } });
 
 const ROOT_EFFECTS_INIT = '@ngrx/effects/init';
 const rootEffectsInit = createAction(ROOT_EFFECTS_INIT);
@@ -402,49 +382,45 @@ class EffectsRootModule {
         this.sources.addEffects(effectSourceInstance);
     }
 }
-/** @type {!Array<{type: !Function, args: (undefined|!Array<?>)}>} */
-EffectsRootModule.decorators = [
-    { type: NgModule, args: [{},] }
-];
-/**
- * @type {function(): !Array<(null|{
- *   type: ?,
- *   decorators: (undefined|!Array<{type: !Function, args: (undefined|!Array<?>)}>),
- * })>}
- * @nocollapse
- */
-EffectsRootModule.ctorParameters = () => [
-    { type: EffectSources },
-    { type: EffectsRunner },
-    { type: Store },
-    { type: Array, decorators: [{ type: Inject, args: [ROOT_EFFECTS,] }] },
-    { type: StoreRootModule, decorators: [{ type: Optional }] },
-    { type: StoreFeatureModule, decorators: [{ type: Optional }] },
-    { type: undefined, decorators: [{ type: Optional }, { type: Inject, args: [_ROOT_EFFECTS_GUARD,] }] }
-];
+/** @nocollapse */ EffectsRootModule.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "12.2.6", ngImport: i0, type: EffectsRootModule, deps: [{ token: EffectSources }, { token: EffectsRunner }, { token: i3.Store }, { token: ROOT_EFFECTS }, { token: i3.StoreRootModule, optional: true }, { token: i3.StoreFeatureModule, optional: true }, { token: _ROOT_EFFECTS_GUARD, optional: true }], target: i0.ɵɵFactoryTarget.NgModule });
+/** @nocollapse */ EffectsRootModule.ɵmod = i0.ɵɵngDeclareNgModule({ minVersion: "12.0.0", version: "12.2.6", ngImport: i0, type: EffectsRootModule });
+/** @nocollapse */ EffectsRootModule.ɵinj = i0.ɵɵngDeclareInjector({ minVersion: "12.0.0", version: "12.2.6", ngImport: i0, type: EffectsRootModule });
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "12.2.6", ngImport: i0, type: EffectsRootModule, decorators: [{
+            type: NgModule,
+            args: [{}]
+        }], ctorParameters: function () { return [{ type: EffectSources }, { type: EffectsRunner }, { type: i3.Store }, { type: undefined, decorators: [{
+                    type: Inject,
+                    args: [ROOT_EFFECTS]
+                }] }, { type: i3.StoreRootModule, decorators: [{
+                    type: Optional
+                }] }, { type: i3.StoreFeatureModule, decorators: [{
+                    type: Optional
+                }] }, { type: undefined, decorators: [{
+                    type: Optional
+                }, {
+                    type: Inject,
+                    args: [_ROOT_EFFECTS_GUARD]
+                }] }]; } });
 
 class EffectsFeatureModule {
     constructor(root, effectSourceGroups, storeRootModule, storeFeatureModule) {
         effectSourceGroups.forEach((group) => group.forEach((effectSourceInstance) => root.addEffects(effectSourceInstance)));
     }
 }
-/** @type {!Array<{type: !Function, args: (undefined|!Array<?>)}>} */
-EffectsFeatureModule.decorators = [
-    { type: NgModule, args: [{},] }
-];
-/**
- * @type {function(): !Array<(null|{
- *   type: ?,
- *   decorators: (undefined|!Array<{type: !Function, args: (undefined|!Array<?>)}>),
- * })>}
- * @nocollapse
- */
-EffectsFeatureModule.ctorParameters = () => [
-    { type: EffectsRootModule },
-    { type: Array, decorators: [{ type: Inject, args: [FEATURE_EFFECTS,] }] },
-    { type: StoreRootModule, decorators: [{ type: Optional }] },
-    { type: StoreFeatureModule, decorators: [{ type: Optional }] }
-];
+/** @nocollapse */ EffectsFeatureModule.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "12.2.6", ngImport: i0, type: EffectsFeatureModule, deps: [{ token: EffectsRootModule }, { token: FEATURE_EFFECTS }, { token: i3.StoreRootModule, optional: true }, { token: i3.StoreFeatureModule, optional: true }], target: i0.ɵɵFactoryTarget.NgModule });
+/** @nocollapse */ EffectsFeatureModule.ɵmod = i0.ɵɵngDeclareNgModule({ minVersion: "12.0.0", version: "12.2.6", ngImport: i0, type: EffectsFeatureModule });
+/** @nocollapse */ EffectsFeatureModule.ɵinj = i0.ɵɵngDeclareInjector({ minVersion: "12.0.0", version: "12.2.6", ngImport: i0, type: EffectsFeatureModule });
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "12.2.6", ngImport: i0, type: EffectsFeatureModule, decorators: [{
+            type: NgModule,
+            args: [{}]
+        }], ctorParameters: function () { return [{ type: EffectsRootModule }, { type: undefined, decorators: [{
+                    type: Inject,
+                    args: [FEATURE_EFFECTS]
+                }] }, { type: i3.StoreRootModule, decorators: [{
+                    type: Optional
+                }] }, { type: i3.StoreFeatureModule, decorators: [{
+                    type: Optional
+                }] }]; } });
 
 class EffectsModule {
     static forFeature(featureEffects = []) {
@@ -509,10 +485,13 @@ class EffectsModule {
         };
     }
 }
-/** @type {!Array<{type: !Function, args: (undefined|!Array<?>)}>} */
-EffectsModule.decorators = [
-    { type: NgModule, args: [{},] }
-];
+/** @nocollapse */ EffectsModule.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "12.2.6", ngImport: i0, type: EffectsModule, deps: [], target: i0.ɵɵFactoryTarget.NgModule });
+/** @nocollapse */ EffectsModule.ɵmod = i0.ɵɵngDeclareNgModule({ minVersion: "12.0.0", version: "12.2.6", ngImport: i0, type: EffectsModule });
+/** @nocollapse */ EffectsModule.ɵinj = i0.ɵɵngDeclareInjector({ minVersion: "12.0.0", version: "12.2.6", ngImport: i0, type: EffectsModule });
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "12.2.6", ngImport: i0, type: EffectsModule, decorators: [{
+            type: NgModule,
+            args: [{}]
+        }] });
 function createEffects(injector, effectGroups, userProvidedEffectGroups) {
     const mergedEffects = [];
     for (const effectGroup of effectGroups) {
@@ -631,5 +610,5 @@ function concatLatestFrom(observablesFactory) {
  * Generated bundle index. Do not edit.
  */
 
-export { Actions, EFFECTS_ERROR_HANDLER, Effect, EffectSources, EffectsFeatureModule, EffectsModule, EffectsRootModule, EffectsRunner, ROOT_EFFECTS_INIT, USER_PROVIDED_EFFECTS, act, concatLatestFrom, createEffect, defaultEffectsErrorHandler, getEffectsMetadata, mergeEffects, ofType, rootEffectsInit, getSourceMetadata as ɵa, createEffects as ɵb, _provideForRootGuard as ɵc, _ROOT_EFFECTS_GUARD as ɵd, _ROOT_EFFECTS as ɵe, ROOT_EFFECTS as ɵf, _FEATURE_EFFECTS as ɵg, FEATURE_EFFECTS as ɵh };
+export { Actions, EFFECTS_ERROR_HANDLER, Effect, EffectSources, EffectsFeatureModule, EffectsModule, EffectsRootModule, EffectsRunner, ROOT_EFFECTS_INIT, USER_PROVIDED_EFFECTS, act, concatLatestFrom, createEffect, defaultEffectsErrorHandler, getEffectsMetadata, mergeEffects, ofType, rootEffectsInit };
 //# sourceMappingURL=ngrx-effects.js.map
