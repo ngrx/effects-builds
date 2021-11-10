@@ -70,4 +70,4 @@ function provideMockActions(factoryOrSource) {
  */
 
 export { provideMockActions };
-//# sourceMappingURL=ngrx-effects-testing.js.map
+//# sourceMappingURL=ngrx-effects-testing.mjs.map

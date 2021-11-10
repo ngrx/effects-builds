@@ -21,9 +21,9 @@ var schematics_1 = require("@angular-devkit/schematics");
 var schematics_core_1 = require("../../schematics-core");
 function renameErrorHandlerConfig() {
     return function (tree, ctx) {
-        schematics_core_1.visitTSSourceFiles(tree, function (sourceFile) {
+        (0, schematics_core_1.visitTSSourceFiles)(tree, function (sourceFile) {
             var changes = replaceEffectConfigKeys(sourceFile, 'resubscribeOnError', 'useEffectsErrorHandler');
-            schematics_core_1.commitChanges(tree, sourceFile.fileName, changes);
+            (0, schematics_core_1.commitChanges)(tree, sourceFile.fileName, changes);
             if (changes.length) {
                 ctx.logger.info("[@ngrx/effects] Updated Effects configuration, see the migration guide (https://ngrx.io/guide/migration/v9#effects) for more info");
             }
@@ -46,7 +46,7 @@ function replaceEffectConfigKeys(sourceFile, oldText, newText) {
     return changes;
     function findAndReplaceText(node) {
         visitIdentifierWithText(node, oldText, function (match) {
-            changes.push(schematics_core_1.createReplaceChange(sourceFile, match, oldText, newText));
+            changes.push((0, schematics_core_1.createReplaceChange)(sourceFile, match, oldText, newText));
         });
     }
 }
@@ -80,7 +80,7 @@ function visitCreateEffectFunctionCreator(node, visitor) {
     });
 }
 function default_1() {
-    return schematics_1.chain([renameErrorHandlerConfig()]);
+    return (0, schematics_1.chain)([renameErrorHandlerConfig()]);
 }
 exports["default"] = default_1;
 //# sourceMappingURL=index.js.map

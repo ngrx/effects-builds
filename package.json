@@ -21,7 +21,7 @@
   },
   "homepage": "https://github.com/ngrx/platform#readme",
   "peerDependencies": {
-    "@angular/core": "^13.0.0-rc.0",
+    "@angular/core": "^13.0.0",
     "@ngrx/store": "13.0.0-beta.0",
     "rxjs": "^6.5.3 || ^7.4.0"
   },
@@ -44,10 +44,31 @@
   "dependencies": {
     "tslib": "^2.0.0"
   },
-  "main": "bundles/ngrx-effects.umd.js",
-  "module": "fesm2015/ngrx-effects.js",
-  "es2015": "fesm2015/ngrx-effects.js",
-  "esm2015": "esm2015/ngrx-effects.js",
-  "fesm2015": "fesm2015/ngrx-effects.js",
-  "typings": "ngrx-effects.d.ts"
+  "module": "fesm2015/ngrx-effects.mjs",
+  "es2020": "fesm2020/ngrx-effects.mjs",
+  "esm2020": "esm2020/ngrx-effects.mjs",
+  "fesm2020": "fesm2020/ngrx-effects.mjs",
+  "fesm2015": "fesm2015/ngrx-effects.mjs",
+  "typings": "ngrx-effects.d.ts",
+  "exports": {
+    "./package.json": {
+      "default": "./package.json"
+    },
+    ".": {
+      "types": "./ngrx-effects.d.ts",
+      "esm2020": "./esm2020/ngrx-effects.mjs",
+      "es2020": "./fesm2020/ngrx-effects.mjs",
+      "es2015": "./fesm2015/ngrx-effects.mjs",
+      "node": "./fesm2015/ngrx-effects.mjs",
+      "default": "./fesm2020/ngrx-effects.mjs"
+    },
+    "./testing": {
+      "types": "./testing/ngrx-effects-testing.d.ts",
+      "esm2020": "./esm2020/testing/ngrx-effects-testing.mjs",
+      "es2020": "./fesm2020/ngrx-effects-testing.mjs",
+      "es2015": "./fesm2015/ngrx-effects-testing.mjs",
+      "node": "./fesm2015/ngrx-effects-testing.mjs",
+      "default": "./fesm2020/ngrx-effects-testing.mjs"
+    }
+  }
 }

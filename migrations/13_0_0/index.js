@@ -15,10 +15,14 @@ var __read = (this && this.__read) || function (o, n) {
     }
     return ar;
 };
-var __spreadArray = (this && this.__spreadArray) || function (to, from) {
-    for (var i = 0, il = from.length, j = to.length; i < il; i++, j++)
-        to[j] = from[i];
-    return to;
+var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
 };
 exports.__esModule = true;
 exports.migrateToCreators = void 0;
@@ -27,7 +31,7 @@ var schematics_1 = require("@angular-devkit/schematics");
 var schematics_core_1 = require("../../schematics-core");
 function migrateToCreators() {
     return function (tree) {
-        schematics_core_1.visitTSSourceFiles(tree, function (sourceFile) {
+        (0, schematics_core_1.visitTSSourceFiles)(tree, function (sourceFile) {
             var effectsPerClass = sourceFile.statements
                 .filter(ts.isClassDeclaration)
                 .map(function (clas) {
@@ -40,8 +44,8 @@ function migrateToCreators() {
             });
             var effects = effectsPerClass.reduce(function (acc, effects) { return acc.concat(effects); }, []);
             var createEffectsChanges = replaceEffectDecorators(tree, sourceFile, effects);
-            var importChanges = schematics_core_1.replaceImport(sourceFile, sourceFile.fileName, '@ngrx/effects', 'Effect', 'createEffect');
-            schematics_core_1.commitChanges(tree, sourceFile.fileName, __spreadArray(__spreadArray([], __read(importChanges)), __read(createEffectsChanges)));
+            var importChanges = (0, schematics_core_1.replaceImport)(sourceFile, sourceFile.fileName, '@ngrx/effects', 'Effect', 'createEffect');
+            (0, schematics_core_1.commitChanges)(tree, sourceFile.fileName, __spreadArray(__spreadArray([], __read(importChanges), false), __read(createEffectsChanges), false));
         });
     };
 }
@@ -80,7 +84,7 @@ function replaceEffectDecorators(host, sourceFile, effects) {
         });
     })
         .reduce(function (acc, removes) { return acc.concat(removes); }, []);
-    return __spreadArray(__spreadArray([], __read(inserts)), __read(removes));
+    return __spreadArray(__spreadArray([], __read(inserts), false), __read(removes), false);
 }
 function isEffectDecorator(decorator) {
     return (ts.isCallExpression(decorator.expression) &&
@@ -98,7 +102,7 @@ function getDispatchProperties(host, fileContent, decorator) {
     return args;
 }
 function default_1() {
-    return schematics_1.chain([migrateToCreators()]);
+    return (0, schematics_1.chain)([migrateToCreators()]);
 }
 exports["default"] = default_1;
 //# sourceMappingURL=index.js.map

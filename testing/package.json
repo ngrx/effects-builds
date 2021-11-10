@@ -1,12 +1,15 @@
 {
   "name": "@ngrx/effects/testing",
   "typings": "ngrx-effects-testing.d.ts",
-  "main": "../bundles/ngrx-effects-testing.umd.js",
-  "module": "../fesm2015/ngrx-effects-testing.js",
-  "es2015": "../fesm2015/ngrx-effects-testing.js",
+  "main": "../bundles/core-testing.umd.js",
+  "module": "../fesm2015/ngrx-effects-testing.mjs",
+  "es2015": "../fesm2015/testing.js",
   "esm5": "../esm5/testing/testing.js",
-  "esm2015": "../esm2015/testing/ngrx-effects-testing.js",
+  "esm2015": "../esm2015/testing/testing.js",
   "fesm5": "../fesm5/testing.js",
-  "fesm2015": "../fesm2015/ngrx-effects-testing.js",
+  "fesm2015": "../fesm2015/ngrx-effects-testing.mjs",
+  "es2020": "../fesm2020/ngrx-effects-testing.mjs",
+  "esm2020": "../esm2020/testing/ngrx-effects-testing.mjs",
+  "fesm2020": "../fesm2020/ngrx-effects-testing.mjs",
   "sideEffects": false
 }
