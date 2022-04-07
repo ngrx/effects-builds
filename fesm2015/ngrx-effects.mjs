@@ -579,7 +579,7 @@ configOrProject, errorFn) {
  *
  * ```ts
  * import { concatLatestFrom } from '@ngrx/effects';
- * import * fromCustomers from '../customers';
+ * import * as fromCustomers from '../customers';
  *
  * this.actions$.pipe(
  *  concatLatestFrom(() => this.store.select(fromCustomers.selectActiveCustomer))
