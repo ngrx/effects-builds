@@ -18,7 +18,10 @@
       "type": "string",
       "format": "path",
       "description": "The path to create the effect.",
-      "visible": false
+      "visible": false,
+      "$default": {
+        "$source": "workingDirectory"
+      }
     },
     "flat": {
       "type": "boolean",
@@ -52,6 +55,11 @@
       "type": "boolean",
       "default": true,
       "description": "Setup root effects module without registering initial effects."
+    },
+    "standalone": {
+      "type": "boolean",
+      "default": false,
+      "description": "Configure @ngrx/effects for standalone application"
     }
   },
   "required": []

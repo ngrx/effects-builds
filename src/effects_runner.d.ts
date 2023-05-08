@@ -6,6 +6,7 @@ export declare class EffectsRunner implements OnDestroy {
     private effectSources;
     private store;
     private effectsSubscription;
+    get isStarted(): boolean;
     constructor(effectSources: EffectSources, store: Store<any>);
     start(): void;
     ngOnDestroy(): void;

@@ -24,7 +24,7 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
     }
     return to.concat(ar || Array.prototype.slice.call(from));
 };
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 exports.migrateToCreators = void 0;
 var ts = require("typescript");
 var schematics_1 = require("@angular-devkit/schematics");
@@ -35,11 +35,9 @@ function migrateToCreators() {
             var effectsPerClass = sourceFile.statements
                 .filter(ts.isClassDeclaration)
                 .map(function (clas) {
-                return clas.members
-                    .filter(ts.isPropertyDeclaration)
-                    .filter(function (property) {
-                    return property.decorators &&
-                        property.decorators.some(isEffectDecorator);
+                return clas.members.filter(ts.isPropertyDeclaration).filter(function (property) {
+                    var decorators = ts.getDecorators(property);
+                    return decorators && decorators.some(isEffectDecorator);
                 });
             });
             var effects = effectsPerClass.reduce(function (acc, effects) { return acc.concat(effects); }, []);
@@ -56,7 +54,7 @@ function replaceEffectDecorators(host, sourceFile, effects) {
         if (!effect.initializer) {
             return [];
         }
-        var decorator = (effect.decorators || []).find(isEffectDecorator);
+        var decorator = (ts.getDecorators(effect) || []).find(isEffectDecorator);
         if (!decorator) {
             return [];
         }
@@ -64,7 +62,7 @@ function replaceEffectDecorators(host, sourceFile, effects) {
             return [];
         }
         var effectArguments = getDispatchProperties(host, sourceFile.text, decorator);
-        var end = effectArguments ? ", " + effectArguments + ")" : ')';
+        var end = effectArguments ? ", ".concat(effectArguments, ")") : ')';
         return [
             new schematics_core_1.InsertChange(sourceFile.fileName, effect.initializer.pos, ' createEffect(() =>'),
             new schematics_core_1.InsertChange(sourceFile.fileName, effect.initializer.end, end),
@@ -72,7 +70,7 @@ function replaceEffectDecorators(host, sourceFile, effects) {
     })
         .reduce(function (acc, inserts) { return acc.concat(inserts); }, []);
     var removes = effects
-        .map(function (effect) { return effect.decorators; })
+        .map(function (effect) { return ts.getDecorators(effect); })
         .map(function (decorators) {
         if (!decorators) {
             return [];
@@ -104,5 +102,5 @@ function getDispatchProperties(host, fileContent, decorator) {
 function default_1() {
     return (0, schematics_1.chain)([migrateToCreators()]);
 }
-exports["default"] = default_1;
+exports.default = default_1;
 //# sourceMappingURL=index.js.map
