@@ -131,7 +131,9 @@ function getSourceForInstance(instance) {
     return Object.getPrototypeOf(instance);
 }
 function isClassInstance(obj) {
-    return (obj.constructor.name !== 'Object' && obj.constructor.name !== 'Function');
+    return (!!obj.constructor &&
+        obj.constructor.name !== 'Object' &&
+        obj.constructor.name !== 'Function');
 }
 function isClass(classOrRecord) {
     return typeof classOrRecord === 'function';
@@ -144,7 +146,9 @@ function isToken(tokenOrRecord) {
 }
 
 function mergeEffects(sourceInstance, globalErrorHandler, effectsErrorHandler) {
-    const sourceName = getSourceForInstance(sourceInstance).constructor.name;
+    const source = getSourceForInstance(sourceInstance);
+    const isClassBasedEffect = !!source && source.constructor.name !== 'Object';
+    const sourceName = isClassBasedEffect ? source.constructor.name : null;
     const observables$ = getSourceMetadata(sourceInstance).map(({ propertyName, dispatch, useEffectsErrorHandler, }) => {
         const observable$ = typeof sourceInstance[propertyName] === 'function'
             ? sourceInstance[propertyName]()
@@ -277,7 +281,10 @@ function isAction(action) {
 }
 function getEffectName({ propertyName, sourceInstance, sourceName, }) {
     const isMethod = typeof sourceInstance[propertyName] === 'function';
-    return `"${sourceName}.${String(propertyName)}${isMethod ? '()' : ''}"`;
+    const isClassBasedEffect = !!sourceName;
+    return isClassBasedEffect
+        ? `"${sourceName}.${String(propertyName)}${isMethod ? '()' : ''}"`
+        : `"${String(propertyName)}()"`;
 }
 function stringify(action) {
     try {
