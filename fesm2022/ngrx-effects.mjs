@@ -1,10 +1,11 @@
 import * as i1 from 'rxjs';
-import { merge, Observable, Subject, defer, of } from 'rxjs';
-import { ignoreElements, materialize, map, catchError, filter, groupBy, mergeMap, exhaustMap, dematerialize, take, concatMap, finalize, withLatestFrom } from 'rxjs/operators';
+import { merge, Observable, Subject, defer } from 'rxjs';
+import { ignoreElements, materialize, map, catchError, filter, groupBy, mergeMap, exhaustMap, dematerialize, take, concatMap, finalize } from 'rxjs/operators';
 import * as i0 from '@angular/core';
 import { InjectionToken, Injectable, Inject, NgModule, Optional, inject, makeEnvironmentProviders, ENVIRONMENT_INITIALIZER } from '@angular/core';
 import * as i3 from '@ngrx/store';
 import { ScannedActionsSubject, createAction, ROOT_STORE_PROVIDER, FEATURE_STATE_PROVIDER, Store } from '@ngrx/store';
+export { concatLatestFrom } from '@ngrx/operators';
 
 const DEFAULT_EFFECT_CONFIG = {
     dispatch: true,
@@ -595,45 +596,6 @@ configOrProject, errorFn) {
 }
 
 /**
- * `concatLatestFrom` combines the source value
- * and the last available value from a lazily evaluated Observable
- * in a new array
- *
- * @usageNotes
- *
- * Select the active customer from the NgRx Store
- *
- * ```ts
- * import { concatLatestFrom } from '@ngrx/effects';
- * import * as fromCustomers from '../customers';
- *
- * this.actions$.pipe(
- *  concatLatestFrom(() => this.store.select(fromCustomers.selectActiveCustomer))
- * )
- * ```
- *
- * Select a customer from the NgRx Store by its id that is available on the action
- *
- * ```ts
- * import { concatLatestFrom } from '@ngrx/effects';
- * import * fromCustomers from '../customers';
- *
- * this.actions$.pipe(
- *  concatLatestFrom((action) => this.store.select(fromCustomers.selectCustomer(action.customerId)))
- * )
- * ```
- */
-function concatLatestFrom(observablesFactory) {
-    return concatMap((value) => {
-        const observables = observablesFactory(value);
-        const observablesAsArray = Array.isArray(observables)
-            ? observables
-            : [observables];
-        return of(value).pipe(withLatestFrom(...observablesAsArray));
-    });
-}
-
-/**
  * @usageNotes
  *
  * ### Providing effects at the root level
@@ -701,5 +663,5 @@ function provideEffects(...effects) {
  * Generated bundle index. Do not edit.
  */
 
-export { Actions, EFFECTS_ERROR_HANDLER, EffectSources, EffectsFeatureModule, EffectsModule, EffectsRootModule, EffectsRunner, ROOT_EFFECTS_INIT, USER_PROVIDED_EFFECTS, act, concatLatestFrom, createEffect, defaultEffectsErrorHandler, getEffectsMetadata, mergeEffects, ofType, provideEffects, rootEffectsInit };
+export { Actions, EFFECTS_ERROR_HANDLER, EffectSources, EffectsFeatureModule, EffectsModule, EffectsRootModule, EffectsRunner, ROOT_EFFECTS_INIT, USER_PROVIDED_EFFECTS, act, createEffect, defaultEffectsErrorHandler, getEffectsMetadata, mergeEffects, ofType, provideEffects, rootEffectsInit };
 //# sourceMappingURL=ngrx-effects.mjs.map

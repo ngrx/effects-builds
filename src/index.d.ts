@@ -16,5 +16,5 @@ export { EFFECTS_ERROR_HANDLER } from './tokens';
 export { act } from './act';
 export { OnIdentifyEffects, OnRunEffects, OnInitEffects, } from './lifecycle_hooks';
 export { USER_PROVIDED_EFFECTS } from './tokens';
-export { concatLatestFrom } from './concat_latest_from';
+export { concatLatestFrom } from '@ngrx/operators';
 export { provideEffects } from './provide_effects';
