@@ -9,7 +9,7 @@ type EffectResult<OT> = Observable<OT> | ((...args: any[]) => Observable<OT>);
 type ConditionallyDisallowActionCreator<DT, Result> = DT extends false ? unknown : Result extends EffectResult<infer OT> ? OT extends ActionCreator ? 'ActionCreator cannot be dispatched. Did you forget to call the action creator function?' : unknown : unknown;
 export declare function createEffect<C extends EffectConfig & {
     functional?: false;
-}, DT extends DispatchType<C>, OT extends ObservableType<DT, OT>, R extends EffectResult<OT>>(source: () => R & ConditionallyDisallowActionCreator<DT, R>, config?: C): R & CreateEffectMetadata;
+}, DT extends DispatchType<C>, OTP, R extends EffectResult<OT>, OT extends ObservableType<DT, OTP>>(source: () => R & ConditionallyDisallowActionCreator<DT, R>, config?: C): R & CreateEffectMetadata;
 export declare function createEffect<Source extends () => Observable<unknown>>(source: Source, config: EffectConfig & {
     functional: true;
     dispatch: false;
