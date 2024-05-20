@@ -29,7 +29,6 @@ exports.migrateConcatLatestFromImport = void 0;
 var ts = require("typescript");
 var schematics_1 = require("@angular-devkit/schematics");
 var schematics_core_1 = require("../../schematics-core");
-var os = require("os");
 var change_1 = require("../../schematics-core/utility/change");
 function migrateConcatLatestFromImport() {
     return function (tree, ctx) {
@@ -85,7 +84,7 @@ function migrateConcatLatestFromImport() {
             if (!importAppendedInExistingDeclaration) {
                 // Add new @ngrx/operators import line
                 var newOperatorsImport = "import { concatLatestFrom } from '@ngrx/operators';";
-                changes.push(new schematics_core_1.InsertChange(sourceFile.fileName, effectsImportDeclaration.getEnd() + 1, "".concat(newOperatorsImport).concat(os.EOL)));
+                changes.push(new schematics_core_1.InsertChange(sourceFile.fileName, effectsImportDeclaration.getEnd() + 1, "".concat(newOperatorsImport, "\n")));
             }
             (0, schematics_core_1.commitChanges)(tree, sourceFile.fileName, changes);
             if (changes.length) {
