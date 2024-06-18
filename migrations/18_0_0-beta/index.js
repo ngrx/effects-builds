@@ -32,23 +32,33 @@ var schematics_core_1 = require("../../schematics-core");
 var change_1 = require("../../schematics-core/utility/change");
 function migrateConcatLatestFromImport() {
     return function (tree, ctx) {
-        var changes = [];
         (0, schematics_core_1.addPackageToPackageJson)(tree, 'dependencies', '@ngrx/operators', '^18.0.0');
         (0, schematics_core_1.visitTSSourceFiles)(tree, function (sourceFile) {
             var _a;
             var importDeclarations = new Array();
             getImportDeclarations(sourceFile, importDeclarations);
-            var effectsImportsAndDeclaration = importDeclarations
+            var effectsImportsAndDeclarations = importDeclarations
                 .map(function (effectsImportDeclaration) {
                 var effectsImports = getEffectsNamedBinding(effectsImportDeclaration);
                 if (effectsImports) {
-                    return { effectsImports: effectsImports, effectsImportDeclaration: effectsImportDeclaration };
+                    if (effectsImports.elements.some(function (element) { return element.name.getText() === 'concatLatestFrom'; })) {
+                        return { effectsImports: effectsImports, effectsImportDeclaration: effectsImportDeclaration };
+                    }
+                    return undefined;
                 }
                 else {
                     return undefined;
                 }
             })
-                .find(Boolean);
+                .filter(Boolean);
+            if (effectsImportsAndDeclarations.length === 0) {
+                return;
+            }
+            else if (effectsImportsAndDeclarations.length > 1) {
+                ctx.logger.info('[@ngrx/effects] Skipping because of multiple `concatLatestFrom` imports');
+                return;
+            }
+            var _b = __read(effectsImportsAndDeclarations, 1), effectsImportsAndDeclaration = _b[0];
             if (!effectsImportsAndDeclaration) {
                 return;
             }
@@ -60,6 +70,7 @@ function migrateConcatLatestFromImport() {
                 .filter(function (element) { return element.name.getText() !== 'concatLatestFrom'; })
                 .map(function (element) { return element.name.getText(); })
                 .join(', ');
+            var changes = [];
             // Remove `concatLatestFrom` from @ngrx/effects and leave the other imports
             if (otherEffectsImports) {
                 changes.push((0, schematics_core_1.createReplaceChange)(sourceFile, effectsImportDeclaration, effectsImportDeclaration.getText(), "import { ".concat(otherEffectsImports, " } from '@ngrx/effects';")));
@@ -84,7 +95,8 @@ function migrateConcatLatestFromImport() {
             if (!importAppendedInExistingDeclaration) {
                 // Add new @ngrx/operators import line
                 var newOperatorsImport = "import { concatLatestFrom } from '@ngrx/operators';";
-                changes.push(new schematics_core_1.InsertChange(sourceFile.fileName, effectsImportDeclaration.getEnd() + 1, "".concat(newOperatorsImport, "\n")));
+                changes.push(new schematics_core_1.InsertChange(sourceFile.fileName, effectsImportDeclaration.getEnd() + 1, "".concat(newOperatorsImport, "\n") // not os-independent for snapshot tests
+                ));
             }
             (0, schematics_core_1.commitChanges)(tree, sourceFile.fileName, changes);
             if (changes.length) {
