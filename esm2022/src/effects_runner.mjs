@@ -24,10 +24,10 @@ export class EffectsRunner {
             this.effectsSubscription = null;
         }
     }
-    /** @nocollapse */ static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "18.0.0", ngImport: i0, type: EffectsRunner, deps: [{ token: i1.EffectSources }, { token: i2.Store }], target: i0.ɵɵFactoryTarget.Injectable }); }
-    /** @nocollapse */ static { this.ɵprov = i0.ɵɵngDeclareInjectable({ minVersion: "12.0.0", version: "18.0.0", ngImport: i0, type: EffectsRunner, providedIn: 'root' }); }
+    /** @nocollapse */ static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "18.2.5", ngImport: i0, type: EffectsRunner, deps: [{ token: i1.EffectSources }, { token: i2.Store }], target: i0.ɵɵFactoryTarget.Injectable }); }
+    /** @nocollapse */ static { this.ɵprov = i0.ɵɵngDeclareInjectable({ minVersion: "12.0.0", version: "18.2.5", ngImport: i0, type: EffectsRunner, providedIn: 'root' }); }
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "18.0.0", ngImport: i0, type: EffectsRunner, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "18.2.5", ngImport: i0, type: EffectsRunner, decorators: [{
             type: Injectable,
             args: [{ providedIn: 'root' }]
         }], ctorParameters: () => [{ type: i1.EffectSources }, { type: i2.Store }] });
